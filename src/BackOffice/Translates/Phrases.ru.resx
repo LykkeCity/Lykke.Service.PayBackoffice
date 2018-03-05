@@ -1,0 +1,1116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Access" xml:space="preserve">
+    <value>Доступ</value>
+  </data>
+  <data name="AccountMgmtMenuItem" xml:space="preserve">
+    <value>Аккаунт</value>
+  </data>
+  <data name="Accuracy" xml:space="preserve">
+    <value>Точность</value>
+  </data>
+  <data name="ActualEmailCodeInfo" xml:space="preserve">
+    <value>Актуальный код</value>
+  </data>
+  <data name="ActualSmsCodeInfo" xml:space="preserve">
+    <value>Актуальный код</value>
+  </data>
+  <data name="AddAssetCategory" xml:space="preserve">
+    <value>Добавление категории активов</value>
+  </data>
+  <data name="AddBalanceButton" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="AddBroadcast" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="AddComment" xml:space="preserve">
+    <value>Добавьте комментарий</value>
+  </data>
+  <data name="AddPartner" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="AddRegulator" xml:space="preserve">
+    <value>Добавить регулятора</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Адрес</value>
+  </data>
+  <data name="AddressBook" xml:space="preserve">
+    <value>Адресная книга</value>
+  </data>
+  <data name="AddressBookEntities" xml:space="preserve">
+    <value>Сущности</value>
+  </data>
+  <data name="AddressBookEntityName" xml:space="preserve">
+    <value>Наименование организации</value>
+  </data>
+  <data name="AddressBookLykkeItems" xml:space="preserve">
+    <value>Кошельки сотрудников Lykke</value>
+  </data>
+  <data name="AddressBookOtherItems" xml:space="preserve">
+    <value>Иные кошельки Lykke</value>
+  </data>
+  <data name="AndroidVersion" xml:space="preserve">
+    <value>Версия android</value>
+  </data>
+  <data name="ApplyButton" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="ApplyButton_Duplicate[1]" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="ApplyButton_Duplicate[2]" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="AppVersion" xml:space="preserve">
+    <value>Версия приложения</value>
+  </data>
+  <data name="AssetAttributes" xml:space="preserve">
+    <value>Атрибуты активов</value>
+  </data>
+  <data name="AssetCanBeBase" xml:space="preserve">
+    <value>Может быть базовым активом</value>
+  </data>
+  <data name="AssetCategories" xml:space="preserve">
+    <value>Категории активов</value>
+  </data>
+  <data name="AssetName" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="AssetPairWithSameIdExists" xml:space="preserve">
+    <value>Валютная пара с таким ID существует</value>
+  </data>
+  <data name="AssetPrefix" xml:space="preserve">
+    <value>Префикс валют</value>
+  </data>
+  <data name="AssetSymbol" xml:space="preserve">
+    <value>Символ актива</value>
+  </data>
+  <data name="AssetWithSameIdExists" xml:space="preserve">
+    <value>Валюта с таким Id уже сущаствует</value>
+  </data>
+  <data name="AuditLogs" xml:space="preserve">
+    <value>Журналы событий</value>
+  </data>
+  <data name="Balance" xml:space="preserve">
+    <value>Баланс</value>
+  </data>
+  <data name="BalanceChange" xml:space="preserve">
+    <value>Изменение баланса</value>
+  </data>
+  <data name="BalanceChangeLessZero" xml:space="preserve">
+    <value>Операция приведет к отрицательному балансу</value>
+  </data>
+  <data name="BanClient" xml:space="preserve">
+    <value>Заблокировать</value>
+  </data>
+  <data name="BankCards" xml:space="preserve">
+    <value>Банковские карты</value>
+  </data>
+  <data name="BaseAsset" xml:space="preserve">
+    <value>Базовая валюта</value>
+  </data>
+  <data name="BaseAssetShouldNotBeTheSameAsTheOtherOne" xml:space="preserve">
+    <value>Базовый актив не должен быть таким же, как другие</value>
+  </data>
+  <data name="Blacklist" xml:space="preserve">
+    <value>BLACKLIST</value>
+  </data>
+  <data name="BlockCashOuts" xml:space="preserve">
+    <value>Запретить вывод</value>
+  </data>
+  <data name="BlockChainAssetPrefix" xml:space="preserve">
+    <value>Префикс Blockchain актива</value>
+  </data>
+  <data name="BlockchainColoredAddress" xml:space="preserve">
+    <value>Адрес Blockchain</value>
+  </data>
+  <data name="BlockOperations" xml:space="preserve">
+    <value>Запретить обмен/вывод</value>
+  </data>
+  <data name="BlockTrades" xml:space="preserve">
+    <value>Запретить обмен</value>
+  </data>
+  <data name="Broadcast" xml:space="preserve">
+    <value>Разослать</value>
+  </data>
+  <data name="BroadcastGroup" xml:space="preserve">
+    <value>Группа Рассылки</value>
+  </data>
+  <data name="BroadcastMailAlreadyExists" xml:space="preserve">
+    <value>Электронная почта уже находится в этой группе</value>
+  </data>
+  <data name="Buy" xml:space="preserve">
+    <value>Купить</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="CashIn" xml:space="preserve">
+    <value>Пополнить</value>
+  </data>
+  <data name="CashInData" xml:space="preserve">
+    <value>Пополнение</value>
+  </data>
+  <data name="CashOut" xml:space="preserve">
+    <value>Вывести</value>
+  </data>
+  <data name="CashOutData" xml:space="preserve">
+    <value>Данные вывода средств</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Изменить</value>
+  </data>
+  <data name="ChangeAccountMenuItem" xml:space="preserve">
+    <value>Изменить аккаунт</value>
+  </data>
+  <data name="ChangeBalanceForAsset" xml:space="preserve">
+    <value>Изменить баланс для актива</value>
+  </data>
+  <data name="Changer" xml:space="preserve">
+    <value>Кто сменил</value>
+  </data>
+  <data name="ChangeTheAccessPassword" xml:space="preserve">
+    <value>Изменение пароля доступа</value>
+  </data>
+  <data name="Citizenships" xml:space="preserve">
+    <value>Гражданства</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Город</value>
+  </data>
+  <data name="ClientComments" xml:space="preserve">
+    <value>Комментарии</value>
+  </data>
+  <data name="ClientIsBanned" xml:space="preserve">
+    <value>Пользователь заблокирован</value>
+  </data>
+  <data name="ClientNotFound" xml:space="preserve">
+    <value>Клиент не найден</value>
+  </data>
+  <data name="ClientReportNotFound" xml:space="preserve">
+    <value>Отчет не найден</value>
+  </data>
+  <data name="Clients" xml:space="preserve">
+    <value>Клиенты</value>
+  </data>
+  <data name="ClientTransactions" xml:space="preserve">
+    <value>Операции клиента</value>
+  </data>
+  <data name="ClientWasBanned" xml:space="preserve">
+    <value>Пользователь был заблокирован</value>
+  </data>
+  <data name="ClientWasUnbanned" xml:space="preserve">
+    <value>Пользователь был разблокирован</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="Confirmation" xml:space="preserve">
+    <value>Подтверждение</value>
+  </data>
+  <data name="ConfirmForceTxDetection" xml:space="preserve">
+    <value>Подтвердить поиск Tx</value>
+  </data>
+  <data name="ContactPhone" xml:space="preserve">
+    <value>Контактный телефон</value>
+  </data>
+  <data name="Count" xml:space="preserve">
+    <value>Счетчик</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Страна</value>
+  </data>
+  <data name="CountryFromID" xml:space="preserve">
+    <value>Страна по коду</value>
+  </data>
+  <data name="CountryFromIP" xml:space="preserve">
+    <value>Страна по IP</value>
+  </data>
+  <data name="CountryFromPOA" xml:space="preserve">
+    <value>Страна по POA</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Создать</value>
+  </data>
+  <data name="CreateAddressBookEntity" xml:space="preserve">
+    <value>Новая сущность</value>
+  </data>
+  <data name="CreateAddressBookItem" xml:space="preserve">
+    <value>Новая запись в адресной книге</value>
+  </data>
+  <data name="CreatePriorityCode" xml:space="preserve">
+    <value>Создать приоритетный код</value>
+  </data>
+  <data name="CreditVoucherUrl" xml:space="preserve">
+    <value>Адрес Credit Voucher</value>
+  </data>
+  <data name="Crime" xml:space="preserve">
+    <value>CRIME</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Деньги</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="DateFrom" xml:space="preserve">
+    <value>Дата с</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>Дата рождения</value>
+  </data>
+  <data name="DateOfExpiryOfID" xml:space="preserve">
+    <value>Дата истечения срока действия ID</value>
+  </data>
+  <data name="DateTo" xml:space="preserve">
+    <value>Дата до</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="DeleteAssetCategory" xml:space="preserve">
+    <value>Удаление категории активов</value>
+  </data>
+  <data name="DepositUrl" xml:space="preserve">
+    <value>URL-адрес депозита</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Устройство</value>
+  </data>
+  <data name="DeviceType" xml:space="preserve">
+    <value>Тип устройства</value>
+  </data>
+  <data name="DictionaryAssetPairs" xml:space="preserve">
+    <value>Справочник валютных пар</value>
+  </data>
+  <data name="DictionaryAssets" xml:space="preserve">
+    <value>Справочник валют</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Отключено</value>
+  </data>
+  <data name="DisableUser" xml:space="preserve">
+    <value>Отключение пользователя</value>
+  </data>
+  <data name="DisableUserDialogText" xml:space="preserve">
+    <value>Вы действительно хотите отключить пользователя</value>
+  </data>
+  <data name="DisableUserDialogText2" xml:space="preserve">
+    <value>Это также приведет к принудительному логауту пользователя</value>
+  </data>
+  <data name="DisplayAccuracy" xml:space="preserve">
+    <value>Отображ. точность</value>
+  </data>
+  <data name="DocumentName" xml:space="preserve">
+    <value>Имя документа</value>
+  </data>
+  <data name="Documents" xml:space="preserve">
+    <value>Документы</value>
+  </data>
+  <data name="DocumentType" xml:space="preserve">
+    <value>Тип документа</value>
+  </data>
+  <data name="Edit Partner" xml:space="preserve">
+    <value>Редактировать партнёра</value>
+  </data>
+  <data name="EditAddressBookEntity" xml:space="preserve">
+    <value>Редактирование сущности</value>
+  </data>
+  <data name="EditAddressBookItem" xml:space="preserve">
+    <value>Редактирование записи в адресной книге</value>
+  </data>
+  <data name="EditAsset" xml:space="preserve">
+    <value>Редактировать валюту</value>
+  </data>
+  <data name="EditAssetCategory" xml:space="preserve">
+    <value>Редактирование категории активов</value>
+  </data>
+  <data name="EditAssetPair" xml:space="preserve">
+    <value>Редактирование валютной пары</value>
+  </data>
+  <data name="EditDepositWithdrawalOptions" xml:space="preserve">
+    <value>Изменить настройки депозита/вывода</value>
+  </data>
+  <data name="EditIssuer" xml:space="preserve">
+    <value>Редактировать эмитента</value>
+  </data>
+  <data name="EditRegulator" xml:space="preserve">
+    <value>Редактировать регулятора</value>
+  </data>
+  <data name="EditRole" xml:space="preserve">
+    <value>Изменить роль</value>
+  </data>
+  <data name="EditUser" xml:space="preserve">
+    <value>Изменить пользователя</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="EmailAlreadyUsed" xml:space="preserve">
+    <value>Email уже используется</value>
+  </data>
+  <data name="EmailAtLykke" xml:space="preserve">
+    <value>Email на lykke.com</value>
+  </data>
+  <data name="EmailConfirmation" xml:space="preserve">
+    <value>Подтверждение email</value>
+  </data>
+  <data name="EmailConfirmationDoesntMatch" xml:space="preserve">
+    <value>Подтверждение email не соответствует email удаляемого пользователя</value>
+  </data>
+  <data name="EmailIsEmpty" xml:space="preserve">
+    <value>Email не задан</value>
+  </data>
+  <data name="EmailIsNotValidated" xml:space="preserve">
+    <value>Email не проверен</value>
+  </data>
+  <data name="EmailMenuItem" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="EmailShouldBeAtLykke" xml:space="preserve">
+    <value>Email должен быть на lykke.com</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Включено</value>
+  </data>
+  <data name="EnableTxdetection" xml:space="preserve">
+    <value>Включить обнаружение tx</value>
+  </data>
+  <data name="EnableUser" xml:space="preserve">
+    <value>Включение пользователя</value>
+  </data>
+  <data name="EnableUserDialogText" xml:space="preserve">
+    <value>Вы действительно хотите включить пользователя</value>
+  </data>
+  <data name="EnterTwoFactorCode" xml:space="preserve">
+    <value>Введите код:</value>
+  </data>
+  <data name="Expires" xml:space="preserve">
+    <value>Действителен до</value>
+  </data>
+  <data name="ExportIn" xml:space="preserve">
+    <value>Скачать в формате</value>
+  </data>
+  <data name="Fee" xml:space="preserve">
+    <value>Комиссия</value>
+  </data>
+  <data name="FeeOutputsStatus" xml:space="preserve">
+    <value>Статусы комиссий</value>
+  </data>
+  <data name="FeeRecharging" xml:space="preserve">
+    <value>Плата за пополнение</value>
+  </data>
+  <data name="FieldShouldNotBeEmpty" xml:space="preserve">
+    <value>Поле не должно быть пустым</value>
+  </data>
+  <data name="FieldShouldNotBeEmptyOrZero" xml:space="preserve">
+    <value>Поле не должно быть пустым и равным нулю</value>
+  </data>
+  <data name="Filled" xml:space="preserve">
+    <value>Заполненные</value>
+  </data>
+  <data name="Find" xml:space="preserve">
+    <value>Найти</value>
+  </data>
+  <data name="FindBlockchainTx" xml:space="preserve">
+    <value>Найти blockchain транзакцию</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="ForAsset" xml:space="preserve">
+    <value>для</value>
+  </data>
+  <data name="ForceUserLogoutDialogText" xml:space="preserve">
+    <value>Вы действительно хотите сделать принудительный логаут пользователя</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Фамилия Имя</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Общие</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>Общие настройки</value>
+  </data>
+  <data name="Generate" xml:space="preserve">
+    <value>Сформировать</value>
+  </data>
+  <data name="IconUrl" xml:space="preserve">
+    <value>URL иконки</value>
+  </data>
+  <data name="IdIssuer" xml:space="preserve">
+    <value>Идентификатор издателя</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>INFORMATION</value>
+  </data>
+  <data name="InformationFound" xml:space="preserve">
+    <value>информация найдена</value>
+  </data>
+  <data name="InternalId" xml:space="preserve">
+    <value>Внутренний ID</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Недопустимый адрес электронной почты</value>
+  </data>
+  <data name="InvalidEmailOrClientId" xml:space="preserve">
+    <value>Неверный формат идентификатора пользователя или email</value>
+  </data>
+  <data name="InvalidGoogleApiClientId" xml:space="preserve">
+    <value>Неверный ИД клиента Google API</value>
+  </data>
+  <data name="InvalidJwt" xml:space="preserve">
+    <value>Некорректный JWT</value>
+  </data>
+  <data name="InvalidPriceFormat" xml:space="preserve">
+    <value>Неправильная формат цены</value>
+  </data>
+  <data name="InvalidTimeSpanFormat" xml:space="preserve">
+    <value>Не верный формат промежутка времени</value>
+  </data>
+  <data name="InvalidVolumeFormat" xml:space="preserve">
+    <value>Недопустимый формат объема</value>
+  </data>
+  <data name="InvertedAccuracy" xml:space="preserve">
+    <value>Точность Inv.</value>
+  </data>
+  <data name="IsLykkeCorp" xml:space="preserve">
+    <value>Принадлежит Lykke</value>
+  </data>
+  <data name="Issuer" xml:space="preserve">
+    <value>Поставщик</value>
+  </data>
+  <data name="IssuerName" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="IssuerWithSameIdExists" xml:space="preserve">
+    <value>Существует активов с тем же Id</value>
+  </data>
+  <data name="IwantToAsset" xml:space="preserve">
+    <value>Желаемое действие</value>
+  </data>
+  <data name="KickSession" xml:space="preserve">
+    <value>Прервать сессию</value>
+  </data>
+  <data name="KycSkipOnTrades" xml:space="preserve">
+    <value>Пропустить проверку KYC на торгах фиат -&gt; крипто</value>
+  </data>
+  <data name="KYCSpiderCheck" xml:space="preserve">
+    <value>KYC Spider проверка</value>
+  </data>
+  <data name="KYCSpiderCheckHasNotFoundAnyFlags" xml:space="preserve">
+    <value>KYC Spider проверка не обнаружила флагов</value>
+  </data>
+  <data name="KYCSpiderCheckWasNotFinished" xml:space="preserve">
+    <value>KYC Spider проверка не была произведена</value>
+  </data>
+  <data name="KycStatus" xml:space="preserve">
+    <value>KYC статус</value>
+  </data>
+  <data name="KycTemplateNotFound" xml:space="preserve">
+    <value>Шаблон не найден</value>
+  </data>
+  <data name="KycTemplates" xml:space="preserve">
+    <value>KYC шаблоны</value>
+  </data>
+  <data name="KycTemplatesNoTemplates" xml:space="preserve">
+    <value>Нет доступных шаблонов</value>
+  </data>
+  <data name="KycTemplatesSelectTemplate" xml:space="preserve">
+    <value>Выберите шаблон</value>
+  </data>
+  <data name="KycUnskipOnTrades" xml:space="preserve">
+    <value>Проверять KYC на торгах фиат -&gt; крипто</value>
+  </data>
+  <data name="LastAction" xml:space="preserve">
+    <value>Последнее действие</value>
+  </data>
+  <data name="LastEmailCodeNotFound" xml:space="preserve">
+    <value>Не удалось найти последний отправленный email-код</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Фамилия</value>
+  </data>
+  <data name="LastSmsCodeNotFound" xml:space="preserve">
+    <value>Не удалось найти последний отправленный смс-код</value>
+  </data>
+  <data name="LatestEmailCodeSent" xml:space="preserve">
+    <value>Последний отправленный код</value>
+  </data>
+  <data name="LoginDelay" xml:space="preserve">
+    <value>Таймаут логина</value>
+  </data>
+  <data name="LoginDelayTimer" xml:space="preserve">
+    <value>Таймер таймаута логина</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Выход</value>
+  </data>
+  <data name="LogoutUser" xml:space="preserve">
+    <value>Принудительный логаут пользователя</value>
+  </data>
+  <data name="Logs" xml:space="preserve">
+    <value>Журналы</value>
+  </data>
+  <data name="LowCashOutLimit" xml:space="preserve">
+    <value>Кол-во операций вывода без таймаута (небольшой объем)</value>
+  </data>
+  <data name="LowCashOutTimeoutMins" xml:space="preserve">
+    <value>Таймаут вывода средств в минутах (небольшой объем)</value>
+  </data>
+  <data name="MailMock" xml:space="preserve">
+    <value>Mock почты</value>
+  </data>
+  <data name="MarginRegulator" xml:space="preserve">
+    <value>Margin регулятор</value>
+  </data>
+  <data name="MarginTradingConditions" xml:space="preserve">
+    <value>Торговые словия</value>
+  </data>
+  <data name="MenuDevelopers" xml:space="preserve">
+    <value>Разработчикам</value>
+  </data>
+  <data name="MoneyAmount" xml:space="preserve">
+    <value>Сумма</value>
+  </data>
+  <data name="Monitor" xml:space="preserve">
+    <value>Монитор</value>
+  </data>
+  <data name="MultisigIsNotGenerated" xml:space="preserve">
+    <value>Multisig не сгенерирован</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="NameOnCard" xml:space="preserve">
+    <value>Имя владельца карты</value>
+  </data>
+  <data name="NewEmailMatchesOldValue" xml:space="preserve">
+    <value>Новое значение почты идентично старому</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Новый пароль</value>
+  </data>
+  <data name="NoComments" xml:space="preserve">
+    <value>Нет комментариев</value>
+  </data>
+  <data name="NoInformationFound" xml:space="preserve">
+    <value>информация не найдена</value>
+  </data>
+  <data name="NoPartners" xml:space="preserve">
+    <value>У вас еще нет партнёров :(</value>
+  </data>
+  <data name="NoRecordsFound" xml:space="preserve">
+    <value>Записи не найдены</value>
+  </data>
+  <data name="NoRegulators" xml:space="preserve">
+    <value>У вас еще нет регуляторов :(</value>
+  </data>
+  <data name="NoSpotRegulators" xml:space="preserve">
+    <value>У вас еще нет Spot Regulators :(</value>
+  </data>
+  <data name="NotValidUrl" xml:space="preserve">
+    <value>не валидный адрес</value>
+  </data>
+  <data name="NoValue" xml:space="preserve">
+    <value>Нет значения</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Число</value>
+  </data>
+  <data name="NumberOfFeeOutputs" xml:space="preserve">
+    <value>Количество выходов комиссии</value>
+  </data>
+  <data name="OrderBook" xml:space="preserve">
+    <value>Книга заявок</value>
+  </data>
+  <data name="OsVersion" xml:space="preserve">
+    <value>Версия ОС</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>Партнёр</value>
+  </data>
+  <data name="PartnerAssignedToAsset" xml:space="preserve">
+    <value>Партнер связан с какой-то валютой</value>
+  </data>
+  <data name="Partners" xml:space="preserve">
+    <value>Партнёры</value>
+  </data>
+  <data name="PaymentSystem" xml:space="preserve">
+    <value>Платежная система</value>
+  </data>
+  <data name="PendingBalance" xml:space="preserve">
+    <value>Ожидание</value>
+  </data>
+  <data name="Pep" xml:space="preserve">
+    <value>PEP</value>
+  </data>
+  <data name="PinSecurityCounter" xml:space="preserve">
+    <value>Счетчик pin security</value>
+  </data>
+  <data name="PinSecurityLimitCounter" xml:space="preserve">
+    <value>Использованный лимит PinSecurity</value>
+  </data>
+  <data name="PleaseConfirmDelete" xml:space="preserve">
+    <value>Пожалуйста, подтвердите удаление</value>
+  </data>
+  <data name="PleaseConfirmMultisigGeneration" xml:space="preserve">
+    <value>Пожалуйста, подтвердите, что вы хотите создать новый multisig для клиента</value>
+  </data>
+  <data name="PleaseConfirmYourAction" xml:space="preserve">
+    <value>Пожалуйста подтвердите ваши действия</value>
+  </data>
+  <data name="PleaseSelectAtLeastOneItem" xml:space="preserve">
+    <value>Пожалуйста выберите по крайней мере один элемент</value>
+  </data>
+  <data name="PleaseTypeAccuracy" xml:space="preserve">
+    <value>Пожалуйста, введите точность</value>
+  </data>
+  <data name="PleaseTypeYourNewPassword" xml:space="preserve">
+    <value>Пожалуйста введите Ваш новый пароль</value>
+  </data>
+  <data name="PreventTxDetection" xml:space="preserve">
+    <value>Предотвращение обнаружения tx</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Цена</value>
+  </data>
+  <data name="PriceShouldBeGreaterThanZero" xml:space="preserve">
+    <value>Цена должна быть больше нуля</value>
+  </data>
+  <data name="PrivateKey" xml:space="preserve">
+    <value>Закрытый ключ</value>
+  </data>
+  <data name="ProcessIsBeingStarted" xml:space="preserve">
+    <value>Процесс запускается</value>
+  </data>
+  <data name="PublicId" xml:space="preserve">
+    <value>Публичный ID</value>
+  </data>
+  <data name="PushNotifications" xml:space="preserve">
+    <value>Push нотификации</value>
+  </data>
+  <data name="PushTxDialogText" xml:space="preserve">
+    <value>You have pending transaction, tap to open details</value>
+  </data>
+  <data name="QRCode" xml:space="preserve">
+    <value>QR Код</value>
+  </data>
+  <data name="QuotingAsset" xml:space="preserve">
+    <value>Котируемая валюта</value>
+  </data>
+  <data name="RefreshButton" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="RefreshButton_Duplicate[1]" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="RefreshButton_Duplicate[2]" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="Registrations" xml:space="preserve">
+    <value>Регистрации</value>
+  </data>
+  <data name="RegulatorCountryNotBoundConfirmation" xml:space="preserve">
+    <value>Выбранная стране не привязана к {0} регулятору.</value>
+  </data>
+  <data name="RegulatorNotDefaultConfirmation" xml:space="preserve">
+    <value>{0} Регулятор не отмечен как Default.</value>
+  </data>
+  <data name="Regulators" xml:space="preserve">
+    <value>Регуляторы</value>
+  </data>
+  <data name="RelatedByIp" xml:space="preserve">
+    <value>Похожие клиенты по IP</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="RemoveAccountMenuItem" xml:space="preserve">
+    <value>Удалить аккаунт</value>
+  </data>
+  <data name="RemoveClientReport" xml:space="preserve">
+    <value>Удалить отчет по клиентам</value>
+  </data>
+  <data name="RemoveKycTemplate" xml:space="preserve">
+    <value>Удалить KYC шаблон</value>
+  </data>
+  <data name="RemovePartner" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="RemoveUser" xml:space="preserve">
+    <value>Удаление пользователя</value>
+  </data>
+  <data name="RemoveUserDialogText1" xml:space="preserve">
+    <value>Вы действительно хотите удалить пользователя</value>
+  </data>
+  <data name="RemoveUserDialogText2" xml:space="preserve">
+    <value>Это неотменяемая операция. Чтобы убедиться, что вы все делаете верно, пожалуйста, введите email пользователя, которого вы хотите удалить</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>Отчеты</value>
+  </data>
+  <data name="ReportType" xml:space="preserve">
+    <value>Тип отчета</value>
+  </data>
+  <data name="Reputation" xml:space="preserve">
+    <value>REPUTATION</value>
+  </data>
+  <data name="RequestId" xml:space="preserve">
+    <value>ID запроса</value>
+  </data>
+  <data name="ResetButton" xml:space="preserve">
+    <value>Сбросить</value>
+  </data>
+  <data name="ResetSubmitCodeLimitButton" xml:space="preserve">
+    <value>Сбросить счетчик вызовов SubmitCode</value>
+  </data>
+  <data name="Residences" xml:space="preserve">
+    <value>Местонахождение</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Повторить</value>
+  </data>
+  <data name="RiskDescriptionUrl" xml:space="preserve">
+    <value>Адрес описания рисков</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Роли</value>
+  </data>
+  <data name="Sanctioned" xml:space="preserve">
+    <value>SANCTIONED</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Сохранено</value>
+  </data>
+  <data name="SearchBySessionMenuItem" xml:space="preserve">
+    <value>Поиск сессии</value>
+  </data>
+  <data name="SelectedForCheckBy_0_For_1_in_2" xml:space="preserve">
+    <value>Клиент выбран для проверки пользователем {0} на {1} минут в {2} UTC</value>
+  </data>
+  <data name="Sell" xml:space="preserve">
+    <value>Продажа</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="SendNewCode" xml:space="preserve">
+    <value>Отправить новый код</value>
+  </data>
+  <data name="SentVerificationCodeErrorMsg" xml:space="preserve">
+    <value>При отправке кода возникла ошибка</value>
+  </data>
+  <data name="SeoReportClients" xml:space="preserve">
+    <value>SEO: клиенты</value>
+  </data>
+  <data name="SessionHasBeenDeleted" xml:space="preserve">
+    <value>Сессия удалена</value>
+  </data>
+  <data name="Sessions" xml:space="preserve">
+    <value>Сеансы</value>
+  </data>
+  <data name="SetLimitOrder" xml:space="preserve">
+    <value>Установить лимитный ордер</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>Вход</value>
+  </data>
+  <data name="SMSMenuItem" xml:space="preserve">
+    <value>SMS</value>
+  </data>
+  <data name="SmsMock" xml:space="preserve">
+    <value>Mock SMS</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Источник</value>
+  </data>
+  <data name="SpotAndMarginRegulatorsDifferent" xml:space="preserve">
+    <value>Spot и margin регуляторы различаются.</value>
+  </data>
+  <data name="SpotRegulator" xml:space="preserve">
+    <value>Spot pегулятор</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Начать</value>
+  </data>
+  <data name="StartCheck" xml:space="preserve">
+    <value>Начать проверку</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Состояние</value>
+  </data>
+  <data name="StopCheck" xml:space="preserve">
+    <value>Закончить проверку</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="SubmitCodeCounter" xml:space="preserve">
+    <value>Счетчик submit code</value>
+  </data>
+  <data name="SubmitCodeLimitCounter" xml:space="preserve">
+    <value>Использованный лимит SubmitCode</value>
+  </data>
+  <data name="SubtractBalanceButton" xml:space="preserve">
+    <value>Снять</value>
+  </data>
+  <data name="SupportTools" xml:space="preserve">
+    <value>Поддержка</value>
+  </data>
+  <data name="SwiftAccount" xml:space="preserve">
+    <value>SWIFT счет</value>
+  </data>
+  <data name="SwiftCashoutRequest" xml:space="preserve">
+    <value>Запрос на вывод</value>
+  </data>
+  <data name="TermsOfUseUrl" xml:space="preserve">
+    <value>Адрес соглашения</value>
+  </data>
+  <data name="TextCode" xml:space="preserve">
+    <value>Текстовый код</value>
+  </data>
+  <data name="ThePriceIs" xml:space="preserve">
+    <value>Цена</value>
+  </data>
+  <data name="Tools" xml:space="preserve">
+    <value>Инструменты</value>
+  </data>
+  <data name="Trades" xml:space="preserve">
+    <value>Торговые операции</value>
+  </data>
+  <data name="TransferConfirm" xml:space="preserve">
+    <value>Вы переводите {0} {1} пользователю {2}. Вы уверены?</value>
+  </data>
+  <data name="TrustedTimeSpan" xml:space="preserve">
+    <value>Доверительный промежуток времени</value>
+  </data>
+  <data name="TrustedTimeSpanPlaceholder" xml:space="preserve">
+    <value>Введите промежуток времени (01:00:00)</value>
+  </data>
+  <data name="TxDetectionForUser" xml:space="preserve">
+    <value>Обнаружение TX для пользователя</value>
+  </data>
+  <data name="TxNotFound" xml:space="preserve">
+    <value>Транзакция не найдена</value>
+  </data>
+  <data name="TypeEmailHere" xml:space="preserve">
+    <value>Введите адрес почты или идентификатор клиента</value>
+  </data>
+  <data name="TypePhoneNumberHere" xml:space="preserve">
+    <value>Введите номер телефона</value>
+  </data>
+  <data name="TypePhraseHere" xml:space="preserve">
+    <value>Введите фразу</value>
+  </data>
+  <data name="TypeTxIdHere" xml:space="preserve">
+    <value>Наберите tx здес</value>
+  </data>
+  <data name="UnbanClient" xml:space="preserve">
+    <value>Разблокировать</value>
+  </data>
+  <data name="UnblockCashOuts" xml:space="preserve">
+    <value>Разрешить вывод</value>
+  </data>
+  <data name="UnblockOperations" xml:space="preserve">
+    <value>Разрешить вывод/обмен</value>
+  </data>
+  <data name="UnblockTrades" xml:space="preserve">
+    <value>Разрешить обмен</value>
+  </data>
+  <data name="UpdateEmail" xml:space="preserve">
+    <value>Изменить email</value>
+  </data>
+  <data name="UpdateUserEmailConfirmation" xml:space="preserve">
+    <value>Пожалуйста, укажите новые почтовый адрес для пользователя</value>
+  </data>
+  <data name="UserExists" xml:space="preserve">
+    <value>Пользователь существует</value>
+  </data>
+  <data name="UserIsDisabled" xml:space="preserve">
+    <value>Пользователь отключен, обратитесь к администратору</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>Пользователь</value>
+  </data>
+  <data name="UserNotRegistered" xml:space="preserve">
+    <value>Пользователь не зарегистрирован, обратитесь к администратору</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Пользователи</value>
+  </data>
+  <data name="ViewReports" xml:space="preserve">
+    <value>Просмотреть отчеты</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Объем</value>
+  </data>
+  <data name="WalletAddress" xml:space="preserve">
+    <value>Адрес кошелька</value>
+  </data>
+  <data name="Wallets" xml:space="preserve">
+    <value>Кошельки</value>
+  </data>
+  <data name="WithdrawRequests" xml:space="preserve">
+    <value>Запросы на снятие</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="ZipCode" xml:space="preserve">
+    <value>Индекс</value>
+  </data>
+  <data name="PleaseTypeMinInvertedVolume" xml:space="preserve">
+    <value>Пожалуйста, введите минимум Inv. объем</value>
+  </data>
+  <data name="PleaseTypeMinVolume" xml:space="preserve">
+    <value>Пожалуйста, введите минимум объем</value>
+  </data>
+  <data name="MinInvertedVolume" xml:space="preserve">
+    <value>минимум перевернутый объем</value>
+  </data>
+  <data name="MinVolume" xml:space="preserve">
+    <value>минимум объем</value>
+  </data>
+  <data name="WalletAmountError" xml:space="preserve">
+    <value>Пожалуйста, укажитье сумму с правильным формате. (0.00)</value>
+  </data>
+  <data name="WalletAmountError" xml:space="preserve">
+    <value>Пожалуйста, укажитье сумму с правильным формате. (0.00)</value>
+  </data>
+  <data name="WalletAmountError" xml:space="preserve">
+    <value>Пожалуйста, укажитье сумму с правильным формате. (0.00)</value>
+  </data>
+</root>

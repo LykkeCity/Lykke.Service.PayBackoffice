@@ -1,0 +1,18 @@
+﻿@using BackOffice.Helpers
+@using BackOffice.Translates
+@model BackOffice.Areas.Users.Models.UserDialogViewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+
+<form id="frmDisableUser">
+    <input name="Id" value="@Model.Id" type="hidden" />
+
+    <div style="width: 100%">
+        @Phrases.DisableUserDialogText <b>@Model.Id</b>? @Phrases.DisableUserDialogText2
+    </div>
+</form>
+
+@Html.RenderDeleteCancelButtonPair(Url.Action("DisableUser"), "#frmDisableUser", Phrases.Yes)
+

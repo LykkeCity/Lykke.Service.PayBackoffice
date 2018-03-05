@@ -1,0 +1,49 @@
+﻿@using BackOffice.Services
+@using BackOffice.Translates
+@model BackOffice.Areas.Users.Models.UserRolesIndexViewModels
+
+<table class="table">
+    <tr>
+        <th>
+            @Phrases.Name
+        </th>
+        <th>
+            @Phrases.Access
+        </th>
+        <th>
+
+        </th>
+    </tr>
+    @foreach (var userRole in Model.UserRoles)
+    {
+        <tr>
+            <td>
+                @userRole.Name
+            </td>
+            <td>
+                @foreach (var f in userRole.Features)
+                {
+                    <span class="badge">@f.GetCaption()</span>
+                }
+            </td>
+            <td>
+                @if (Model.IsCurrentUserAdmin)
+                {
+                    @Html.BtnEditById(Url.Action("EditDialog"), userRole.Id)
+                }
+            </td>
+        </tr>
+    }
+    @if (Model.IsCurrentUserAdmin)
+    {
+        <tr>
+            <td colspan="2">
+
+            </td>
+            <td>
+                @Html.BtnCreate(Url.Action("EditDialog"))
+            </td>
+        </tr>
+    }
+</table>
+

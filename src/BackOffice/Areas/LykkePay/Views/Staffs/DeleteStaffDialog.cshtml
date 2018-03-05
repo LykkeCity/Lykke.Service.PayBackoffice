@@ -1,0 +1,15 @@
+﻿@model BackOffice.Areas.LykkePay.Models.DeleteStaffDialogViewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+
+<form id="frmDeleteStaff">
+
+    <input style="display: none" name="Id" value="@Model.Id" />
+    <input style="display: none" name="MerchantId" value="@Model.MerchantId" />
+    <h3>@Model.Name</h3>
+
+</form>
+
+@Html.RenderSaveCancelButtonPair(Url.Action("DeleteStaff"), "#frmDeleteStaff", "Confirm")

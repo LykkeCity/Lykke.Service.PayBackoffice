@@ -1,0 +1,63 @@
+﻿@using System.Linq;
+@using BackOffice.Areas.Kyc.Models
+@using BackOffice.Translates
+@using Core.Users
+@model BackOffice.Models.IFindClientViewModel
+
+@{
+    var isShowFindClient = true;
+    var div = string.IsNullOrEmpty(Model.Div) ? "#foundClient" : Model.Div;
+    var modelDocumentChecking = Model as DocumentsCheckingIndexViewModel;
+    if (modelDocumentChecking != null)
+    {
+        var roles = modelDocumentChecking.UserRolesPair.Roles;
+        foreach (var roleId in modelDocumentChecking.UserRolesPair.User.Roles)
+        {
+            var foundRole = roles.FirstOrDefault(role => role.Id == roleId);
+            if (foundRole == null)
+            {
+                continue;
+            }
+
+            if (foundRole.Features.Any(f => f == UserFeatureAccess.DoNotShowSearchClient))
+            {
+                isShowFindClient = false;
+                break;
+            }
+        }
+    }
+}
+
+@if (isShowFindClient)
+{
+    <div class="input-group">
+        <form id="findClient">
+            <input id="phraseToFind" name="Phrase" type="text" class="form-control" placeholder="@Phrases.TypePhraseHere" value="@Model.Value" onkeypress="keypress(event)">
+            <input style="display: none"/>
+        </form>
+
+        <span class="input-group-btn">
+        <button class="btn btn-default btn-xs" type="button" style="padding: 8px;"
+                onclick="searchTrader()"><span class="glyphicon glyphicon-search hideOnRequest" aria-hidden="true"></span><img src="~/images/processing-menu.gif" class="showOnRequest"/></button>
+       
+         <button class="btn btn-default btn-xs" type="button" style="padding: 8px;"
+                onclick="ui.showDialog('@Url.Action("Index", "LastFound", new {area = "Clients"})')">
+             <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+        </button>
+
+    </span>
+    </div>
+}
+
+<script>
+
+    function keypress(event) {
+        if (event.keyCode === 13) {
+            searchTrader();
+        }
+    }
+
+    function searchTrader() {
+        requests.doRequest({ url: '@Model.RequestUrl', divResult: '@div', formId: '#findClient', showLoading: true });
+    }
+</script>

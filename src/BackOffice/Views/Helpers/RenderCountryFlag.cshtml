@@ -1,0 +1,16 @@
+﻿@model CountryFlagModel
+
+@if (string.IsNullOrEmpty(Model.CountryCode))
+{
+    <span>???</span>
+}
+else
+{
+    var textColor = "black";
+    if (Model.TextColor != null)
+    {
+        textColor = Model.TextColor;
+    }
+    <div><img class="flag" src="~/images/flags/@(Model.CountryCode.ToLower()).svg" /></div>
+    <div style="height: 10px;position: relative; font-size:8px; text-align: center; color: @Model.TextColor">@Model.CountryCode</div>
+}

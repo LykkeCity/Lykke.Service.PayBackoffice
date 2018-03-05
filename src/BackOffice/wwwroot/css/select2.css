@@ -1,0 +1,7 @@
+﻿.select2-dropdown {
+    z-index: 999999 !important;
+}
+.select2-selection--multiple {
+    max-height: 140px;
+    overflow-y: auto
+}

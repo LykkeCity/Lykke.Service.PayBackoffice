@@ -1,0 +1,45 @@
+﻿@*Google signout placed on separate page because gapi places iframe into body, but in _Layout.cshtml it's being removed from body*@
+@model string
+@{
+    ViewBag.Title = "Google signout";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/images/favicon.png" rel="shortcut icon" type="image/png" />
+    <title>Lykke Back Office</title>
+    
+    <script src="https://apis.google.com/js/platform.js?onload=onGapiLoaded" async defer></script>
+    <meta name="google-signin-client_id" content="@Model">
+    
+    <script>
+        function onGapiLoaded() {
+            gapi.load('auth2',
+                function() {
+                    gapi.auth2.init().then(function() {
+                        var auth2 = gapi.auth2.getAuthInstance();
+
+                        var redirectToLogout = function() {
+                            window.location = '@Url.Action("Logout", "Home")';
+                        };
+
+                        try {
+                            auth2.signOut()
+                                .then(redirectToLogout)
+                                .catch(redirectToLogout);
+                        } catch(ex) {
+                            redirectToLogout();
+                        }  
+                    });
+                });
+        };
+    </script>
+
+</head>
+<body style="overflow-y: hidden">  
+</body>
+</html>

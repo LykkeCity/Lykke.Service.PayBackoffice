@@ -1,0 +1,856 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="ru" original="BACKOFFICE/TRANSLATES/PHRASES.RESX" tool-id="MultilingualAppToolkit" product-name="n/a" product-version="n/a" build-num="n/a">
+    <header>
+      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="4.0.1466.0" tool-company="Microsoft" />
+    </header>
+    <body>
+      <group id="BACKOFFICE/TRANSLATES/PHRASES.RESX" datatype="resx">
+        <trans-unit id="ChangeMyPassword" translate="yes" xml:space="preserve">
+          <source>Change my password</source>
+          <target state="final" state-qualifier="tm-suggestion">Изменить пароль</target>
+        </trans-unit>
+        <trans-unit id="ChangeTheAccessPassword" translate="yes" xml:space="preserve">
+          <source>Change access password</source>
+          <target state="final">Изменение пароля доступа</target>
+        </trans-unit>
+        <trans-unit id="Confirmation" translate="yes" xml:space="preserve">
+          <source>Confirmation</source>
+          <target state="final" state-qualifier="tm-suggestion">Подтверждение</target>
+        </trans-unit>
+        <trans-unit id="FieldShouldNotBeEmpty" translate="yes" xml:space="preserve">
+          <source>Field should not be empty</source>
+          <target state="final" state-qualifier="mt-suggestion">Поле не должно быть пустым</target>
+        </trans-unit>
+        <trans-unit id="InvalidUsernameOrPassword" translate="yes" xml:space="preserve">
+          <source>Invalid username or password</source>
+          <target state="final" state-qualifier="mt-suggestion">Неверное имя пользователя или пароль</target>
+        </trans-unit>
+        <trans-unit id="NewPassword" translate="yes" xml:space="preserve">
+          <source>New password</source>
+          <target state="final" state-qualifier="mt-suggestion">Новый пароль</target>
+        </trans-unit>
+        <trans-unit id="Password" translate="yes" xml:space="preserve">
+          <source>Password</source>
+          <target state="final" state-qualifier="mt-suggestion">Пароль</target>
+        </trans-unit>
+        <trans-unit id="PasswordIsNowChanged" translate="yes" xml:space="preserve">
+          <source>Password is now changed</source>
+          <target state="final">Пароль изменен</target>
+        </trans-unit>
+        <trans-unit id="PasswordsDoNotMatch" translate="yes" xml:space="preserve">
+          <source>Passwords do not match</source>
+          <target state="final" state-qualifier="tm-suggestion">Несовпадение паролей</target>
+        </trans-unit>
+        <trans-unit id="PleaseTypeYourNewPassword" translate="yes" xml:space="preserve">
+          <source>Please, type your new password</source>
+          <target state="final">Пожалуйста введите Ваш новый пароль</target>
+        </trans-unit>
+        <trans-unit id="SignIn" translate="yes" xml:space="preserve">
+          <source>Sign In</source>
+          <target state="final" state-qualifier="tm-suggestion">Вход</target>
+        </trans-unit>
+        <trans-unit id="UserName" translate="yes" xml:space="preserve">
+          <source>Username</source>
+          <target state="final" state-qualifier="tm-suggestion">Пользователь</target>
+        </trans-unit>
+        <trans-unit id="Users" translate="yes" xml:space="preserve">
+          <source>Users</source>
+          <target state="final">Пользователи</target>
+        </trans-unit>
+        <trans-unit id="FullName" translate="yes" xml:space="preserve">
+          <source>Full Name</source>
+          <target state="final">Фамилия Имя</target>
+        </trans-unit>
+        <trans-unit id="Create" translate="yes" xml:space="preserve">
+          <source>Create</source>
+          <target state="final">Создать</target>
+        </trans-unit>
+        <trans-unit id="EditUser" translate="yes" xml:space="preserve">
+          <source>Edit user</source>
+          <target state="final" state-qualifier="tm-suggestion">Изменить пользователя</target>
+        </trans-unit>
+        <trans-unit id="UserExists" translate="yes" xml:space="preserve">
+          <source>User Exists</source>
+          <target state="final">Пользователь существует</target>
+        </trans-unit>
+        <trans-unit id="Cancel" translate="yes" xml:space="preserve">
+          <source>Cancel</source>
+          <target state="final" state-qualifier="tm-suggestion">Отмена</target>
+        </trans-unit>
+        <trans-unit id="Save" translate="yes" xml:space="preserve">
+          <source>Save</source>
+          <target state="final">Сохранить</target>
+        </trans-unit>
+        <trans-unit id="DictionaryAssetPairs" translate="yes" xml:space="preserve">
+          <source>Dictionary Asset Pairs</source>
+          <target state="final">Справочник валютных пар</target>
+        </trans-unit>
+        <trans-unit id="DictionaryAssets" translate="yes" xml:space="preserve">
+          <source>Dictionary Assets</source>
+          <target state="final">Справочник валют</target>
+        </trans-unit>
+        <trans-unit id="AssetName" translate="yes" xml:space="preserve">
+          <source>Asset name</source>
+          <target state="final">Название</target>
+        </trans-unit>
+        <trans-unit id="Accuracy" translate="yes" xml:space="preserve">
+          <source>Accuracy</source>
+          <target state="final">Точность</target>
+        </trans-unit>
+        <trans-unit id="BaseAsset" translate="yes" xml:space="preserve">
+          <source>Base Asset</source>
+          <target state="final">Базовая валюта</target>
+        </trans-unit>
+        <trans-unit id="QuotingAsset" translate="yes" xml:space="preserve">
+          <source>Quoting Asset</source>
+          <target state="final">Котируемая валюта</target>
+        </trans-unit>
+        <trans-unit id="EditAsset" translate="yes" xml:space="preserve">
+          <source>Edit asset</source>
+          <target state="final">Редактировать валюту</target>
+        </trans-unit>
+        <trans-unit id="AssetPairWithSameIdExists" translate="yes" xml:space="preserve">
+          <source>Assetpair with the same Id exists</source>
+          <target state="final">Валютная пара с таким ID существует</target>
+        </trans-unit>
+        <trans-unit id="EditAssetPair" translate="yes" xml:space="preserve">
+          <source>Edit asset pair</source>
+          <target state="final">Редактирование валютной пары</target>
+        </trans-unit>
+        <trans-unit id="PleaseTypeAccuracy" translate="yes" xml:space="preserve">
+          <source>Please, type accuracy</source>
+          <target state="final">Пожалуйста, введите точность</target>
+        </trans-unit>
+        <trans-unit id="AssetWithSameIdExists" translate="yes" xml:space="preserve">
+          <source>Asset with the same Id exists</source>
+          <target state="final">Валюта с таким Id уже сущаствует</target>
+        </trans-unit>
+        <trans-unit id="Find" translate="yes" xml:space="preserve">
+          <source>Find</source>
+          <target state="final">Найти</target>
+        </trans-unit>
+        <trans-unit id="TypePhraseHere" translate="yes" xml:space="preserve">
+          <source>Type phrase here</source>
+          <target state="final">Введите фразу</target>
+        </trans-unit>
+        <trans-unit id="Address" translate="yes" xml:space="preserve">
+          <source>Address</source>
+          <target state="final">Адрес</target>
+        </trans-unit>
+        <trans-unit id="City" translate="yes" xml:space="preserve">
+          <source>City</source>
+          <target state="final" state-qualifier="tm-suggestion">Город</target>
+        </trans-unit>
+        <trans-unit id="ClientNotFound" translate="yes" xml:space="preserve">
+          <source>Client  not found</source>
+          <target state="final" state-qualifier="mt-suggestion">Клиент не найден</target>
+        </trans-unit>
+        <trans-unit id="CountryFromID" translate="yes" xml:space="preserve">
+          <source>Country from ID</source>
+          <target state="final">Страна по коду</target>
+        </trans-unit>
+        <trans-unit id="CountryFromIP" translate="yes" xml:space="preserve">
+          <source>Country from IP</source>
+          <target state="final" state-qualifier="tm-suggestion">Страна по IP</target>
+        </trans-unit>
+        <trans-unit id="CountryFromPOA" translate="yes" xml:space="preserve">
+          <source>Country from POA</source>
+          <target state="final" state-qualifier="tm-suggestion">Страна по POA</target>
+        </trans-unit>
+        <trans-unit id="ContactPhone" translate="yes" xml:space="preserve">
+          <source>Contact Phone</source>
+          <target state="final" state-qualifier="tm-suggestion">Контактный телефон</target>
+        </trans-unit>
+        <trans-unit id="Country" translate="yes" xml:space="preserve">
+          <source>Country</source>
+          <target state="final">Страна</target>
+        </trans-unit>
+        <trans-unit id="FirstName" translate="yes" xml:space="preserve">
+          <source>First Name</source>
+          <target state="final">Имя</target>
+        </trans-unit>
+        <trans-unit id="LastName" translate="yes" xml:space="preserve">
+          <source>Last Name</source>
+          <target state="final">Фамилия</target>
+        </trans-unit>
+        <trans-unit id="ZipCode" translate="yes" xml:space="preserve">
+          <source>Zip Code</source>
+          <target state="final">Индекс</target>
+        </trans-unit>
+        <trans-unit id="Date" translate="yes" xml:space="preserve">
+          <source>Date</source>
+          <target state="final" state-qualifier="tm-suggestion">Дата</target>
+        </trans-unit>
+        <trans-unit id="DateOfBirth" translate="yes" xml:space="preserve">
+          <source>Date of birth (mm/dd/yyyy)</source>
+          <target state="final" state-qualifier="tm-suggestion">Дата рождения (мм/дд/гггг)</target>
+        </trans-unit>
+        <trans-unit id="DateOfExpiryOfID" translate="yes" xml:space="preserve">
+          <source>Date of expiry of ID (mm/dd/yyyy)</source>
+          <target state="final" state-qualifier="tm-suggestion">Дата истечения срока действия ID (мм/дд/гггг)</target>
+        </trans-unit>
+        <trans-unit id="Documents" translate="yes" xml:space="preserve">
+          <source>Documents</source>
+          <target state="final" state-qualifier="tm-suggestion">Документы</target>
+        </trans-unit>
+        <trans-unit id="DocumentType" translate="yes" xml:space="preserve">
+          <source>Document type</source>
+          <target state="final" state-qualifier="mt-suggestion">Тип документа</target>
+        </trans-unit>
+        <trans-unit id="KycStatus" translate="yes" xml:space="preserve">
+          <source>Kyc Status</source>
+          <target state="final" state-qualifier="mt-suggestion">KYC статус</target>
+        </trans-unit>
+        <trans-unit id="PleaseConfirmYourAction" translate="yes" xml:space="preserve">
+          <source>Please, confirm your action</source>
+          <target state="final" state-qualifier="mt-suggestion">Пожалуйста подтвердите ваши действия</target>
+        </trans-unit>
+        <trans-unit id="Clients" translate="yes" xml:space="preserve">
+          <source>Clients</source>
+          <target state="final" state-qualifier="tm-suggestion">Клиенты</target>
+        </trans-unit>
+        <trans-unit id="Device" translate="yes" xml:space="preserve">
+          <source>Device</source>
+          <target state="final" state-qualifier="tm-suggestion">Устройство</target>
+        </trans-unit>
+        <trans-unit id="LastAction" translate="yes" xml:space="preserve">
+          <source>LastAction</source>
+          <target state="final">Последнее действие</target>
+        </trans-unit>
+        <trans-unit id="KickSession" translate="yes" xml:space="preserve">
+          <source>Kick session</source>
+          <target state="final">Прервать сессию</target>
+        </trans-unit>
+        <trans-unit id="Registrations" translate="yes" xml:space="preserve">
+          <source>Registrations</source>
+          <target state="final" state-qualifier="tm-suggestion">Регистрации</target>
+        </trans-unit>
+        <trans-unit id="SessionHasBeenDeleted" translate="yes" xml:space="preserve">
+          <source>Session has been deleted</source>
+          <target state="final">Сессия удалена</target>
+        </trans-unit>
+        <trans-unit id="AssetCanBeBase" translate="yes" xml:space="preserve">
+          <source>Can be base asset</source>
+          <target state="final" state-qualifier="mt-suggestion">Может быть базовым активом</target>
+        </trans-unit>
+        <trans-unit id="Balance" translate="yes" xml:space="preserve">
+          <source>Balance</source>
+          <target state="final" state-qualifier="tm-suggestion">Баланс</target>
+        </trans-unit>
+        <trans-unit id="Wallets" translate="yes" xml:space="preserve">
+          <source>Wallets</source>
+          <target state="final" state-qualifier="mt-suggestion">Кошельки</target>
+        </trans-unit>
+        <trans-unit id="Sessions" translate="yes" xml:space="preserve">
+          <source>Sessions</source>
+          <target state="final" state-qualifier="tm-suggestion">Сеансы</target>
+        </trans-unit>
+        <trans-unit id="AssetSymbol" translate="yes" xml:space="preserve">
+          <source>Asset symbol</source>
+          <target state="final">Символ актива</target>
+        </trans-unit>
+        <trans-unit id="Change" translate="yes" xml:space="preserve">
+          <source>Change</source>
+          <target state="final" state-qualifier="tm-suggestion">Изменить</target>
+        </trans-unit>
+        <trans-unit id="ChangeBalanceForAsset" translate="yes" xml:space="preserve">
+          <source>Change balance for the asset</source>
+          <target state="final" state-qualifier="mt-suggestion">Изменить баланс для актива</target>
+        </trans-unit>
+        <trans-unit id="IssuerName" translate="yes" xml:space="preserve">
+          <source>Name</source>
+          <target state="final" state-qualifier="tm-suggestion">Название</target>
+        </trans-unit>
+        <trans-unit id="EditIssuer" translate="yes" xml:space="preserve">
+          <source>Edit Issuer</source>
+          <target state="final" state-qualifier="mt-suggestion">Редактировать эмитента</target>
+        </trans-unit>
+        <trans-unit id="IssuerWithSameIdExists" translate="yes" xml:space="preserve">
+          <source>Asset with the same Id exists</source>
+          <target state="final" state-qualifier="mt-suggestion">Существует активов с тем же Id</target>
+        </trans-unit>
+        <trans-unit id="IdIssuer" translate="yes" xml:space="preserve">
+          <source>Id Issuer</source>
+          <target state="final" state-qualifier="mt-suggestion">Идентификатор издателя</target>
+        </trans-unit>
+        <trans-unit id="Issuer" translate="yes" xml:space="preserve">
+          <source>Issuer</source>
+          <target state="final" state-qualifier="tm-suggestion">Поставщик</target>
+        </trans-unit>
+        <trans-unit id="Number" translate="yes" xml:space="preserve">
+          <source>Number</source>
+          <target state="final" state-qualifier="tm-suggestion">Число</target>
+        </trans-unit>
+        <trans-unit id="Expires" translate="yes" xml:space="preserve">
+          <source>Expires</source>
+          <target state="final" state-qualifier="tm-suggestion">Действителен до</target>
+        </trans-unit>
+        <trans-unit id="NameOnCard" translate="yes" xml:space="preserve">
+          <source>Name on card</source>
+          <target state="final" state-qualifier="tm-suggestion">Имя владельца карты</target>
+        </trans-unit>
+        <trans-unit id="BankCards" translate="yes" xml:space="preserve">
+          <source>Bank cards</source>
+          <target state="final" state-qualifier="mt-suggestion">Банковские карты</target>
+        </trans-unit>
+        <trans-unit id="Generate" translate="yes" xml:space="preserve">
+          <source>Generate</source>
+          <target state="final" state-qualifier="tm-suggestion">Сформировать</target>
+        </trans-unit>
+        <trans-unit id="MultisigIsNotGenerated" translate="yes" xml:space="preserve">
+          <source>Multisig is not generated</source>
+          <target state="final">Multisig не сгенерирован</target>
+        </trans-unit>
+        <trans-unit id="PleaseConfirmMultisigGeneration" translate="yes" xml:space="preserve">
+          <source>Please confirm, that you want to generate new multisig for the client</source>
+          <target state="final" state-qualifier="mt-suggestion">Пожалуйста, подтвердите, что вы хотите создать новый multisig для клиента</target>
+        </trans-unit>
+        <trans-unit id="ProcessIsBeingStarted" translate="yes" xml:space="preserve">
+          <source>Process is being started</source>
+          <target state="final" state-qualifier="mt-suggestion">Процесс запускается</target>
+        </trans-unit>
+        <trans-unit id="OrderBook" translate="yes" xml:space="preserve">
+          <source>Order book</source>
+          <target state="final" state-qualifier="mt-suggestion">Книга заявок</target>
+        </trans-unit>
+        <trans-unit id="IwantToAsset" translate="yes" xml:space="preserve">
+          <source>I want to</source>
+          <target state="final" state-qualifier="tm-suggestion">Желаемое действие</target>
+        </trans-unit>
+        <trans-unit id="Buy" translate="yes" xml:space="preserve">
+          <source>Buy</source>
+          <target state="final" state-qualifier="tm-suggestion">Купить</target>
+        </trans-unit>
+        <trans-unit id="InvalidPriceFormat" translate="yes" xml:space="preserve">
+          <source>Invalid price format</source>
+          <target state="final">Неправильная формат цены</target>
+        </trans-unit>
+        <trans-unit id="PriceShouldBeGreaterThanZero" translate="yes" xml:space="preserve">
+          <source>Price should be greater than zero</source>
+          <target state="final" state-qualifier="mt-suggestion">Цена должна быть больше нуля</target>
+        </trans-unit>
+        <trans-unit id="Sell" translate="yes" xml:space="preserve">
+          <source>Sell</source>
+          <target state="final" state-qualifier="tm-suggestion">Продажа</target>
+        </trans-unit>
+        <trans-unit id="SetLimitOrder" translate="yes" xml:space="preserve">
+          <source>Set limit order</source>
+          <target state="final">Установить лимитный ордер</target>
+        </trans-unit>
+        <trans-unit id="BaseAssetShouldNotBeTheSameAsTheOtherOne" translate="yes" xml:space="preserve">
+          <source>Base asset should not be the same as the other one</source>
+          <target state="final">Базовый актив не должен быть таким же, как другие</target>
+        </trans-unit>
+        <trans-unit id="Volume" translate="yes" xml:space="preserve">
+          <source>Volume</source>
+          <target state="final">Объем</target>
+        </trans-unit>
+        <trans-unit id="InvalidVolumeFormat" translate="yes" xml:space="preserve">
+          <source>Invalid volume format</source>
+          <target state="final">Недопустимый формат объема</target>
+        </trans-unit>
+        <trans-unit id="ForAsset" translate="yes" xml:space="preserve">
+          <source>for</source>
+          <target state="final" state-qualifier="tm-suggestion">для</target>
+        </trans-unit>
+        <trans-unit id="ThePriceIs" translate="yes" xml:space="preserve">
+          <source>the price is</source>
+          <target state="final" state-qualifier="mt-suggestion">Цена</target>
+        </trans-unit>
+        <trans-unit id="Price" translate="yes" xml:space="preserve">
+          <source>Price</source>
+          <target state="final">Цена</target>
+        </trans-unit>
+        <trans-unit id="Filled" translate="yes" xml:space="preserve">
+          <source>Filled</source>
+          <target state="final" state-qualifier="tm-suggestion">Заполненные</target>
+        </trans-unit>
+        <trans-unit id="Status" translate="yes" xml:space="preserve">
+          <source>Status</source>
+          <target state="final" state-qualifier="tm-suggestion">Состояние</target>
+        </trans-unit>
+        <trans-unit id="Currency" translate="yes" xml:space="preserve">
+          <source>Currency</source>
+          <target state="final" state-qualifier="tm-suggestion">Деньги</target>
+        </trans-unit>
+        <trans-unit id="Logout" translate="yes" xml:space="preserve">
+          <source>Logout</source>
+          <target state="final" state-qualifier="tm-suggestion">Выход</target>
+        </trans-unit>
+        <trans-unit id="General" translate="yes" xml:space="preserve">
+          <source>General</source>
+          <target state="final" state-qualifier="tm-suggestion">Общие</target>
+        </trans-unit>
+        <trans-unit id="Settings" translate="yes" xml:space="preserve">
+          <source>Settings</source>
+          <target state="final">Настройки</target>
+        </trans-unit>
+        <trans-unit id="GeneralSettings" translate="yes" xml:space="preserve">
+          <source>General settings</source>
+          <target state="final">Общие настройки</target>
+        </trans-unit>
+        <trans-unit id="BlockChainAssetPrefix" translate="yes" xml:space="preserve">
+          <source>Blockchain asset prefix</source>
+          <target state="final">Префикс Blockchain актива</target>
+        </trans-unit>
+        <trans-unit id="Monitor" translate="yes" xml:space="preserve">
+          <source>Monitor</source>
+          <target state="final" state-qualifier="tm-suggestion">Монитор</target>
+        </trans-unit>
+        <trans-unit id="DepositUrl" translate="yes" xml:space="preserve">
+          <source>Deposit Url</source>
+          <target state="final" state-qualifier="mt-suggestion">URL-адрес депозита</target>
+        </trans-unit>
+        <trans-unit id="Saved" translate="yes" xml:space="preserve">
+          <source>Saved</source>
+          <target state="final" state-qualifier="tm-suggestion">Сохранено</target>
+        </trans-unit>
+        <trans-unit id="CashInData" translate="yes" xml:space="preserve">
+          <source>Cash in data</source>
+          <target state="final">Пополнение</target>
+        </trans-unit>
+        <trans-unit id="MoneyAmount" translate="yes" xml:space="preserve">
+          <source>Amount</source>
+          <target state="final" state-qualifier="tm-suggestion">Сумма</target>
+        </trans-unit>
+        <trans-unit id="CashIn" translate="yes" xml:space="preserve">
+          <source>Cash In</source>
+          <target state="final">Пополнить</target>
+        </trans-unit>
+        <trans-unit id="CashOut" translate="yes" xml:space="preserve">
+          <source>Cash out</source>
+          <target state="final">Вывести</target>
+        </trans-unit>
+        <trans-unit id="CashOutData" translate="yes" xml:space="preserve">
+          <source>Cash out data</source>
+          <target state="final">Данные вывода средств</target>
+        </trans-unit>
+        <trans-unit id="FeeRecharging" translate="yes" xml:space="preserve">
+          <source>Fee recharging</source>
+          <target state="final" state-qualifier="mt-suggestion">Плата за пополнение</target>
+        </trans-unit>
+        <trans-unit id="PrivateKey" translate="yes" xml:space="preserve">
+          <source>Private key</source>
+          <target state="final" state-qualifier="tm-suggestion">Закрытый ключ</target>
+        </trans-unit>
+        <trans-unit id="Submit" translate="yes" xml:space="preserve">
+          <source>Submit</source>
+          <target state="final" state-qualifier="tm-suggestion">Отправить</target>
+        </trans-unit>
+        <trans-unit id="WalletAddress" translate="yes" xml:space="preserve">
+          <source>Wallet address</source>
+          <target state="final">Адрес кошелька</target>
+        </trans-unit>
+        <trans-unit id="Fee" translate="yes" xml:space="preserve">
+          <source>Fee</source>
+          <target state="final">Комиссия</target>
+        </trans-unit>
+        <trans-unit id="NumberOfFeeOutputs" translate="yes" xml:space="preserve">
+          <source>Number of fee outputs</source>
+          <target state="final">Количество выходов комиссии</target>
+        </trans-unit>
+        <trans-unit id="ClientTransactions" translate="yes" xml:space="preserve">
+          <source>Client Operations</source>
+          <target state="final" state-qualifier="tm-suggestion">Операции клиента</target>
+        </trans-unit>
+        <trans-unit id="Source" translate="yes" xml:space="preserve">
+          <source>Source</source>
+          <target state="final">Источник</target>
+        </trans-unit>
+        <trans-unit id="Broadcast" translate="yes" xml:space="preserve">
+          <source>Broadcast</source>
+          <target state="final">Разослать</target>
+        </trans-unit>
+        <trans-unit id="BroadcastGroup" translate="yes" xml:space="preserve">
+          <source>Broadcast Group</source>
+          <target state="final">Группа Рассылки</target>
+        </trans-unit>
+        <trans-unit id="BroadcastMailAlreadyExists" translate="yes" xml:space="preserve">
+          <source>Email is already in this group</source>
+          <target state="final" state-qualifier="mt-suggestion">Электронная почта уже находится в этой группе</target>
+        </trans-unit>
+        <trans-unit id="NoRecordsFound" translate="yes" xml:space="preserve">
+          <source>No records found</source>
+          <target state="final" state-qualifier="mt-suggestion">Записи не найдены</target>
+        </trans-unit>
+        <trans-unit id="AddBroadcast" translate="yes" xml:space="preserve">
+          <source>Add</source>
+          <target state="final">Добавить</target>
+        </trans-unit>
+        <trans-unit id="Delete" translate="yes" xml:space="preserve">
+          <source>Delete</source>
+          <target state="final">Удалить</target>
+        </trans-unit>
+        <trans-unit id="InvalidEmail" translate="yes" xml:space="preserve">
+          <source>Invalid email address</source>
+          <target state="final" state-qualifier="tm-suggestion">Недопустимый адрес электронной почты</target>
+        </trans-unit>
+        <trans-unit id="MailMock" translate="yes" xml:space="preserve">
+          <source>Mail mocks</source>
+          <target state="final">Mock почты</target>
+        </trans-unit>
+        <trans-unit id="SmsMock" translate="yes" xml:space="preserve">
+          <source>Sms Mock</source>
+          <target state="final">Mock SMS</target>
+        </trans-unit>
+        <trans-unit id="AuditLogs" translate="yes" xml:space="preserve">
+          <source>Event logs</source>
+          <target state="final" state-qualifier="tm-suggestion">Журналы событий</target>
+        </trans-unit>
+        <trans-unit id="Changer" translate="yes" xml:space="preserve">
+          <source>Changer</source>
+          <target state="final">Кто сменил</target>
+        </trans-unit>
+        <trans-unit id="BalanceChange" translate="yes" xml:space="preserve">
+          <source>Balance change</source>
+          <target state="final" state-qualifier="mt-suggestion">Изменение баланса</target>
+        </trans-unit>
+        <trans-unit id="RequestId" translate="yes" xml:space="preserve">
+          <source>Request ID</source>
+          <target state="final">ID запроса</target>
+        </trans-unit>
+        <trans-unit id="WithdrawRequests" translate="yes" xml:space="preserve">
+          <source>Withdraw requests</source>
+          <target state="final">Запросы на снятие</target>
+        </trans-unit>
+        <trans-unit id="PaymentSystem" translate="yes" xml:space="preserve">
+          <source>Payment System</source>
+          <target state="final" state-qualifier="mt-suggestion">Платежная система</target>
+        </trans-unit>
+        <trans-unit id="TypeTxIdHere" translate="yes" xml:space="preserve">
+          <source>Type tx id here</source>
+          <target state="final">Наберите tx здес</target>
+        </trans-unit>
+        <trans-unit id="ConfirmForceTxDetection" translate="yes" xml:space="preserve">
+          <source>Confirm force Tx detection</source>
+          <target state="final">Подтвердить поиск Tx</target>
+        </trans-unit>
+        <trans-unit id="TxNotFound" translate="yes" xml:space="preserve">
+          <source>Transaction not found</source>
+          <target state="final">Транзакция не найдена</target>
+        </trans-unit>
+        <trans-unit id="Start" translate="yes" xml:space="preserve">
+          <source>Start</source>
+          <target state="final" state-qualifier="tm-suggestion">Начать</target>
+        </trans-unit>
+        <trans-unit id="FindBlockchainTx" translate="yes" xml:space="preserve">
+          <source>Find blockchain transaction</source>
+          <target state="final">Найти blockchain транзакцию</target>
+        </trans-unit>
+        <trans-unit id="Disabled" translate="yes" xml:space="preserve">
+          <source>Disabled</source>
+          <target state="final">Отключено</target>
+        </trans-unit>
+        <trans-unit id="Enabled" translate="yes" xml:space="preserve">
+          <source>Enabled</source>
+          <target state="final" state-qualifier="tm-suggestion">Включено</target>
+        </trans-unit>
+        <trans-unit id="EnableTxdetection" translate="yes" xml:space="preserve">
+          <source>Enable tx detection</source>
+          <target state="final" state-qualifier="mt-suggestion">Включить обнаружение tx</target>
+        </trans-unit>
+        <trans-unit id="PreventTxDetection" translate="yes" xml:space="preserve">
+          <source>Prevent tx detection</source>
+          <target state="final" state-qualifier="mt-suggestion">Предотвращение обнаружения tx</target>
+        </trans-unit>
+        <trans-unit id="Tools" translate="yes" xml:space="preserve">
+          <source>Tools</source>
+          <target state="final">Инструменты</target>
+        </trans-unit>
+        <trans-unit id="TxDetectionForUser" translate="yes" xml:space="preserve">
+          <source>Tx detection for user</source>
+          <target state="final" state-qualifier="mt-suggestion">Обнаружение TX для пользователя</target>
+        </trans-unit>
+        <trans-unit id="Logs" translate="yes" xml:space="preserve">
+          <source>Logs</source>
+          <target state="final" state-qualifier="tm-suggestion">Журналы</target>
+        </trans-unit>
+        <trans-unit id="PendingBalance" translate="yes" xml:space="preserve">
+          <source>Pending</source>
+          <target state="final" state-qualifier="tm-suggestion">Ожидание</target>
+        </trans-unit>
+        <trans-unit id="Count" translate="yes" xml:space="preserve">
+          <source>Count</source>
+          <target state="final" state-qualifier="tm-suggestion">Счетчик</target>
+        </trans-unit>
+        <trans-unit id="FeeOutputsStatus" translate="yes" xml:space="preserve">
+          <source>Fee statuses</source>
+          <target state="final">Статусы комиссий</target>
+        </trans-unit>
+        <trans-unit id="InvertedAccuracy" translate="yes" xml:space="preserve">
+          <source>Inv. Accuracy</source>
+          <target state="final" state-qualifier="mt-suggestion">Точность Inv.</target>
+        </trans-unit>
+        <trans-unit id="Roles" translate="yes" xml:space="preserve">
+          <source>Roles</source>
+          <target state="final" state-qualifier="tm-suggestion">Роли</target>
+        </trans-unit>
+        <trans-unit id="ViewReports" translate="yes" xml:space="preserve">
+          <source>View reports</source>
+          <target state="final" state-qualifier="tm-suggestion">Просмотреть отчеты</target>
+        </trans-unit>
+        <trans-unit id="Name" translate="yes" xml:space="preserve">
+          <source>Name</source>
+          <target state="final" state-qualifier="tm-suggestion">Название</target>
+        </trans-unit>
+        <trans-unit id="Access" translate="yes" xml:space="preserve">
+          <source>Access</source>
+          <target state="final" state-qualifier="tm-suggestion">Доступ</target>
+        </trans-unit>
+        <trans-unit id="EditRole" translate="yes" xml:space="preserve">
+          <source>Edit role</source>
+          <target state="final" state-qualifier="tm-suggestion">Изменить роль</target>
+        </trans-unit>
+        <trans-unit id="PleaseSelectAtLeastOneItem" translate="yes" xml:space="preserve">
+          <source>Please, select at least one item</source>
+          <target state="final" state-qualifier="mt-suggestion">Пожалуйста выберите по крайней мере один элемент</target>
+        </trans-unit>
+        <trans-unit id="Reports" translate="yes" xml:space="preserve">
+          <source>Reports</source>
+          <target state="final">Отчеты</target>
+        </trans-unit>
+        <trans-unit id="DateFrom" translate="yes" xml:space="preserve">
+          <source>Date from</source>
+          <target state="final" state-qualifier="mt-suggestion">Дата с</target>
+        </trans-unit>
+        <trans-unit id="DateTo" translate="yes" xml:space="preserve">
+          <source>Date to</source>
+          <target state="final">Дата до</target>
+        </trans-unit>
+        <trans-unit id="ReportType" translate="yes" xml:space="preserve">
+          <source>Report type</source>
+          <target state="final" state-qualifier="mt-suggestion">Тип отчета</target>
+        </trans-unit>
+        <trans-unit id="Trades" translate="yes" xml:space="preserve">
+          <source>Trades</source>
+          <target state="final">Торговые операции</target>
+        </trans-unit>
+        <trans-unit id="DefaultOrder" translate="yes" xml:space="preserve">
+          <source>Default Order</source>
+          <target state="new">Default Order</target>
+        </trans-unit>
+        <trans-unit id="FailedTransactions" translate="yes" xml:space="preserve">
+          <source>Failed transactions</source>
+          <target state="new">Failed transactions</target>
+        </trans-unit>
+        <trans-unit id="WalletBalance" translate="yes" xml:space="preserve">
+          <source>Wallet Balance</source>
+          <target state="new">Wallet Balance</target>
+        </trans-unit>
+        <trans-unit id="UploadDocument" translate="yes" xml:space="preserve">
+          <source>Upload Document</source>
+          <target state="new">Upload Document</target>
+        </trans-unit>
+        <trans-unit id="EditBlockchainAsset" translate="yes" xml:space="preserve">
+          <source>Edit blockchain asset</source>
+          <target state="new">Edit blockchain asset</target>
+        </trans-unit>
+        <trans-unit id="Transfer" translate="yes" xml:space="preserve">
+          <source>Transfer</source>
+          <target state="new">Transfer</target>
+        </trans-unit>
+        <trans-unit id="KycAttentionNeeded" translate="yes" xml:space="preserve">
+          <source>Your attention is needed in regard to your KYC details</source>
+          <target state="new">Your attention is needed in regard to your KYC details</target>
+        </trans-unit>
+        <trans-unit id="KycRestricted" translate="yes" xml:space="preserve">
+          <source>Your KYC details are not approved</source>
+          <target state="new">Your KYC details are not approved</target>
+        </trans-unit>
+        <trans-unit id="KycSuccess" translate="yes" xml:space="preserve">
+          <source>Your KYC details are approved</source>
+          <target state="new">Your KYC details are approved</target>
+        </trans-unit>
+        <trans-unit id="UploadIcon" translate="yes" xml:space="preserve">
+          <source>Upload Icon</source>
+          <target state="new">Upload Icon</target>
+        </trans-unit>
+        <trans-unit id="InvalidValue" translate="yes" xml:space="preserve">
+          <source>Invalid value</source>
+          <target state="new">Invalid value</target>
+        </trans-unit>
+        <trans-unit id="AddAssetToGroup" translate="yes" xml:space="preserve">
+          <source>Add Asset to Group</source>
+          <target state="new">Add Asset to Group</target>
+        </trans-unit>
+        <trans-unit id="AddClientToGroup" translate="yes" xml:space="preserve">
+          <source>Add client to group</source>
+          <target state="new">Add client to group</target>
+        </trans-unit>
+        <trans-unit id="AddGroup" translate="yes" xml:space="preserve">
+          <source>Add new Asset Group</source>
+          <target state="new">Add new Asset Group</target>
+        </trans-unit>
+        <trans-unit id="AlreadyExists" translate="yes" xml:space="preserve">
+          <source>Already exists</source>
+          <target state="new">Already exists</target>
+        </trans-unit>
+        <trans-unit id="Asset" translate="yes" xml:space="preserve">
+          <source>Asset</source>
+          <target state="new">Asset</target>
+        </trans-unit>
+        <trans-unit id="AssetGroups" translate="yes" xml:space="preserve">
+          <source>Asset groups</source>
+          <target state="new">Asset groups</target>
+        </trans-unit>
+        <trans-unit id="AssetsInGroups" translate="yes" xml:space="preserve">
+          <source>Assets in groups</source>
+          <target state="new">Assets in groups</target>
+        </trans-unit>
+        <trans-unit id="ClientsInGroups" translate="yes" xml:space="preserve">
+          <source>Clients in groups</source>
+          <target state="new">Clients in groups</target>
+        </trans-unit>
+        <trans-unit id="DeleteAssetFromGroup" translate="yes" xml:space="preserve">
+          <source>Delete asset from group</source>
+          <target state="new">Delete asset from group</target>
+        </trans-unit>
+        <trans-unit id="DeleteClientFromGroup" translate="yes" xml:space="preserve">
+          <source>Delete client from group</source>
+          <target state="new">Delete client from group</target>
+        </trans-unit>
+        <trans-unit id="DeleteGroup" translate="yes" xml:space="preserve">
+          <source>Delete group</source>
+          <target state="new">Delete group</target>
+        </trans-unit>
+        <trans-unit id="Group" translate="yes" xml:space="preserve">
+          <source>Group</source>
+          <target state="new">Group</target>
+        </trans-unit>
+        <trans-unit id="InvalidOrNotExist" translate="yes" xml:space="preserve">
+          <source>Invalid or not our user</source>
+          <target state="new">Invalid or not our user</target>
+        </trans-unit>
+        <trans-unit id="NoGroupsExist" translate="yes" xml:space="preserve">
+          <source>No Asset Group found. Add some group(s) first.</source>
+          <target state="new">No Asset Group found. Add some group(s) first.</target>
+        </trans-unit>
+        <trans-unit id="RemoveAssetsFromGroupFirst" translate="yes" xml:space="preserve">
+          <source>Group has assets assigned. Remove them first.</source>
+          <target state="new">Group has assets assigned. Remove them first.</target>
+        </trans-unit>
+        <trans-unit id="RemoveClientsFromGroupFirst" translate="yes" xml:space="preserve">
+          <source>Group has client. Remove them first.</source>
+          <target state="new">Group has client. Remove them first.</target>
+        </trans-unit>
+        <trans-unit id="GroupHasNoAssets" translate="yes" xml:space="preserve">
+          <source>Group has no assets. Please, add some first.</source>
+          <target state="new">Group has no assets. Please, add some first.</target>
+        </trans-unit>
+        <trans-unit id="DefaultAssetGroupForOther" translate="yes" xml:space="preserve">
+          <source>Default group for other (assigned to new users)</source>
+          <target state="new">Default group for other (assigned to new users)</target>
+        </trans-unit>
+        <trans-unit id="DefaultIosAssetGroup" translate="yes" xml:space="preserve">
+          <source>Default IOS group (assigned to new users)</source>
+          <target state="new">Default IOS group (assigned to new users)</target>
+        </trans-unit>
+        <trans-unit id="IsIosDevice" translate="yes" xml:space="preserve">
+          <source>Is IOS Device</source>
+          <target state="new">Is IOS Device</target>
+        </trans-unit>
+        <trans-unit id="DeviceTypeNotSelected" translate="yes" xml:space="preserve">
+          <source>Please, select device type</source>
+          <target state="new">Please, select device type</target>
+        </trans-unit>
+        <trans-unit id="GroupUsedInSettings" translate="yes" xml:space="preserve">
+          <source>Group used as default in settings</source>
+          <target state="new">Group used as default in settings</target>
+        </trans-unit>
+        <trans-unit id="ClientsCanCashInViaBankCards" translate="yes" xml:space="preserve">
+          <source>Clients can cash in via bank cards</source>
+          <target state="new">Clients can cash in via bank cards</target>
+        </trans-unit>
+        <trans-unit id="Applications" translate="yes" xml:space="preserve">
+          <source>Applications</source>
+          <target state="new">Applications</target>
+        </trans-unit>
+        <trans-unit id="Actions" translate="yes" xml:space="preserve">
+          <source>Actions</source>
+          <target state="new">Actions</target>
+        </trans-unit>
+        <trans-unit id="ChangePwdUrl" translate="yes" xml:space="preserve">
+          <source>Get "Change Pwd" URL</source>
+          <target state="new">Get "Change Pwd" URL</target>
+        </trans-unit>
+        <trans-unit id="SwiftDepositEnabled" translate="yes" xml:space="preserve">
+          <source>Swift deposit enabled</source>
+          <target state="new">Swift deposit enabled</target>
+        </trans-unit>
+        <trans-unit id="LengthLimit" translate="yes" xml:space="preserve">
+          <source>Length should be less than {0}</source>
+          <target state="new">Length should be less than {0}</target>
+        </trans-unit>
+        <trans-unit id="Payments" translate="yes" xml:space="preserve">
+          <source>Payments</source>
+          <target state="new">Payments</target>
+        </trans-unit>
+        <trans-unit id="ReferralCode" translate="yes" xml:space="preserve">
+          <source>Referral code</source>
+          <target state="new">Referral code</target>
+        </trans-unit>
+        <trans-unit id="GetChangePinUrl" translate="yes" xml:space="preserve">
+          <source>Get "Change PIN" Url</source>
+          <target state="new">Get "Change PIN" Url</target>
+        </trans-unit>
+        <trans-unit id="KYCSpiderCheck" translate="yes" xml:space="preserve">
+          <source>KYC Spider check</source>
+          <target state="new">KYC Spider проверка</target>
+        </trans-unit>
+        <trans-unit id="KYCSpiderCheckHasNotFoundAnyFlags" translate="yes" xml:space="preserve">
+          <source>KYC Spider check has not found any flags</source>
+          <target state="new">KYC Spider проверка не обнаружила флагов</target>
+        </trans-unit>
+        <trans-unit id="KYCSpiderCheckWasNotFinished" translate="yes" xml:space="preserve">
+          <source>KYC Spider check was not finished</source>
+          <target state="new">KYC Spider проверка не была произведена</target>
+        </trans-unit>
+        <trans-unit id="Sanctioned" translate="yes" xml:space="preserve">
+          <source>SANCTIONED</source>
+          <target state="new">SANCTIONED</target>
+        </trans-unit>
+        <trans-unit id="Pep" translate="yes" xml:space="preserve">
+          <source>PEP</source>
+          <target state="new">PEP</target>
+        </trans-unit>
+        <trans-unit id="Crime" translate="yes" xml:space="preserve">
+          <source>CRIME</source>
+          <target state="new">CRIME</target>
+        </trans-unit>
+        <trans-unit id="Blacklist" translate="yes" xml:space="preserve">
+          <source>BLACKLIST</source>
+          <target state="new">BLACKLIST</target>
+        </trans-unit>
+        <trans-unit id="Reputation" translate="yes" xml:space="preserve">
+          <source>REPUTATION</source>
+          <target state="new">REPUTATION</target>
+        </trans-unit>
+        <trans-unit id="Information" translate="yes" xml:space="preserve">
+          <source>INFORMATION</source>
+          <target state="new">INFORMATION</target>
+        </trans-unit>
+        <trans-unit id="InformationFound" translate="yes" xml:space="preserve">
+          <source>information found</source>
+          <target state="new">информация найдена</target>
+        </trans-unit>
+        <trans-unit id="NoInformationFound" translate="yes" xml:space="preserve">
+          <source>no information found</source>
+          <target state="new">информация не найдена</target>
+        </trans-unit>
+        <trans-unit id="Citizenships" translate="yes" xml:space="preserve">
+          <source>Citizenships</source>
+          <target state="new">Гражданства</target>
+        </trans-unit>
+        <trans-unit id="Residences" translate="yes" xml:space="preserve">
+          <source>Residences</source>
+          <target state="new">Местонахождение</target>
+        </trans-unit>
+        <trans-unit id="Retry" translate="yes" xml:space="preserve">
+          <source>Retry</source>
+          <target state="new">Повторить</target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>

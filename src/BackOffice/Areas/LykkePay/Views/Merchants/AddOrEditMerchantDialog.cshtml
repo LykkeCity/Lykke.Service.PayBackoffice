@@ -1,0 +1,71 @@
+﻿@using BackOffice.Translates
+@model BackOffice.Areas.LykkePay.Models.AddOrEditMerchantDialogViewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+
+<form id="frmMerchant" autocomplete="off" style="max-height: 700px;overflow: auto;">
+    @Html.HiddenFor(x => x.IsNewMerchant)
+    @Html.HiddenFor(x => x.Id)
+    <div id="errorMessage"></div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("Name", "Name", Model.Name, focused: true)
+    </div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("LpMarkupPercent", "LpMarkupPercent", Model.LpMarkupPercent.ToString(), null, "number")
+    </div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("LpMarkupPips", "LpMarkupPips", Model.LpMarkupPips.ToString(), null, "number")
+    </div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("LwId", "LwId", Model.LwId)
+    </div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("MarkupFixedFee", "MarkupFixedFee", Model.MarkupFixedFee.ToString(), null, "number")
+    </div>
+    @if (Model.IsNewMerchant)
+    {
+        <div class="form-group">
+            @Html.RenderTextAreaWithLabelOnTop("PublicKey", "PublicKey", Model.PublicKey)
+        </div>
+    }
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("TimeCacheRates", "TimeCacheRates", Model.TimeCacheRates.ToString(), null, "number")
+    </div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("ApiKey", "ApiKey", Model.ApiKey)
+    </div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("DeltaSpread", "DeltaSpread", Model.DeltaSpread.ToString(), null, "number")
+    </div>
+    @if (Model.IsNewMerchant)
+    {
+        <div class="form-group">
+            @Html.RenderInputWithLabelOnTop("SystemId", "SystemId", Model.SystemId.ToString())
+        </div>
+    }
+</form>
+
+@Html.RenderSaveCancelButtonPair(Url.Action("AddOrEditMerchant"), "#frmMerchant")
+<script>
+    $('input[type=number]').keypress(function (event) {
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+        debugger;
+        if ((event.which != 46 || $(this).val().indexOf('.') == -1) && (event.which < 48 || event.which > 57) && ($(this).attr("name") == "TimeCacheRates" || $(this).attr("name") == "LpMarkupPips")) {
+            event.preventDefault();
+        }
+    });
+    $('input[type=number]').on('paste', function () {
+        var element = this;
+        setTimeout(function () {
+            var text = $(element).val();
+            if ($(element).attr("name") == "TimeCacheRates" || $(element).attr("name") == "LpMarkupPips")
+                $(element).val(parseInt(text));
+            else
+                $(element).val(parseFloat(text));
+        }, 100);
+    });
+</script>

@@ -1,0 +1,218 @@
+﻿@model BackOffice.Models.IndexPageModel
+@using BackOffice.Translates
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section header
+{
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="@Model.GoogleApiClientId">
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-fetch_basic_profile" content="false">
+}
+
+<div style="text-align: center; margin-top: 100px;">
+    <img src="~/images/lykke.svg" style="height: 100px"/>
+</div>
+
+
+<div class="panel panel-default" style="width: 500px; margin: 50px auto">
+
+    <div class="panel-heading">
+        <table style="width: 100%">
+            <tr>
+                <td style="text-align: left">
+                    <h3 class="panel-title">@Phrases.SignIn</h3>
+                </td>
+                <td style="text-align: right">
+                    <span class="glyphicon glyphicon-log-in hideOnRequest" aria-hidden="true"></span>
+                    <img src="~/images/processing.gif" class="showOnRequest"/>        
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="panel-body" style="text-align: right;" id="signinPanel">
+        <table style="width: 100%;">
+            <tr>
+                <td style="text-align: left;">
+                    <a href="@Url.Action("Index", "Home", new {LangId="EN" })" style="padding: 5px"><img src="~/images/flags/gb.png" class="flag-lang" /></a>
+                    <a href="@Url.Action("Index", "Home", new {LangId="RU" })" style="padding: 5px"><img src="~/images/flags/ru.png" class="flag-lang" /></a>
+                </td>
+                <td style="text-align: center;">
+                    <div id="googleSignIn" class="g-signin2 disableOnRequest" data-onsuccess="googleSignIn" data-theme="dark" data-prompt="select_account"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="panel-body" style="text-align: center; visibility: hidden; display: none" id="codePanel">
+        <div>
+            <p style="text-align: left">
+                <b>Google Authenticator </b>
+                <a href="https://lykkex.atlassian.net/wiki/spaces/LKEWALLET/pages/83591206/2-Step+Verification+in+Lykke+BackOffice">info link</a><br>
+                <b>@Phrases.EnterTwoFactorCode</b><br>
+                <input id="code" type="text" size="40">
+            </p>
+            <p style="text-align: left">
+                <input type="button" value="@Phrases.Send" onclick="sendCode()">
+                <input type="button" value="@Phrases.EditUser" onclick="changeUser()">
+            </p>
+        </div>        
+    </div>
+    
+    <div class="panel-body" style="text-align: center; visibility: hidden; display: none" id="bindingPanel">
+        <p style="text-align: left">
+            <b>Google Authenticator </b> 
+            <a href="https://lykkex.atlassian.net/wiki/spaces/LKEWALLET/pages/83591206/2-Step+Verification+in+Lykke+BackOffice">info link</a><br>
+            <b>@Phrases.EnterTwoFactorCode</b><br>
+            <input id="bindingCode" type="text" size="40">
+        </p>
+        <p style="text-align: left">
+            <input type="button" value="@Phrases.Send" onclick="sendBindingCode()">
+            <input type="button" value="@Phrases.EditUser" onclick="changeUser()">
+        </p>
+        <p style="text-align: left">
+            <b>@Phrases.QRCode</b>
+            <img id="imageCode" /><br>
+            <b>@Phrases.TextCode</b><br>
+            <span style="width:150px;white-space: pre-wrap;word-break: break-word;" id="textCode"></span><br>
+        </p>
+
+    </div>
+</div>
+
+
+
+<script>
+
+    function changeUser() {
+        gotoSignInState();
+    }
+
+    function sendBindingCode() {
+        var codeInput = document.getElementById('bindingCode');
+        var code = codeInput.value;
+        codeInput.value = '';
+        var idToken = this.myToken;
+
+        Requests.doRequest({
+            url: '@Url.Action("Authenticate","Home")',
+            params: {
+                googleSignInIdToken: idToken,
+                code: code
+            },
+            onJsonResult: function (data) {
+                if (data.status !== undefined) {
+                    gotoSignInState();
+                }
+            }
+        });
+    }
+
+    function sendCode() {
+        var idToken = this.myToken;
+        var bindingCode = document.getElementById('code');
+        var code = bindingCode.value;
+        bindingCode.value = '';
+
+        Requests.doRequest({
+            url: '@Url.Action("Authenticate","Home")',
+            params: {
+                googleSignInIdToken: idToken,
+                code: code
+            },
+            onJsonResult: function (data) {
+                if (data.status !== undefined) {
+                    gotoSignInState();
+                }
+            },
+        });
+    }
+
+    function gotoSignInState() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            var divcode = document.getElementById('codePanel');
+            divcode.style.visibility = 'hidden';
+            divcode.style.display = 'none';
+
+            var signDiv = document.getElementById('signinPanel');
+            signDiv.style.visibility = "visible";
+            signDiv.style.display = 'block';
+
+            var bindingPanel = document.getElementById('bindingPanel');
+            bindingPanel.style.visibility = 'hidden';
+            bindingPanel.style.display = 'none';
+
+            var imageCode = document.getElementById('imageCode');
+            imageCode.src ='';
+            var textCode = document.getElementById('textCode');
+            textCode.innerText = '';
+
+            var bindingCode = document.getElementById('bindingCode');
+            bindingCode.value = "";
+
+            bindingCode = document.getElementById('code');
+            bindingCode.value = "";
+
+        });
+
+    }
+
+    function googleSignIn(googleUser) {
+        var idToken = googleUser.getAuthResponse().id_token;
+
+        var profile = googleUser.getBasicProfile();
+
+        this.myToken = idToken;
+        this.myEmail = profile.getEmail();
+
+        var data = {
+            googleSignInIdToken: this.myToken
+        };
+
+
+        $.post(
+            '@Url.Action("CheckTwoFactor", "Home")',
+            data,
+            function (data) {
+
+                if (data.status === undefined) {
+                    if (data.useVerification) {
+
+                        var signDiv = document.getElementById('signinPanel');
+                        signDiv.style.visibility = "hidden";
+                        signDiv.style.display = 'none';
+        
+                        if (data.existCode) {
+                            var divcode = document.getElementById('codePanel');
+                            divcode.style.visibility = 'visible';
+                            divcode.style.display = 'block';
+
+                        } else {
+                            var bindingPanel = document.getElementById('bindingPanel');
+                            bindingPanel.style.visibility = 'visible';
+                            bindingPanel.style.display = 'block';
+
+                            var imageCode = document.getElementById('imageCode');
+                            imageCode.src = data.imageUrl;
+                            var textCode = document.getElementById('textCode');
+                            textCode.innerText = data.textKey;
+                        }
+                    } else {
+                        Requests.doRequest({
+                            url: '@Url.Action("Authenticate","Home")',
+                            params: {
+                                googleSignInIdToken: idToken
+                            }
+                        });
+                    }
+                } else {
+                    console.log("Error from Home/CheckTwoFactor: " + data.status + ". message: " + data.msg);
+                    gotoSignInState();
+                }
+
+
+            });
+    }
+</script>

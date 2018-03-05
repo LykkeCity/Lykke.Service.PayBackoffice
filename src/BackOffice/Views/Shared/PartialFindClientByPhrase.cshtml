@@ -1,0 +1,35 @@
+﻿@using BackOffice.Translates
+@model BackOffice.Areas.SupportTools.Models.IClientFindViewModel
+
+@{
+    var div = string.IsNullOrEmpty(Model.Div) ? "#foundClientByPhrase" : Model.Div;
+}
+
+<div class="input-group">
+    <form id="findClientByPhrase">
+        <input id="phraseToFind" name="Phrase" type="text" class="form-control" placeholder="@Phrases.TypeEmailHere" value="@Model.Phrase" onkeypress="keypress(event)">
+        <input style="display: none" />
+    </form>
+
+    <span class="input-group-btn">
+        <button class="btn btn-default btn-xs" type="button" style="padding: 8px;"
+                onclick="searchByPhrase()">
+            <span class="glyphicon glyphicon-search hideOnRequest" aria-hidden="true"></span>
+            <img src="~/images/processing-menu.gif" class="showOnRequest" />
+        </button>
+    </span>
+</div>
+
+
+<script>
+    function keypress(event) {
+        if (event.keyCode === 13) {
+            searchByPhrase();
+        }
+    }
+
+    function searchByPhrase() {
+        requests.doRequest(
+            { url: '@Model.FindUrl', divResult: '@div', formId: '#findClientByPhrase', showLoading: true });
+    }
+</script>

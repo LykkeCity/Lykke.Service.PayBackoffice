@@ -1,0 +1,25 @@
+﻿@using Common;
+@model SelectModel
+
+@{ var id = Model.Name.FirstLetterLowCase();}
+<div class="form-group">
+    <label class="control-label" for="@id">@Model.Caption</label>
+    <select id="@id" name="@Model.Name" class="form-control input-lg">
+        @if (Model.HasOptional)
+            {
+            <option value="">@Model.OptionalText</option>
+        }
+        @foreach (var selectedId in Model.Ids)
+            {
+                var optionValue = Model.GetValue == null ? selectedId : Model.GetValue(selectedId);
+                if (Model.CurrentId == selectedId)
+                {
+                <option value="@selectedId" selected="selected">@optionValue</option>
+            }
+            else
+            {
+                <option value="@selectedId">@optionValue</option>
+            }
+        }
+    </select>
+</div>

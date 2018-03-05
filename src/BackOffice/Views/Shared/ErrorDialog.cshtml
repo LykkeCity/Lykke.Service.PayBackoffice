@@ -1,0 +1,16 @@
+﻿@using BackOffice.Models
+@model ErrorDialogViewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+
+<div class="form-group">
+    <h3>@Model.Message</h3>
+</div>
+
+<div style="text-align: center;">
+    <div class="btn-group" style="margin-top: 10px;">
+        <button class="btn btn-success" style="width: 150px" onclick="ui.hideDialog()">OK</button>
+    </div>
+</div>

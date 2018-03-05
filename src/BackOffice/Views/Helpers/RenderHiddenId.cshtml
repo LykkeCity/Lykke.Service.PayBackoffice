@@ -1,0 +1,6 @@
+﻿@model Tuple<string, string>
+
+@if (!string.IsNullOrEmpty(Model.Item1))
+{
+    <input name="@Model.Item2" type="hidden" value="@Model.Item1" />
+}

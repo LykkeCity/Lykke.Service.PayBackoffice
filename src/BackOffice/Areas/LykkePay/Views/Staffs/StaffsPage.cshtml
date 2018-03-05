@@ -1,0 +1,55 @@
+﻿@using BackOffice.Translates
+@using BackOffice.Models
+@model BackOffice.Areas.LykkePay.Models.StaffsPageViewModel
+
+@{
+    IEnumerable<ItemViewModel> merchantList = Model.Merchants.
+        Select(m => new ItemViewModel { Id = m.Id, Title = m.Name }).ToArray();
+}
+
+@if (merchantList.Any())
+{
+        <div class="row" style="margin-left: 30px">
+            <h1>Staffs</h1>
+            <div class="col-md-2">
+                <a class="btn btn btn-success"
+                   onclick="openDialog()">
+                    Add Staff
+                </a>
+            </div>
+        </div>
+        <hr />
+        <form id="frmStaffs">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4 input-lg">
+                    @Html.RenderSelect2("Merchant:", "SelectedMerchant", merchantList, false, "Select merchant...")
+                </div>
+            </div>
+        </form>
+        <div id="staffList"></div>
+
+    <script>
+        $(function () {
+            var $merchantSelect = $('#selectedMerchant');
+            $merchantSelect.select2().on("change",
+                function (e) {
+                    requests.doRequest({
+                        url: '@Url.Action("StaffsList")',
+                        formId: '#frmStaffs',
+                        divResult: '#staffList'
+                    });
+                });
+            $('.select2-container--default').width(200);
+            requests.doRequest({ url: '@Url.Action("StaffsList")', formId: '#frmStaffs', divResult: '#staffList' });
+        });
+        function openDialog()
+        {
+            var $merchantSelect = $('#selectedMerchant');
+            ui.showDialog('@Url.Action("AddOrEditStaffDialog")', { merchant: $merchantSelect.val() });
+        }
+    </script>
+}
+else
+{
+    <p>@Phrases.NoGroupsExist</p>
+}

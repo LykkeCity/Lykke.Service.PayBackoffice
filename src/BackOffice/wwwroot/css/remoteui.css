@@ -1,0 +1,34 @@
+﻿.tree-item {
+    cursor: pointer;
+    border: 1px solid white;
+}
+
+.l1 {
+    padding-left: 10px;
+}
+
+.l2 {
+    padding-left: 20px;
+}
+
+.l3 {
+    padding-left: 30px;
+}
+
+.l4 {
+    padding-left: 40px;
+}
+
+.l5 {
+    padding-left: 50px;
+}
+
+.selectedItem {
+    border: 1px solid #003A63;
+    border-radius: 3px;
+    background: #ebf1f6;
+    background: -moz-linear-gradient(top, #ebf1f6 0%, #abd3ee 50%, #89c3eb 51%, #d5ebfb 100%);
+    background: -webkit-linear-gradient(top, #ebf1f6 0%,#abd3ee 50%,#89c3eb 51%,#d5ebfb 100%);
+    background: linear-gradient(to bottom, #ebf1f6 0%,#abd3ee 50%,#89c3eb 51%,#d5ebfb 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ebf1f6', endColorstr='#d5ebfb',GradientType=0 );
+}

@@ -1,0 +1,15 @@
+﻿@using BackOffice.Services
+@using BackOffice.Translates
+@using Common
+@using Core.Users
+@model BackOffice.Areas.Users.Models.EditUserRoleUserVewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+<form id="frmEditRole">
+    @Html.RenderHiddenId(Model.UserRole.Id)
+    @Html.RenderInputWithLabelOnTop("Name", Phrases.Name, Model.UserRole.Name, focused: true)
+    @Html.RenderMultiselect("Features", "Features", Utils.Enumerate<UserFeatureAccess>().Select(itm => new KeyValuePair<string, string>(itm.ToString(), itm.GetCaption())),   Model.UserRole.Features.Select(itm => itm.ToString()).ToArray())
+</form>
+@Html.RenderSaveCancelButtonPair(Url.Action("Edit"), "#frmEditRole")

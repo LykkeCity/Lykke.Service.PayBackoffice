@@ -1,0 +1,56 @@
+﻿@using System
+@model LkeServices.Messages.EmailTemplates.ViewModels.SwiftConfirmedTemplate
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SWIFT cash out request</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>
+                User email: @Model.Email
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Requested funds: @Model.Amount @Model.AssetId
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Beneficiary's Account number (IBAN): @Model.AccNumber
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Name of the accountholder: @Model.AccName
+            </td>
+        </tr>
+        <tr>
+            <td>
+                SWIFT / ABA Routing: @Model.Bic
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Name of the bank: @Model.BankName
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Address of the accountholder: @Model.AccHolderAddress
+            </td>
+        </tr>
+        @if (!string.IsNullOrEmpty(Model.ExplorerUrl))
+        {
+            <tr>
+                <td>
+                    <a href="@Model.ExplorerUrl">Bitcoin transaction</a>
+                </td>
+            </tr>
+        }
+    </table>
+</body>
+</html>

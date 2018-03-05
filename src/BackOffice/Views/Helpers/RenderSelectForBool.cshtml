@@ -1,0 +1,30 @@
+﻿@using Common;
+@model SelectFromBoolModel
+
+@{ var id = Model.Name.FirstLetterLowCase(); }
+
+<div class="form-group">
+    <label class="control-label" for="@id">@Model.Caption</label>
+    <select id="@id" name="@Model.Name" class="form-control input-lg">
+        @if (Model.HasOptional)
+            {
+            <option value=""></option>
+        }
+        
+        @if (true == Model.CurrentValue)
+        {
+            <option value="true" selected="selected">True</option>
+            <option value="false">False</option>
+        }
+        else if (false == Model.CurrentValue)
+        {
+            <option value="true">True</option>
+            <option value="false" selected="selected">False</option>
+        }
+        else
+        {
+            <option value="true">True</option>
+            <option value="false">False</option>
+        }
+    </select>
+</div>

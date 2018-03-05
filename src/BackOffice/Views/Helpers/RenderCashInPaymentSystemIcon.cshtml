@@ -1,0 +1,35 @@
+﻿@using Core.PaymentSystems
+@model Core.PaymentSystems.CashInPaymentSystem
+
+@switch (Model)
+{
+    case CashInPaymentSystem.CreditVoucher:
+        <img src="~/images/paymentsystems/creditvaucher.png" title="Credit voucher" style="height: 22px" />
+        return;
+
+    case CashInPaymentSystem.Ethereum:
+        <img src="~/images/paymentsystems/ethereum.svg" title="Ethereum" style="height: 22px" />
+        return;
+
+    case CashInPaymentSystem.Bitcoin:
+        <img src="~/images/paymentsystems/bitcoin.svg" title="Bitcoin" style="height: 22px" />
+        return;
+
+    case CashInPaymentSystem.Swift:
+        <img src="~/images/paymentsystems/swift.svg" title="Swift" style="height: 22px" />
+        return;
+
+    case CashInPaymentSystem.SolarCoin:
+        <img src="~/images/paymentsystems/solarcoin.png" title="SolarCoin" style="height: 22px" />
+        return;
+
+    case CashInPaymentSystem.ChronoBank:
+        <img src="~/images/paymentsystems/chronobank.png" title="ChronoBank" style="height: 22px" />
+        return;
+
+    case CashInPaymentSystem.Quanta:
+        <img src="~/images/paymentsystems/Quanta.png" title="ChronoBank" style="height: 22px" />
+        return;
+}
+
+<h4>@Model</h4>

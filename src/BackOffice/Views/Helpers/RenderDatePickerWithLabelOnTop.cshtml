@@ -1,0 +1,42 @@
+﻿@using Common
+@using Microsoft.AspNetCore.Html
+@model InputWithLabelModel
+@functions
+{
+    public IHtmlContent GetStrOrEmptyAttr(string attr, string value)
+    {
+        if (value == null)
+            return HtmlString.Empty;
+        return new HtmlString(string.Format("{0}=\"{1}\"", attr, value));
+    }
+}
+@{
+    var id = Model.Name.FirstLetterLowCase();
+    var idGrp = $"{id}Grp";
+}
+<div class="form-group">
+    <label class="control-label" for="@id">@Model.Caption</label>
+    <div class='input-group date' id='@idGrp'>
+        <input id="@id" name="@Model.Name" class="form-control @(Model.Lg ? "input-lg" : "")" type="text" @GetStrOrEmptyAttr("value", Model.Value) placeholder="MM/DD/YYYY" />
+        <span class="input-group-addon  @(Model.Lg ? "input-lg" : "")">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        /*
+        this version od datepicker throws waring about constuctor's deprecation
+        next lines suppress this warning (and all others) during construction
+        */
+        var cachedWarn = console.warn;
+        console.warn = function () { };
+        $('#@idGrp').datetimepicker({
+            locale: 'EN',
+            format: 'MM/DD/YYYY',
+            minDate: '01/01/1900'
+        });
+        console.warn = cachedWarn;
+    });
+</script>

@@ -1,0 +1,151 @@
+﻿@model LkeServices.Messages.EmailTemplates.ViewModels.BankCashInTemplate
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Model.AssetId Deposit</title>
+</head>
+<body style="background-color: #F4F6F7;font-family: Geneva, Arial, Helvetica, sans-serif;">
+    <div style="margin:20px auto;width:600px;">
+        <img src="https://lkefiles.blob.core.windows.net/images/emails/logo_emails.png" height="60" alt="Lykke logo" />
+    </div>
+    <table style="margin:auto;width:600px;border: 1px solid #E5E7EA;background-color: #fff;">
+        <tr>
+            <td style="padding-top:30px;"></td>
+        </tr>
+        <tr>
+            <td style="padding: 0 60px 0 60px;">
+                <h1 style="font-size:2.4em;font-weight:bold;line-height: 140%;width:100%;border-bottom:3px solid #FF8F1C;padding-bottom:4px;">@Model.AssetId Deposit</h1>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding:10px 60px 0 60px;">
+                <span style="font-size: 1.4em;font-weight: bold;margin-top: 40px;line-height: 140%;">
+                    Dear @Model.ClientName, here are the details needed to make a bank wire transfer to Lykke Exchange to buy colored coins:
+                </span>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding:40px 60px 0 60px;">
+                <table style="border-collapse:collapse">
+                    <tr style="border-top: 1px solid #8C94A0; border-bottom: 1px solid #8C94A0;">
+                        <td style="padding:15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em;color: #8C94A0;">
+                                BIC (SWIFT)
+                            </span>
+                        </td>
+                        <td style="padding:15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em;color: #3F4D60;">
+                                @Model.Bic
+                            </span>
+                        </td>
+                    </tr>
+                    <tr style="border-top: 1px solid #8C94A0; border-bottom: 1px solid #8C94A0;">
+                        <td style="padding:15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em;color: #8C94A0;">
+                                Account Number (IBAN)
+                            </span>
+                        </td>
+                        <td style="padding:15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em;color: #3F4D60;">
+                                @Model.AccountNumber
+                            </span>
+                        </td>
+                    </tr>
+                    <tr style="border-top: 1px solid #8C94A0; border-bottom: 1px solid #8C94A0;">
+                        <td style="padding: 15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em; color: #8C94A0;">
+                                Account Name
+                            </span>
+                        </td>
+                        <td style="padding: 15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em; color: #3F4D60;">
+                                @Model.AccountName
+                            </span>
+                        </td>
+                    </tr>
+                    <tr style="border-top: 1px solid #8C94A0; border-bottom: 1px solid #8C94A0;">
+                        <td style="padding: 15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em; color: #8C94A0;">
+                                Bank Address
+                            </span>
+                        </td>
+                        <td style="padding: 15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em; color: #3F4D60;">
+                                @Model.BankAddress
+                            </span>
+                        </td>
+                    </tr>
+                    <tr style="border-top: 1px solid #8C94A0; border-bottom: 1px solid #8C94A0;">
+                        <td style="padding:15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em;color: #8C94A0;">
+                                Company Address
+                            </span>
+                        </td>
+                        <td style="padding:15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em;color: #3F4D60;">
+                                @Model.CompanyAddress
+                            </span>
+                        </td>
+                    </tr>
+                    <tr style="border-top: 1px solid #8C94A0; border-bottom: 1px solid #8C94A0;">
+                        <td style="vertical-align:top;padding:15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em;color: #8C94A0;">
+                                Purpose of Payment
+                            </span>
+                        </td>
+                        <td style="padding:10px 0 10px 0;" width="260">
+                            <span style="font-size: 1.1em;color: #3F4D60;line-height:180%;">
+                                @Model.PurposeOfPayment
+                            </span>
+                        </td>
+                    </tr>
+                    <tr style="border-top: 1px solid #8C94A0; border-bottom: 1px solid #8C94A0;">
+                        <td style="padding:15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em;color: #8C94A0;">
+                                Amount
+                            </span>
+                        </td>
+                        <td style="padding:15px 0 15px 0;" width="260">
+                            <span style="font-size: 1.1em;color: #3F4D60;">
+                                @Model.AssetSymbol @Model.Amount
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding:0 60px 0 60px;">
+                <p style="font-size: 1.1em;color: #3F4D60;line-height: 180%;margin-top: 30px;">
+                    Please note that wire transfer may take up to 5 business days to arrive at our bank. The deposit will be confirmed when our bank receives the wire transfer. As soon as we receive the transfer we will update you.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding:0 60px 0 60px;">
+                <p style="font-size: 1.1em;color: #3F4D60;line-height: 180%;margin-top: 30px;"><b style="color: #000;">We are happy to answer any questions!</b><br />Please email us at <a style="color: #3F4D60;" href="mailto:support@lykke.com">support@lykke.com</a></p>
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td style="padding:20px 60px 20px 60px; text-align:center;font-size: 0.9em;color: #8C94A0;">
+                <p>If you did not sign up for this account you can ignore this email and the account will be deleted</p>
+            </td>
+        </tr>
+    </table>
+    <table style="margin:auto;width:600px;border: none;">
+        <tr>
+            <td style="padding:10px 60px 20px 60px; text-align:center;font-size: 0.9em;color: #8C94A0;">
+                <p>&copy; Lykke @Model.Year. All rights reserved, support &mdash; <a style="color: #8C94A0;" href="mailto:support@lykke.com">support@lykke.com</a></p>
+                <p>Let's be friends in social networks!</p>
+                <a href="https://www.facebook.com/groups/542506412568917/"><img style="margin-right:10px" src="https://lkefiles.blob.core.windows.net/images/emails/fb_icon.png" height="25" alt="facebook" /></a>
+                <a href="https://twitter.com/LykkeCity"><img style="margin-right:10px" src="https://lkefiles.blob.core.windows.net/images/emails/twitter_icon.png" height="25" alt="twitter" /></a>
+                <a href="https://www.youtube.com/channel/UCmMYipGdKMF0kzfaE-PXsNQ"><img style="margin-right:10px" src="https://lkefiles.blob.core.windows.net/images/emails/youtube_icon.png" height="25" alt="youtube" /></a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

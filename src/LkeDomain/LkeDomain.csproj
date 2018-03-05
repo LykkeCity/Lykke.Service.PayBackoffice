@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>LkeDomain</AssemblyName>
+    <PackageId>LkeDomain</PackageId>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <SetLinkMetadataAutomatically>false</SetLinkMetadataAutomatically>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AzureRepositories\AzureRepositories.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Lykke.Common" Version="4.5.0" />
+    <PackageReference Include="Lykke.Service.ClientAccount.Client" Version="1.3.0" />
+    <PackageReference Include="Lykke.Service.MarketProfile.Client" Version="1.0.20" />
+    <PackageReference Include="Lykke.Service.RateCalculator.Client" Version="1.0.11" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,15 @@
+﻿@using Common;
+@using Microsoft.AspNetCore.Html;
+
+@model CheckboxModel
+@{
+    var id = Model.Name.FirstLetterLowCase();
+    var @valueAttr = new HtmlString(@Model.Value != null ? "value='" + @Model.Value + "'" : "");
+    var @checkedAttr = new HtmlString(@Model.IsSelected  ? "checked='checked'" : "");
+}
+<div class="form-group">
+    <label class="form-check-label" for="@id">
+        <input type="checkbox" name="@Model.Name" class="form-check-input" @checkedAttr @valueAttr />
+        @Model.Caption
+    </label>
+</div>

@@ -1,0 +1,92 @@
+﻿@using BackOffice.Translates
+@model Lykke.Service.PersonalData.Contract.Models.IPersonalData
+
+@{
+    ViewBag.Title = "PartialPersonalDataCard";
+
+    var backgroundColor = "#F1F1F1";
+    var foregroundColor = "black";
+    var flagTextColor = "black";
+    var redMessage = "";
+
+    @if (!String.IsNullOrEmpty(ViewBag.RedMessage))
+    {
+        backgroundColor = "red";
+        foregroundColor = "white";
+        flagTextColor = "white";
+        redMessage = ViewBag.RedMessage;
+    }
+    else if (ViewBag.IsApproved != null && ViewBag.IsApproved == true)
+    {
+        backgroundColor = "green";
+        foregroundColor = "white";
+        flagTextColor = "white";
+        redMessage = ViewBag.RedMessage;
+    }
+
+<div class="panel panel-default" style="width: 800px; margin: 10px auto; padding: 10px;">
+    <table style="width: 100%; background: @backgroundColor; border-radius: 3px;">
+        <tr>
+            <td style="width: 100%; padding: 5px 10px">
+                <h4 style="text-align: left; color: @foregroundColor">
+                    Id: @Model.Id
+                </h4>
+            </td>
+            <td style="padding: 5px;">
+                <span style="color: @flagTextColor;">POA</span>
+            </td>
+            <td style="padding: 5px 10px">
+                <table>
+                    <tr>
+                        <td style="padding: 5px; color: white;">@redMessage</td>
+                        <td>@Html.RenderCountryFlag(Model.CountryFromPOA ?? Model.Country, flagTextColor)</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <table style="width: 100%">
+        <tr>
+            <td style="width: 50%">
+                @Html.RenderCaptionValue("Email", Model.Email)
+            </td>
+            <td>
+                @Html.RenderCaptionValue(Phrases.FullName, Model.FullName)
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 50%">
+                @Html.RenderCaptionValue(Phrases.Country, Model.Country)
+            </td>
+            <td>
+                @Html.RenderCaptionValue(Phrases.ZipCode, Model.Zip)
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 50%">
+                @Html.RenderCaptionValue(Phrases.City, Model.City)
+            </td>
+            <td>
+                @Html.RenderCaptionValue(Phrases.ContactPhone, Model.ContactPhone)
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 50%">
+                @Html.RenderCaptionValue(Phrases.ReferralCode, Model.ReferralCode)
+            </td>
+            <td>
+                @Html.RenderCaptionValue(Phrases.Address, Model.Address)
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 50%">
+                @Html.RenderCaptionValue(Phrases.SpotRegulator, Model.SpotRegulator)
+            </td>
+            <td>
+                @Html.RenderCaptionValue(Phrases.MarginRegulator, Model.MarginRegulator)
+            </td>
+        </tr>
+    </table>
+</div>
+
+}

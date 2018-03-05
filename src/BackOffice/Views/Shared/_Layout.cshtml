@@ -1,0 +1,38 @@
+﻿@using BackOffice
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/images/favicon.png" rel="shortcut icon" type="image/png" />
+    <title>Lykke Back Office</title>
+
+
+    <environment names="Development">
+        @Bundler.Unpack("wwwroot/output/site.min.css")
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/output/site.min.css" asp-append-version="true" />
+    </environment>
+    <environment names="Development">        
+        @Bundler.Unpack("wwwroot/output/site.min.js")
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/output/site.min.js" asp-append-version="true"></script>
+    </environment>
+    
+    @RenderSection("header", required: false)
+    
+    @Html.Raw(JavaScriptSnippet.FullScript)
+</head>
+<body style="overflow-y: hidden">
+
+
+    @Html.Partial("PartialInitScript")
+    @RenderBody()
+    @Html.Partial("PartialModalDialog")
+
+
+</body>
+</html>

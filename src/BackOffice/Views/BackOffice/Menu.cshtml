@@ -1,0 +1,104 @@
+﻿@model BackOffice.Models.MainMenuViewModel
+@{
+    Layout = null;
+}
+
+<div class="nonSelectable">
+    <div style="text-align: center; font-size: 9px;">
+        <span id="srvTime" style="color: white; text-align: right;"></span>
+    </div>
+    <img src="~/images/logo-white.png" style="padding: 5px; width: 100%;padding: 2px 15px;" />
+</div>
+<hr style="border-bottom: 1px solid #080606; margin: 5px 36px 0 5px;" />
+
+<div class="user">
+    <span class="glyphicon glyphicon-user"></span> @(Model.UserRolesPair.User.Id)
+</div>
+<div class="version">
+    v @(Model.Ver)
+</div>
+
+<div id="wrapper" data-autoheight="-120" style="position: absolute; overflow: hidden">
+    @Html.Partial("PartialSideMenu")
+</div>
+<script>
+
+    $('.smi').each(function() {
+        $(this).html($(this).attr('data-text'));
+        $(this).click(menuItemClick);
+    });
+
+
+    function menuItemClick() {
+
+
+        mainMenu.deselectMenu();
+        var activeItem = $(this);
+        var url = activeItem.attr('data-url');
+
+
+        if (url) {
+            $('#pamain')
+                .html('<div style="text-align:center; margin-top:20px;"><img src="/images/loading-pa.gif"/></div>');
+            var options = { url: url, type: 'POST', headers: { 'RequestVerificationToken': getAntiForgeryCookie() } };
+            $.ajax(options)
+                .then(function(result) {
+
+                    var historyItem = {
+                        url: url,
+                        div: '#pamain',
+                        title: activeItem.attr("data-text"),
+                        type: 'menu'
+                    };
+
+                    historyManager.put(historyItem);
+                    mainMenu.selectMenu(activeItem);
+
+                    $('#pamain').html(result);
+                    layout.ressize();
+                }).fail(function(fr) {
+                    if (xhr && (xhr.status === 403 || xhr.status === 401)) {
+                        console.log("Forbidden redirecting to index...");
+                        window.location = '@Url.Action("Index", "Home")';
+                    } else {
+                        activeItem.addClass('smiSel');
+                        $('#pamain').html(fr.responseText);
+                    }
+                });
+        } else {
+            $('#pamain').html('<h1>No content</h1>');
+            activeItem.addClass('smiSel');
+        }
+
+    }
+
+
+    $('#wrapper').perfectScrollbar({
+        wheelSpeed: 20,
+        wheelPropagation: false
+    });
+
+    function RefreshBadges() {
+        var options = { url: '@Url.Action("GetBadges","BackOffice")', type: 'POST' };
+        $.ajax(options)
+            .then(function (result) {
+                result.forEach(function (itm) {
+                    var node = $('#smi' + itm.id);
+                    if (itm.value === "0")
+                        node.html(node.attr('data-text'));
+                    else
+                        node.html(node.attr('data-text') + ' <span class="badge" style="background:red; font-size:9px;padding: 1px 5px 2px 4px;">' + itm.value + "</span>");
+                });
+            }).fail(function (xhr) {
+                if (xhr && (xhr.status === 403 || xhr.status === 401)) {
+                    console.log("Forbidden redirecting to index...");
+                    window.location.reload();
+                }
+            });
+        window.setTimeout(RefreshBadges, 5000);
+    }
+
+    RefreshBadges();
+
+
+</script>

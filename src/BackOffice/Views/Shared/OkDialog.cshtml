@@ -1,0 +1,9 @@
+﻿@using BackOffice.Translates
+@model BackOffice.Areas.Blockchain.Models.OkDialogViewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+
+<h4>@Phrases.ProcessIsBeingStarted</h4>
+@Html.RenderOkDialogButton()

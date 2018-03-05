@@ -1,0 +1,38 @@
+﻿@using BackOffice.Translates
+
+<div class="input-group">
+    <form id="findErc20Token">
+        <input id="address" name="address" type="text" class="form-control" placeholder="Erc20 token address" onkeypress="keypress(event)">
+        <input style="display: none"/>
+    </form>
+
+    <span class="input-group-btn">
+        <button class="btn btn-default btn-xs"
+                type="button"
+                style="padding: 8px;"
+                onclick="searchErc20Token()">
+            <span class="glyphicon glyphicon-search hideOnRequest" aria-hidden="true"></span><img src="~/images/processing-menu.gif" class="showOnRequest"/>
+        </button>
+    </span>
+</div>
+
+<script>
+
+    function keypress(event) {
+        if (event.keyCode === 13) {
+            searchErc20Token();
+        }
+    }
+
+    function searchErc20Token() {
+        
+        requests.doRequest({
+            url:         '@Model.RequestUrl',
+            divResult:   '#foundErc20Tokens',
+            formId:      '#findErc20Token',
+            showLoading: true
+        });
+
+    }
+
+</script>

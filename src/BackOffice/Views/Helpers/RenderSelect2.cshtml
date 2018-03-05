@@ -1,0 +1,28 @@
+﻿@using Common;
+@model Select2Model
+
+@{ var id = Model.Name.FirstLetterLowCase(); }
+
+<div class="form-group">
+    <label class="control-label" for="@id">@Model.Caption</label>
+    <select id="@id" name="@Model.Name" class="form-control" @(Model.Multi ? "multiple=\"multiple\"" : string.Empty)>
+        @foreach (var item in Model.Items)
+        {
+             if (item.Selected)
+             {
+                 <option value="@item.Id" selected="selected">@item.Title</option>
+             }
+             else
+             {
+                 <option value="@item.Id">@item.Title</option>
+             }
+        }
+    </select>
+</div>
+
+<script type="text/javascript">
+    $('#@id').select2({
+        allowClear: @Model.AllowClear.ToString().ToLower(),
+        placeholder: '@Model.Placeholder'
+    });
+</script>

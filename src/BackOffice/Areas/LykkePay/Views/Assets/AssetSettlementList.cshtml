@@ -1,0 +1,40 @@
+﻿@using BackOffice.Translates
+@using Lykke.Service.PayInternal.Client.Models.Asset
+@model IReadOnlyList<AssetModel>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped">
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Name
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Id
+                </td>
+                <td>
+                    @item.Name
+                </td>
+                <td style="text-align: right">
+                    <button class="btn btn-xs btn-danger btn-raised"
+                            onclick="ui.showDialog('@Url.Action("DeleteAssetSettlementDialog")', { assetId: '@item.Id' });">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>@Phrases.NoRecordsFound</p>
+}

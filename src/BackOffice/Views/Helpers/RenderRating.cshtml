@@ -1,0 +1,23 @@
+﻿
+@using BackOffice.Models;
+
+@model Tuple<int, int>
+@{
+    var value = Model.Item1;
+    var maxValue = Model.Item2;
+    var popIndex = value > maxValue ? maxValue : value;
+    if (popIndex < 0)
+    {
+        popIndex = 0;
+    }
+
+    for (var i = 0; i < popIndex; i++)
+    {
+        <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: @WebSiteConstants.LykkePurple"></span>
+    }
+
+    for (var i = popIndex; i < maxValue; i++)
+    {
+        <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: lightgray"></span>
+    }
+}

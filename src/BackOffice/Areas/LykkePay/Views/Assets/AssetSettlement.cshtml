@@ -1,0 +1,20 @@
+﻿<div class="row" style="margin-left: 30px">
+    <h1>Assets for settlement</h1>
+    <div class="col-md-2">
+        <a class="btn btn btn-success"
+           onclick="ui.showDialog('@Url.Action("AddAssetSettlementDialog")');">
+            Add
+        </a>
+    </div>
+</div>
+<hr />
+<form id="frmAssetSettlement">
+    <div class="row">
+    </div>
+</form>
+<div id="assetSettlementList"></div>
+<script>
+    $(function () {
+        requests.doRequest({ url: '@Url.Action("AssetSettlementList")', formId: '#frmAssetSettlement', divResult: '#assetSettlementList' });
+    });
+</script>

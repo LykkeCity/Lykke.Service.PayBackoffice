@@ -1,0 +1,18 @@
+﻿@using BackOffice.Translates;
+
+@model SaveCancelButtonPairModel
+
+@{ 
+    var onFinishCode = Model.OnFinish == null ? "" : ", onFinish: " + @Model.OnFinish;
+    var validationCode = Model.OnValidate == null ? "" : $"if (!{Model.OnValidate}) return false; ";
+}
+
+<div style="text-align: center;">
+    <div class="btn-group" style="margin-top: 10px;">
+        <button class="btn btn-success" style="width: 150px" onclick="@validationCode Requests.doRequest({ url: '@Model.Url', formId: '@Model.FormId' @onFinishCode, showLoading: true });">
+            <span class="glyphicon glyphicon-floppy-disk hideOnRequest" aria-hidden="true"></span>
+            <img class="showOnRequest" src="~/images/processing.gif" style="display: none"/> @(Model.SavePhrase ?? Phrases.Save)
+        </button>
+        <button class="btn btn-default" style="width: 150px" onclick="ui.hideDialog()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> @Phrases.Cancel</button>
+    </div>
+</div>

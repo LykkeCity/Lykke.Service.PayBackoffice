@@ -1,0 +1,227 @@
+﻿@model BackOffice.Models.IndexPageModel
+@using BackOffice.Translates
+@{
+    Layout = "~/Views/Shared/_Layout.mobile.cshtml";
+}
+
+@section header
+{
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="@Model.GoogleApiClientId">
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-fetch_basic_profile" content="false">
+}
+
+<div>
+    <p>Hrllow!!</p>
+</div>
+
+<div class="container">
+    <div style="text-align: center; margin-top: 10px;">
+        <img src="~/images/door_open.png" />
+    </div>
+
+    <table style="width: 100%;">
+        <tr id="signinPanel">
+            <td style="text-align: left;">
+                <a href="@Url.Action("Index", "Home", new {LangId = "EN"})" style="padding: 5px"><img src="~/images/langs/en.png" style="width: 32px;" /></a>
+                <a href="@Url.Action("Index", "Home", new {LangId = "RU"})" style="padding: 5px"><img src="~/images/langs/ru.png" style="width: 32px;" /></a>
+            </td>
+            <td style="text-align: center;">
+                <div id="googleSignIn" class="g-signin2 disableOnRequest" data-onsuccess="googleSignIn" data-theme="dark" data-prompt="select_account"></div>
+            </td>
+        </tr>
+        <tr id="codePanel">
+            <td>
+                <p style="text-align: left">
+                    <b>Email:</b> <span id="email"></span><br>
+                    <b>@Phrases.EnterTwoFactorCode</b><br>
+                    <input id="code" type="text" size="40">
+                </p>
+                <p style="text-align: left">
+                    <input type="button" value="@Phrases.Send" onclick="sendCode()"><br>
+                    <input type="button" value="@Phrases.EditUser" onclick="changeUser()">
+                </p>
+            </td>
+        </tr>
+        <tr id="bindingPanel">
+            <td>
+                <p style="text-align: left">
+                    <b>Email:</b> <span id="emailBind"></span><br>
+                    <b>@Phrases.QRCode</b>
+                    <img id="imageCode"/><br>
+                    <b>@Phrases.TextCode</b><br>
+                    <span style="width:150px;white-space: pre-wrap;word-break: break-word;" id="textCode"></span><br>
+                
+                
+
+                    <b>@Phrases.EnterTwoFactorCode</b><br>
+                    <input id="bindingCode" type="text" size="40">
+                </p>
+                <p style="text-align: left">
+                    <input type="button" value="@Phrases.Send" onclick="sendBindingCode()"><br>
+                    <input type="button" value="@Phrases.EditUser" onclick="changeUser()">
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td style="text-align: center;">
+                <img src="~/images/processing.gif" class="showOnRequest"/>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<script>
+
+    function makeCode() {
+        console.log('makeCode');
+    }
+
+    function changeUser() {
+        console.log('User signed out.');
+        gotoSignInState();
+
+    }
+
+    function sendBindingCode() {
+
+        var codeInput = document.getElementById('bindingCode');
+        var code = codeInput.value;
+        codeInput.value = '';
+        var idToken = this.myToken;
+        console.log("enter code: " + code);
+
+        Requests.doRequest({
+            url: '@Url.Action("Authenticate","Home")',
+            params: {
+                googleSignInIdToken: idToken,
+                code: code
+            },
+            onJsonResult: function (data) {
+                if (data.status !== undefined) {
+                    console.log("Error from Authenticate: " + data.msg);
+                    gotoSignInState();
+                }
+            }
+        });
+    }
+
+    function sendCode() {
+
+        var idToken = this.myToken;
+        var bindingCode = document.getElementById('code');
+        var code = bindingCode.value;
+        bindingCode.value = '';
+
+        Requests.doRequest({
+            url: '@Url.Action("Authenticate","Home")',
+            params: {
+                googleSignInIdToken: idToken,
+                code: code
+            },
+            onJsonResult: function (data) {
+                if (data.status !== undefined) {
+                    console.log("Error from Authenticate: " + data.msg);
+                    gotoSignInState();
+                }
+            },
+        });
+    }
+
+    function myFunction() {
+        console.log('on click');
+        console.log(this.myToken);
+        console.log(this.myEmail);
+    }
+
+    function gotoSignInState() {
+        console.log("execute gotoSignInState");
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            var email = document.getElementById('email');
+            email.innerText = '';
+
+            var divcode = document.getElementById('codePanel');
+            //console.log(divcode.style.visibility);
+            divcode.style.visibility = 'hidden';
+            divcode.style.display = 'none';
+
+            var signDiv = document.getElementById('signinPanel');
+            signDiv.style.visibility = "visible";
+            signDiv.style.display = 'block';
+
+            var bindingPanel = document.getElementById('bindingPanel');
+            bindingPanel.style.visibility = 'hidden';
+            bindingPanel.style.display = 'none';
+
+            var imageCode = document.getElementById('imageCode');
+            imageCode.src ='';
+            var textCode = document.getElementById('textCode');
+            textCode.innerText = '';
+            var emailBind = document.getElementById('emailBind');
+            emailBind.innerText = '';
+
+            var bindingCode = document.getElementById('bindingCode');
+            bindingCode.value = "";
+
+            bindingCode = document.getElementById('code');
+            bindingCode.value = "";
+
+        });
+
+    }
+
+    function googleSignIn(googleUser) {
+        console.log('!mobile!');
+        var idToken = googleUser.getAuthResponse().id_token;
+
+        var profile = googleUser.getBasicProfile();
+
+        this.myToken = idToken;
+        this.myEmail = profile.getEmail();
+
+        var data = {
+            googleSignInIdToken: this.myToken
+        };
+
+        var signDiv = document.getElementById('signinPanel');
+        signDiv.style.visibility = "hidden";
+        signDiv.style.display = 'none';
+
+        Requests.doRequest({
+            url: '@Url.Action("CheckTwoFactor", "Home")',
+            params: data,
+            onJsonResult: function (data) {
+                if (data.status === undefined) {
+
+                    if (data.existCode) {
+                        var divcode = document.getElementById('codePanel');
+                        divcode.style.visibility = 'visible';
+                        divcode.style.display = 'block';
+
+                        var email = document.getElementById('email');
+                        email.innerText = profile.getEmail();
+                    } else {
+                        var bindingPanel = document.getElementById('bindingPanel');
+                        bindingPanel.style.visibility = 'visible';
+                        bindingPanel.style.display = 'block';
+
+                        var imageCode = document.getElementById('imageCode');
+                        imageCode.src = data.imageUrl;
+                        var textCode = document.getElementById('textCode');
+                        textCode.innerText = data.textKey;
+                        var emailBind = document.getElementById('emailBind');
+                        emailBind.innerText = profile.getEmail();
+                    }
+                }
+                else {
+                    console.log("Error from Home/CheckTwoFactor: " + data.status + ". message: " + data.msg);
+                    gotoSignInState();
+                };
+            }
+        });
+    }
+</script>

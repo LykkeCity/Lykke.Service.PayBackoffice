@@ -1,0 +1,51 @@
+﻿@using BackOffice.Translates
+@model BackOffice.Models.ClientPartnerRelationIndexViewModel
+@{
+    var div = string.IsNullOrEmpty(Model.Div) ? "#foundClient" : Model.Div;
+}
+@{
+    <div id="foundClient">
+        @Html.RenderFoundOtherClients(Model.SearchPersolnalData)
+        @{
+            var searchPersonalDataCount = Model.SearchPersolnalData?.OtherClients.Count();
+        }
+        @if (Model.Relations == null || Model.Relations.Count() == 0)
+        {
+            @if (searchPersonalDataCount == null || searchPersonalDataCount == 0)
+            {
+                <h1>@Phrases.ClientNotFound</h1>
+            }
+            return;
+        }
+        else
+        {
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>@Phrases.ClientId</th>
+                        <th>@Phrases.Email</th>
+                        <th>@Phrases.PartnerId</th>
+                        <th>@Phrases.PartnerName</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Relations)
+                    {
+                        <tr style="cursor: pointer" onclick="searchTraderById('@item.ClientId')">
+                            <td>@item.ClientId</td>
+                            <td>@item.Email</td>
+                            <td>@item.PartnerId</td>
+                            <td>@item.PartnerName</td>
+                        </tr>
+                    }
+            </table>
+        }
+    </div>
+}
+
+<script>
+    function searchTraderById(clientId) {
+        requests.doRequest({ url: '@Model.RequestUrl', divResult: '@div', showLoading: true, params: { phrase: clientId } });
+    }
+</script>

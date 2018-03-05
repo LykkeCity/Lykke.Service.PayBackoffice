@@ -1,0 +1,23 @@
+﻿@using BackOffice.Controllers
+@using Microsoft.AspNetCore.Http
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    if (this.Context.Request.IsMobileBrowser())
+    {
+        <script>
+    requests.doRequest({ url: '@Url.Action("Layout", "BackOffice")', divResult:'#pamain' });
+        </script>
+
+    }
+    else
+    {
+        <script>
+    requests.doRequest({ url: '@Url.Action("Layout", "BackOffice")', divResult:'body' });
+        </script>
+
+    }
+}
+
+

@@ -1,0 +1,36 @@
+﻿@using BackOffice.Translates
+@model BackOffice.Areas.LykkePay.Models.AddStaffDialogViewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+
+    IEnumerable<SelectListItem> merchantsList = Model.Merchants.
+        Select(x => new SelectListItem { Value = x.Id, Text = x.Name }).ToArray();
+}
+
+<form id="frmAddStaffToMerchant" autocomplete="off">
+    <div id="errorMessage"></div>
+    @Html.HiddenFor(x => x.IsNewStaff)
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.SelectedMerchant)
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("FirstName", "FirstName", Model.FirstName)
+    </div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("LastName", "LastName", Model.LastName)
+    </div>
+    <div class="form-group">
+        @(Model.IsNewStaff ? @Html.RenderInputWithLabelOnTop("Email", "Email") :
+            @Html.RenderInputWithLabelOnTopReadOnly("Email", Model.Email, name: "Email"))
+    </div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("Password", "Password", Model.Password, null, "password")
+    </div>
+</form>
+
+@Html.RenderSaveCancelButtonPair(Url.Action("AddOrEditStaff"), "#frmAddStaffToMerchant")
+<script>
+        $(function() {
+            $('#SelectedMerchant').val('@Model.SelectedMerchant');
+        });
+</script>

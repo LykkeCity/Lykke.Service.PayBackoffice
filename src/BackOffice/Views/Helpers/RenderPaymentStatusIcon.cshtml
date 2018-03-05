@@ -1,0 +1,17 @@
+﻿@using Core.PaymentSystems
+@model PaymentStatus
+
+@switch (Model)
+{
+    case PaymentStatus.NotifyProcessed:
+        <img style="height: 24px" src="/images/icons/ok.svg">
+        return;
+
+    case PaymentStatus.NotifyDeclined:
+        <img style="height: 24px" src="/images/icons/notok.svg">
+        return;
+
+    case PaymentStatus.Processing:
+        <img style="height: 24px" src="/images/icons/processing.svg">
+        return;
+}

@@ -1,0 +1,23 @@
+﻿@using BackOffice.Translates
+@model BackOffice.Areas.LykkePay.Models.TransferMoneyDialogViewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+
+    IEnumerable<SelectListItem> walletsList = Model.Wallets.Wallets.
+        Select(x => new SelectListItem { Value = x.Address, Text = x.Name }).ToArray();
+}
+
+<form id="frmTransferMoney">
+    @Html.HiddenFor(x => x.SelectedMerchant)
+    @for(int i = 0; i < Model.SelectedPaymentRequests.Count; i++)
+    {
+        @Html.HiddenFor(model => Model.SelectedPaymentRequests[i])
+    }
+    <div id="errorMessage"></div>
+    <div class="form-group">
+        Wallet: @Html.DropDownListFor(model => model.SelectedWallet, walletsList)
+    </div>
+</form>
+
+@Html.RenderSaveCancelButtonPair(Url.Action("TransferMoney"), "#frmTransferMoney")

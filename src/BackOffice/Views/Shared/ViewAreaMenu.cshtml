@@ -1,0 +1,24 @@
+﻿@model BackOffice.Models.AreaMenuViewModel
+@{
+    Layout = null;
+    var first = true;
+}
+<ul class="nav nav-tabs" role="tablist">
+    @foreach (var menuItem in Model.MenuItems)
+    {
+        if (first)
+        {
+            first = false;
+            <li class="active"><a role="tab" data-toggle="tab" style="cursor: pointer;" onclick="Requests.doRequest({ url: '@menuItem.Url', divResult: '#tabContent', showLoading: true, putToLast:true })">@menuItem.Caption</a></li>
+        }
+        else
+        {
+            <li><a role="tab" data-toggle="tab" style="cursor: pointer;" onclick="Requests.doRequest({ url: '@menuItem.Url', divResult: '#tabContent', showLoading: true, putToLast:true })">@menuItem.Caption</a></li>
+        }
+    }
+</ul>
+<div id="tabContent">
+    <script>
+        Requests.doRequest({ url: '@Model.MenuItems[0].Url', divResult: '#tabContent', showLoading: true, putToLast:true })
+    </script>
+</div>

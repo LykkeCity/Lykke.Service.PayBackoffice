@@ -1,0 +1,28 @@
+﻿@using Common;
+@model SelectFromEnumModel
+
+@{ var values = from Enum e in Enum.GetValues(Model.EnumType)
+                 select e.ToString();
+    var id = Model.Name.FirstLetterLowCase();}
+
+<div class="form-group">
+    <label class="control-label" for="@id">@Model.Caption</label>
+    <select id="@id" name="@Model.Name" class="form-control input-lg">
+        @if (Model.HasOptional)
+            {
+            <option value=""></option>
+        }
+        @foreach (var selectedId in values)
+            {
+                var optionValue = selectedId;
+                if (Model.CurrentValue.ToString() == selectedId)
+                {
+                <option value="@selectedId" selected="selected">@optionValue</option>
+            }
+            else
+            {
+                <option value="@selectedId">@optionValue</option>
+            }
+        }
+    </select>
+</div>

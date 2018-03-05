@@ -1,0 +1,49 @@
+﻿@model BackOffice.Models.ChangePin
+
+@{
+    Layout = "../Shared/_LayoutChangePassword.cshtml";
+}
+
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h4 class="text-center">Change PIN for @Model.Email</h4><br/>
+            @using (Html.BeginForm("ChangePin", "Home", FormMethod.Post))
+            {
+                @Html.HiddenFor(x => x.TemporaryId)
+                @Html.HiddenFor(x => x.Email)
+
+                <div class="form-group">
+                    <input type="checkbox" id="showValuesFlag"><span>  Show entered values</span>
+                </div>
+
+                <div id="changePin">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.PIN)
+                        @Html.TextBoxFor(x => x.PIN, new {@class = "form-control", type = "password", placeholder = "Please enter 4 digits"})
+                        @Html.ValidationMessageFor(m => m.PIN, "", new {@class = "text-danger"})
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.ConfirmPIN)
+                        @Html.TextBoxFor(x => x.ConfirmPIN, new {@class = "form-control", type = "password", placeholder = "Please enter 4 digits" })
+                        @Html.ValidationMessageFor(m => m.ConfirmPIN, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success">Submit</button>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#showValuesFlag').change(function () {
+            if (this.checked) {
+                $('.form-control').prop('type', 'text');
+            } else {
+                $('.form-control').prop('type', 'password');
+            }
+        });
+    });
+</script>

@@ -1,0 +1,25 @@
+﻿@using Common
+@using Microsoft.AspNetCore.Html
+@model InputWithLabelModel
+
+@functions
+{
+    public IHtmlContent GetStrOrEmptyAttr(string attr, string value)
+    {
+        if (value == null)
+            return HtmlString.Empty;
+        return new HtmlString(string.Format("{0}=\"{1}\"", attr, value));
+    }
+}
+
+@{
+    var id = Model.Name.FirstLetterLowCase();
+}
+
+<div class="form-group">
+    <label class="control-label">@Model.Caption</label>
+    <input @GetStrOrEmptyAttr("type", Model.Type) @GetStrOrEmptyAttr("value", Model.Value)
+           @GetStrOrEmptyAttr("name", Model.Name)
+           class="form-control input-lg"
+           readonly="readonly" />
+</div>

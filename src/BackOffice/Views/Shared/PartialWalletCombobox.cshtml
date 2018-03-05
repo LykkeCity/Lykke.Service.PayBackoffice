@@ -1,0 +1,46 @@
+﻿
+@model BackOffice.Models.WalletComboboxViewModel
+
+<div class="input-group" style="font-size:large">
+    <span class="input-group-addon">Select wallet</span>
+    <div class="col-md-6">
+        <select id="all-client-wallets" disabled>
+            
+        </select>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        fillAllWallets();
+    });
+
+    function fillAllWallets() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetAllWalletsByClient", "List", new { area = "Wallets" })',
+            data: { clientId: "@Model.ClientId" },
+            async: true,
+            headers: { 'RequestVerificationToken': getAntiForgeryCookie() },
+            success: function (result) {
+                var options = $("#all-client-wallets");
+                $.each(result.wallets, function () {
+                    var element = $("<option />").val(this.id).text(this.displayName);
+                    if (this.id === "@Model.WalletId")
+                        element.attr("selected", "selected");
+                    options.append(element);
+                });
+
+                options.removeAttr("disabled");
+            }
+        });
+    }
+
+    $('#all-client-wallets').on('change', function (e) {
+        var valueSelected = this.value;
+        var urlTemplate = "@Html.Raw(Model.RedirectUrl)";
+        var url = urlTemplate.replace("WALLET_ID_MOCK", valueSelected);
+
+        Requests.doRequest({ url: url, divResult: '#tabContent', showLoading: true, putToLast: true });
+    });
+</script>

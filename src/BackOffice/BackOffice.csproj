@@ -1,0 +1,222 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <AssemblyName>BackOffice</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>BackOffice</PackageId>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+    <Version>1.0.0</Version>
+    <SetLinkMetadataAutomatically>false</SetLinkMetadataAutomatically>
+    <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Areas\AlphaEngine\**" />
+    <Compile Remove="Areas\Applications\**" />
+    <Compile Remove="Areas\BcnReports\**" />
+    <Compile Remove="Areas\Blockchain\**" />
+    <Compile Remove="Areas\Broadcast\**" />
+    <Compile Remove="Areas\CashOutRequest\**" />
+    <Compile Remove="Areas\Cash\**" />
+    <Compile Remove="Areas\Clients\**" />
+    <Compile Remove="Areas\Development\**" />
+    <Compile Remove="Areas\Dictionaries\**" />
+    <Compile Remove="Areas\EventLogs\**" />
+    <Compile Remove="Areas\GoogleDrive\**" />
+    <Compile Remove="Areas\Iata\**" />
+    <Compile Remove="Areas\InternalTransfers\**" />
+    <Compile Remove="Areas\Kyc\**" />
+    <Compile Remove="Areas\MarginTrading\**" />
+    <Compile Remove="Areas\Mock\**" />
+    <Compile Remove="Areas\Offchain\**" />
+    <Compile Remove="Areas\OrderBook\**" />
+    <Compile Remove="Areas\Partners\**" />
+    <Compile Remove="Areas\Regulation\**" />
+    <Compile Remove="Areas\Regulator\**" />
+    <Compile Remove="Areas\RemoteUi\**" />
+    <Compile Remove="Areas\Reports\**" />
+    <Compile Remove="Areas\Settings\**" />
+    <Compile Remove="Areas\Strategies\**" />
+    <Compile Remove="Areas\SupportTools\**" />
+    <Compile Remove="Areas\VoiceCall\**" />
+    <Compile Remove="Areas\Wallets\**" />
+    <Content Remove="Areas\AlphaEngine\**" />
+    <Content Remove="Areas\Applications\**" />
+    <Content Remove="Areas\BcnReports\**" />
+    <Content Remove="Areas\Blockchain\**" />
+    <Content Remove="Areas\Broadcast\**" />
+    <Content Remove="Areas\CashOutRequest\**" />
+    <Content Remove="Areas\Cash\**" />
+    <Content Remove="Areas\Clients\**" />
+    <Content Remove="Areas\Development\**" />
+    <Content Remove="Areas\Dictionaries\**" />
+    <Content Remove="Areas\EventLogs\**" />
+    <Content Remove="Areas\GoogleDrive\**" />
+    <Content Remove="Areas\Iata\**" />
+    <Content Remove="Areas\InternalTransfers\**" />
+    <Content Remove="Areas\Kyc\**" />
+    <Content Remove="Areas\MarginTrading\**" />
+    <Content Remove="Areas\Mock\**" />
+    <Content Remove="Areas\Offchain\**" />
+    <Content Remove="Areas\OrderBook\**" />
+    <Content Remove="Areas\Partners\**" />
+    <Content Remove="Areas\Regulation\**" />
+    <Content Remove="Areas\Regulator\**" />
+    <Content Remove="Areas\RemoteUi\**" />
+    <Content Remove="Areas\Reports\**" />
+    <Content Remove="Areas\Settings\**" />
+    <Content Remove="Areas\Strategies\**" />
+    <Content Remove="Areas\SupportTools\**" />
+    <Content Remove="Areas\VoiceCall\**" />
+    <Content Remove="Areas\Wallets\**" />
+    <EmbeddedResource Remove="Areas\AlphaEngine\**" />
+    <EmbeddedResource Remove="Areas\Applications\**" />
+    <EmbeddedResource Remove="Areas\BcnReports\**" />
+    <EmbeddedResource Remove="Areas\Blockchain\**" />
+    <EmbeddedResource Remove="Areas\Broadcast\**" />
+    <EmbeddedResource Remove="Areas\CashOutRequest\**" />
+    <EmbeddedResource Remove="Areas\Cash\**" />
+    <EmbeddedResource Remove="Areas\Clients\**" />
+    <EmbeddedResource Remove="Areas\Development\**" />
+    <EmbeddedResource Remove="Areas\Dictionaries\**" />
+    <EmbeddedResource Remove="Areas\EventLogs\**" />
+    <EmbeddedResource Remove="Areas\GoogleDrive\**" />
+    <EmbeddedResource Remove="Areas\Iata\**" />
+    <EmbeddedResource Remove="Areas\InternalTransfers\**" />
+    <EmbeddedResource Remove="Areas\Kyc\**" />
+    <EmbeddedResource Remove="Areas\MarginTrading\**" />
+    <EmbeddedResource Remove="Areas\Mock\**" />
+    <EmbeddedResource Remove="Areas\Offchain\**" />
+    <EmbeddedResource Remove="Areas\OrderBook\**" />
+    <EmbeddedResource Remove="Areas\Partners\**" />
+    <EmbeddedResource Remove="Areas\Regulation\**" />
+    <EmbeddedResource Remove="Areas\Regulator\**" />
+    <EmbeddedResource Remove="Areas\RemoteUi\**" />
+    <EmbeddedResource Remove="Areas\Reports\**" />
+    <EmbeddedResource Remove="Areas\Settings\**" />
+    <EmbeddedResource Remove="Areas\Strategies\**" />
+    <EmbeddedResource Remove="Areas\SupportTools\**" />
+    <EmbeddedResource Remove="Areas\VoiceCall\**" />
+    <EmbeddedResource Remove="Areas\Wallets\**" />
+    <None Remove="Areas\AlphaEngine\**" />
+    <None Remove="Areas\Applications\**" />
+    <None Remove="Areas\BcnReports\**" />
+    <None Remove="Areas\Blockchain\**" />
+    <None Remove="Areas\Broadcast\**" />
+    <None Remove="Areas\CashOutRequest\**" />
+    <None Remove="Areas\Cash\**" />
+    <None Remove="Areas\Clients\**" />
+    <None Remove="Areas\Development\**" />
+    <None Remove="Areas\Dictionaries\**" />
+    <None Remove="Areas\EventLogs\**" />
+    <None Remove="Areas\GoogleDrive\**" />
+    <None Remove="Areas\Iata\**" />
+    <None Remove="Areas\InternalTransfers\**" />
+    <None Remove="Areas\Kyc\**" />
+    <None Remove="Areas\MarginTrading\**" />
+    <None Remove="Areas\Mock\**" />
+    <None Remove="Areas\Offchain\**" />
+    <None Remove="Areas\OrderBook\**" />
+    <None Remove="Areas\Partners\**" />
+    <None Remove="Areas\Regulation\**" />
+    <None Remove="Areas\Regulator\**" />
+    <None Remove="Areas\RemoteUi\**" />
+    <None Remove="Areas\Reports\**" />
+    <None Remove="Areas\Settings\**" />
+    <None Remove="Areas\Strategies\**" />
+    <None Remove="Areas\SupportTools\**" />
+    <None Remove="Areas\VoiceCall\**" />
+    <None Remove="Areas\Wallets\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Views\Shared\FindAllForEmail.cshtml" />
+    <Content Remove="Views\Shared\PartialFindCleint.cshtml" />
+    <Content Remove="Views\Shared\PartialFindClientByPhrase.cshtml" />
+    <Content Remove="Views\Shared\PartialFindErc20Token.cshtml" />
+    <Content Remove="Views\Shared\PartialFoundOtherClients.cshtml" />
+    <Content Remove="Views\Shared\PartialPersonalDataCard.cshtml" />
+    <Content Remove="Views\Shared\PartialWalletCombobox.cshtml" />
+    <Content Remove="Views\Shared\_AddClientCommentDialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="wwwroot\images\**\*;wwwroot\output\**\*;wwwroot\fonts\**\*;Views\**\*.cshtml;Areas\**\Views\**\*.cshtml;Dockerfile;.dockerignore">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AzureRepositories\AzureRepositories.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\LkeServices\LkeServices.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="BuildBundlerMinifier" Version="2.6.362" />
+    <PackageReference Include="BundlerMinifier.Core" Version="2.6.362" />
+    <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.28.0.949" />
+    <PackageReference Include="Lykke.Common" Version="4.5.0" />
+    <PackageReference Include="Lykke.GoogleAuthenticator" Version="1.0.8" />
+    <PackageReference Include="Lykke.Service.ClientAccount.Client" Version="1.3.0" />
+    <PackageReference Include="Lykke.Service.PayAuth.Client" Version="1.0.13" />
+    <PackageReference Include="Lykke.Service.PayInternal.Client" Version="1.0.29" />
+    <PackageReference Include="Lykke.Service.PayInvoice.Client" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.0" />
+    <PackageReference Include="Lykke.Service.Session" Version="1.0.33" />
+    <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
+    <PackageReference Include="Lykke.Service.AntifraudDetector" Version="1.0.3" />
+    <PackageReference Include="Lykke.SettingsReader" Version="1.1.4" />
+    <PackageReference Include="QBitNinja.Client" Version="1.0.3.46" />
+  </ItemGroup>
+  <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
+    <Exec Command="npm install" />
+    <Exec Command="gulp" />
+    <Exec Command="bower install --allow-root" />
+    <Exec Command="dotnet bundle" />
+  </Target>
+  <ItemGroup>
+    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.6.362" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="wwwroot/output\mobile-site.min.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot/output\site.min.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\output\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Translates\Phrases.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Phrases.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Translates\Phrases.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Phrases.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
