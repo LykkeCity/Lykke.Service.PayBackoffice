@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LkeDomain.Test", "tests\Lke
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LykkePayBackOffice.Tests", "tests\BackOfficeTests\LykkePayBackOffice.Tests.csproj", "{94EBF767-5D7A-4997-925A-DF51D6585F3E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LkeServices.Tests", "tests\LkeServicesTests\LkeServices.Tests.csproj", "{15496E12-9D3B-427B-8606-9765AEB46D2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{94EBF767-5D7A-4997-925A-DF51D6585F3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94EBF767-5D7A-4997-925A-DF51D6585F3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94EBF767-5D7A-4997-925A-DF51D6585F3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15496E12-9D3B-427B-8606-9765AEB46D2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15496E12-9D3B-427B-8606-9765AEB46D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15496E12-9D3B-427B-8606-9765AEB46D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15496E12-9D3B-427B-8606-9765AEB46D2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,10 +90,11 @@ Global
 		{C3F97B14-AFE4-41DD-A2CC-D1EC108EF660} = {A876FE29-2FDE-4D6F-B747-28D847881D3F}
 		{39DBF2DD-D077-49B2-BC60-8DC231A9FCB9} = {25EA2062-171D-412D-AE1A-0B1DB89A6FFF}
 		{94EBF767-5D7A-4997-925A-DF51D6585F3E} = {25EA2062-171D-412D-AE1A-0B1DB89A6FFF}
+		{15496E12-9D3B-427B-8606-9765AEB46D2B} = {25EA2062-171D-412D-AE1A-0B1DB89A6FFF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F8E1F2E9-30CA-4CC4-9353-1ED121AFEF9B}
-		RESX_SortFileContentOnSave = True
 		RESX_SaveFilesImmediatelyUponChange = False
+		RESX_SortFileContentOnSave = True
+		SolutionGuid = {F8E1F2E9-30CA-4CC4-9353-1ED121AFEF9B}
 	EndGlobalSection
 EndGlobal
