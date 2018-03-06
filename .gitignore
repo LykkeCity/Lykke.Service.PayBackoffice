@@ -71,8 +71,6 @@ node_modules
 
 /src/BackOffice/Scripts/*.js
 /src/BackOffice/Scripts/.js
-/src/BackOffice/wwwroot/fonts
-/src/BackOffice/wwwroot/output
 /src/BackOffice/Scripts/*.js.map
 app/
 **/UseDevelopmentStorage=true*
