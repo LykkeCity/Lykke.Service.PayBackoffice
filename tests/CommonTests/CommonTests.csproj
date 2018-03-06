@@ -19,7 +19,7 @@
     <PackageReference Include="xunit" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\BackOffice\BackOffice.csproj" />
+    <ProjectReference Include="..\..\src\BackOffice\LykkePayBackOffice.csproj" />
     <ProjectReference Include="..\..\src\Core\Core.csproj" />
   </ItemGroup>
 </Project>

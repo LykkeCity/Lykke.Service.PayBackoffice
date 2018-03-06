@@ -4,11 +4,14 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>BackOffice</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>BackOffice</PackageId>
+    <PackageId>LykkePayBackOffice</PackageId>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <Version>1.0.0</Version>
     <SetLinkMetadataAutomatically>false</SetLinkMetadataAutomatically>
     <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
+    <Authors>LykkePayBackOffice</Authors>
+    <Company>LykkePayBackOffice</Company>
+    <Product>LykkePayBackOffice</Product>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Areas\AlphaEngine\**" />

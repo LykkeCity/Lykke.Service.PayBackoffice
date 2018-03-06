@@ -1,5 +1,5 @@
 FROM microsoft/aspnetcore:2.0
-ENTRYPOINT ["dotnet", "BackOffice.dll"]
+ENTRYPOINT ["dotnet", "LykkePayBackOffice.dll"]
 ARG source=.
 WORKDIR /app
 COPY $source .
