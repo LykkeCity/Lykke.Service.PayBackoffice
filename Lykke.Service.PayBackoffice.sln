@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "src\Core\Core.cspro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureRepositories", "src\AzureRepositories\AzureRepositories.csproj", "{40053B86-0C06-43B0-91B1-98119EF6A21E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LykkePayBackOffice", "src\BackOffice\LykkePayBackOffice.csproj", "{F1C222D6-82BF-4ECA-8B8A-3231EE819A9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.PayBackoffice", "src\Lykke.Service.PayBackoffice\Lykke.Service.PayBackoffice.csproj", "{F1C222D6-82BF-4ECA-8B8A-3231EE819A9E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LkeServices", "src\LkeServices\LkeServices.csproj", "{DA97291E-0B6F-4CEB-B2B8-1071FC182936}"
 EndProject
