@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\BackOffice\LykkePayBackOffice.csproj" />
+    <ProjectReference Include="..\..\src\Lykke.Service.PayBackoffice\Lykke.Service.PayBackoffice.csproj" />
   </ItemGroup>
 
 </Project>

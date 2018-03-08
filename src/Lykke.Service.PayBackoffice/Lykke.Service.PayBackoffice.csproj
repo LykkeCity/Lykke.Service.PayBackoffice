@@ -12,6 +12,7 @@
     <Authors>LykkePayBackOffice</Authors>
     <Company>LykkePayBackOffice</Company>
     <Product>LykkePayBackOffice</Product>
+    <RootNamespace>BackOffice</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Areas\AlphaEngine\**" />
