@@ -94,7 +94,7 @@ namespace BackOffice.Binders
 
         public ContainerBuilder Bind(IConfigurationRoot configuration, ContainerBuilder builder = null, bool fromTest = false)
         {
-            var settings = configuration.LoadSettings<BackOfficeBundle>("ConnectionStrings:ConnectionString");
+            var settings = configuration.LoadSettings<BackOfficeBundle>();
             var monitoringServiceUrl = settings.CurrentValue.BackOffice.Service.MonitoringUrl;
 
             var ioc = builder ?? new ContainerBuilder();
