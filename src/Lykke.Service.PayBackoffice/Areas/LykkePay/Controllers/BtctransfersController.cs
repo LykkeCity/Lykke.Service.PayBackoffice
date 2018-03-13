@@ -114,7 +114,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 if (vm.SelectedPaymentRequests.Count == 0)
                     return this.JsonFailResult("Error: needs to select payment request", ErrorMessageAnchor);
-                await _payInternalClient.TransfersRequestFromAddressesAsync(vm.SelectedMerchant, destinationaddress.Address, "0", vm.SelectedPaymentRequests);
+                //await _payInternalClient.TransfersRequestFromAddressesAsync(vm.SelectedMerchant, destinationaddress.Address, "0", vm.SelectedPaymentRequests);
                 return this.JsonRequestResult("#BtcTransferPage", Url.Action("BtcTransfersPage"), vm.SelectedMerchant);
             }
             catch (Exception ex)

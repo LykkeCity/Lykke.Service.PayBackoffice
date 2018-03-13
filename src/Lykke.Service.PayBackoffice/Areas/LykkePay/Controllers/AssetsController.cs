@@ -10,6 +10,7 @@ using Lykke.Service.PayInternal.Client;
 using Lykke.Service.PayInternal.Client.Models.Asset;
 using BackOffice.Controllers;
 using BackOffice.Areas.LykkePay.Models;
+using BackOffice.Translates;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -32,6 +33,35 @@ namespace BackOffice.Areas.LykkePay.Controllers
         public async Task<ActionResult> AssetPayment()
         {
             return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> AssetByMerchant(string merchant = "")
+        {
+            var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+
+            if (!string.IsNullOrEmpty(merchant) && !merchants.Select(x => x.Id).Contains(merchant))
+            {
+                return this.JsonFailResult(Phrases.InvalidValue, "#merchant");
+            }
+
+            if (merchants.Any())
+            {
+                if (string.IsNullOrEmpty(merchant))
+                {
+                    merchant = merchants.Select(x => x.Id).First();
+                }
+            }
+            return View(new AssetByMerchantViewModel
+            {
+                SelectedMerchant = merchant,
+                Merchants = merchants
+            });
+        }
+        [HttpPost]
+        public async Task<ActionResult> AssetByMerchantList(AssetByMerchantViewModel vm)
+        {
+            var assets = await _payInternalClient.GetAvailableAsync(vm.SelectedMerchant);
+            return View(assets);
         }
         [HttpPost]
         public async Task<ActionResult> AssetPaymentList()
@@ -69,6 +99,50 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Id = assetId
             };
             return View(vm);
+        }
+        [HttpPost]
+        public async Task<ActionResult> AddAssetByMerchantDialog(string merchant = null)
+        {
+            var assets = await _payInternalClient.GetAvailableAsync(merchant);
+            var vm = new AddAssetsByMerchantDialogViewModel
+            {
+                Caption = "Add assets to merchant",
+                MerchantId = merchant,
+                AssetsPayment = assets != null ? assets.AssetsPayment : string.Empty,
+                AssetsSettlement = assets != null ? assets.AssetsSettlement : string.Empty,
+            };
+            return View(vm);
+        }
+        [HttpPost]
+        public async Task<ActionResult> AddAssetByMerchant(AddAssetsByMerchantDialogViewModel vm)
+        {
+            await _payInternalClient.SetAvailabilityByMerchantAsync(new UpdateAssetAvailabilityByMerchantRequest()
+            {
+                MerchantId = vm.MerchantId,
+                PaymentAssets = vm.AssetsPayment,
+                SettlementAssets = vm.AssetsSettlement
+            });
+            return this.JsonRequestResult("#assetByMerchantList", Url.Action("AssetByMerchantList"), new AssetByMerchantViewModel() { SelectedMerchant = vm.MerchantId });
+        }
+        [HttpPost]
+        public async Task<ActionResult> DeleteAssetByMerchantDialog(string merchantId = "")
+        {
+            var viewModel = new AddAssetsByMerchantDialogViewModel()
+            {
+                Caption = "Delete assets from merchant",
+                MerchantId = merchantId
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteAssetByMerchant(AddAssetsByMerchantDialogViewModel vm)
+        {
+            await _payInternalClient.SetAvailabilityByMerchantAsync(new UpdateAssetAvailabilityByMerchantRequest()
+            {
+                MerchantId = vm.MerchantId
+            });
+            return this.JsonRequestResult("#assetByMerchantList", Url.Action("AssetByMerchantList"), new AssetByMerchantViewModel() { SelectedMerchant = vm.MerchantId });
         }
         [HttpPost]
         public async Task<ActionResult> AddAssetPayment(AssetModel model)
