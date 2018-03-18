@@ -97,7 +97,7 @@ namespace BackOffice.Binders
         {
             var settings = configuration.LoadSettings<BackOfficeBundle>();
             var monitoringServiceUrl = settings.CurrentValue.BackOffice.Service.MonitoringUrl;
-            BlockchainExplorerUrl = settings.CurrentValue.BlockchainExplorerUrl;
+            BlockchainExplorerUrl = settings.CurrentValue.BackOffice.BlockchainExplorerUrl;
             var ioc = builder ?? new ContainerBuilder();
             ioc.RegisterInstance(settings.CurrentValue.BackOffice);
             ioc.RegisterInstance(settings.CurrentValue.BackOffice.GoogleAuthSettings);
