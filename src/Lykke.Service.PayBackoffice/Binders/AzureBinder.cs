@@ -87,6 +87,7 @@ namespace BackOffice.Binders
 {
     public class AzureBinder : IDependencyBinder
     {
+        internal static string BlockchainExplorerUrl;
         public ContainerBuilder Bind(IConfigurationRoot configuration, ContainerBuilder builder = null)
         {
             return Bind(configuration, builder, false);
@@ -96,7 +97,7 @@ namespace BackOffice.Binders
         {
             var settings = configuration.LoadSettings<BackOfficeBundle>();
             var monitoringServiceUrl = settings.CurrentValue.BackOffice.Service.MonitoringUrl;
-
+            BlockchainExplorerUrl = settings.CurrentValue.BlockchainExplorerUrl;
             var ioc = builder ?? new ContainerBuilder();
             ioc.RegisterInstance(settings.CurrentValue.BackOffice);
             ioc.RegisterInstance(settings.CurrentValue.BackOffice.GoogleAuthSettings);

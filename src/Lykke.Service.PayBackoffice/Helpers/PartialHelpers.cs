@@ -157,6 +157,10 @@ namespace BackOffice.Helpers
                 PersonalData = searchData
             });
         }
+        public static IHtmlContent RenderPagination(this IHtmlHelper helper, int pageSize, int count, int currentPage, string action, string formId, string divResult)
+        {
+            return helper.Partial("~/Views/Helpers/PaginationControl.cshtml", new PagedListModel() { Count = count, CurrentPage = currentPage, PageSize = pageSize , Action = action, FormId = formId, DivResult = divResult});
+        }
     }
 
     public class EditByValueModel

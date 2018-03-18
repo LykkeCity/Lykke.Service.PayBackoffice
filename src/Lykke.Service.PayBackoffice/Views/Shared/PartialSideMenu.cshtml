@@ -13,7 +13,7 @@
     {
         <li class="smi" data-url="@Url.Action("Index", "Menu", new {area = "Users"})" data-text="@Phrases.Users"></li>
     }*@
-    @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.MenuAssets))
+    @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.MenuLykkePay))
     {
         <li class="smi" data-url="@Url.Action("Index", "Merchants", new {area = "LykkePay"})" data-text="Lykke Pay"></li>
         <li class="smi smiSub" data-url="@Url.Action("Index", "Merchants", new {area = "LykkePay"})" data-text="Merchants"></li>

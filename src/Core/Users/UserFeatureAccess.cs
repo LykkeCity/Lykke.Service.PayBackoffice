@@ -11,6 +11,7 @@
         MenuWithdraws,
         MenuIssuers,
         MenuAssets,
+        MenuLykkePay,
         MenuAssetPairs,
         MenuOrderBook,
         MenuFeeRecharging,

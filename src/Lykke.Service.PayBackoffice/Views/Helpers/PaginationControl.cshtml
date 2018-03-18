@@ -1,0 +1,70 @@
+﻿@using BackOffice.Models
+@model PagedListModel
+<div class="row">
+    <div class="col-md-10 col-md-offset-0">
+        <nav aria-label="Page pagination">
+            <ul class="pagination">
+                @*<li class="page-item"><a class="page-link prev">Previous</a></li>*@
+                @for (var i = 1; i <= Model.Count; i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <li class="page-item active"><a class="page-link">@i</a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><a class="page-link">@i</a></li>
+                    }
+                }
+                @*<li class="page-item"><a class="next">Next</a></li>*@
+            </ul>
+        </nav>
+    </div>
+    <div class="col-md-2">
+        <label class="control-label">Page size:</label>
+        <select id="selectPageSize" style="margin-top: 25px">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+        </select>
+    </div>
+</div>
+<script>
+    function getCookie(name) {
+        var matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+    function setCookie(name, value) {
+        var date = new Date;
+        date.setDate(date.getDate() + 100);
+        document.cookie = name + "=" + value + "; path=/; expires=" + date.toUTCString();
+    }
+    var pagesize = getCookie("PageSize");
+    if (!pagesize) {
+        setCookie("PageSize", 10);
+        pagesize = getCookie("PageSize");
+    }
+    $("#selectPageSize").val(pagesize);
+
+    $(".page-link").click(function () {
+        $("#CurrentPage").val($(this).text());
+        requests.doRequest({ url: '@Url.Action(Model.Action)', formId: '#@Model.FormId', divResult: '#@Model.DivResult'});
+    });
+    @*$(".next").click(function () {
+        debugger;
+        var currentpage = parseInt($("#CurrentPage").val());
+        currentpage = currentpage == 0 ? 2 : currentpage++;
+        $("#CurrentPage").val(currentpage);
+        requests.doRequest({ url: '@Url.Action(Model.Action)', formId: '#@Model.FormId', divResult: '#@Model.DivResult'});
+    });*@
+    $("#selectPageSize").change(function () {
+        setCookie("PageSize", $(this).val());
+        $("#PageSize").val($(this).val());
+        $("#CurrentPage").val(1);
+        requests.doRequest({ url: '@Url.Action(Model.Action)', formId: '#@Model.FormId', divResult: '#@Model.DivResult'});
+    });
+</script>

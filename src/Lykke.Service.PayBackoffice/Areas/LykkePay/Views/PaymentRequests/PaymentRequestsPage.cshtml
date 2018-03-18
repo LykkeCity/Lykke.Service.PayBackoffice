@@ -9,12 +9,14 @@
 
 @if (merchantList.Any())
 {
-    <div style="overflow: auto">
+    <div>
         <h1>Payment Requests</h1>
         <hr />
         <form id="frmPaymentRequests">
+            @Html.HiddenFor(x=>x.CurrentPage)
+            @Html.HiddenFor(x => x.PageSize)
             <div class="row">
-                <div class="col-md-4 col-md-offset-4 input-lg">
+                <div class="col-md-4 col-md-offset-0 input-lg">
                     @Html.RenderSelect2("Merchant:", "SelectedMerchant", merchantList, false, "Select merchant...")
                 </div>
             </div>

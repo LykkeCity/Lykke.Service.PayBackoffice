@@ -12,6 +12,8 @@ using Lykke.Service.PayInternal.Client.Models.Merchant;
 using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using BackOffice.Binders;
+using PagedList.Core;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -20,6 +22,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
     [FilterFeaturesAccess(UserFeatureAccess.MenuAssets)]
     public class PaymentRequestsController : Controller
     {
+        protected string BlockchainExplorerUrl
+               => AzureBinder.BlockchainExplorerUrl;
         private readonly IPayInternalClient _payInternalClient;
         public PaymentRequestsController(
             IPayInternalClient payInternalClient)
@@ -70,10 +74,25 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 requests = await _payInternalClient.GetPaymentRequestsAsync(merchant.Id);
             else requests = await _payInternalClient.GetPaymentRequestsAsync(vm.SelectedMerchant);
 
+            vm.PageSize = vm.PageSize == 0 ? 10 : vm.PageSize;
+            var pagesize = Request.Cookies["PageSize"];
+            if (pagesize != null)
+                vm.PageSize = Convert.ToInt32(pagesize);
+            var list = new List<PaymentRequestModel>(requests).AsQueryable();
+            var pagedlist = new List<PaymentRequestModel>();
+            var pageCount = Convert.ToInt32(Math.Ceiling((double)list.Count() / vm.PageSize));
+            var currentPage = vm.CurrentPage == 0 ? 1 : vm.CurrentPage;
+            if (list.Count() != 0)
+                pagedlist = list.ToPagedList(currentPage, vm.PageSize).ToList();
+
             var viewModel = new PaymentRequestListViewModel()
             {
-                Requests = requests,
-                SelectedMerchant = vm.SelectedMerchant
+                Requests = pagedlist,
+                SelectedMerchant = vm.SelectedMerchant,
+                BlockchainExplorerUrl = BlockchainExplorerUrl + "address/",
+                PageSize = vm.PageSize,
+                Count = pageCount,
+                CurrentPage = currentPage
             };
 
             return View(viewModel);
