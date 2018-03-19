@@ -13,6 +13,7 @@ namespace BackOffice.Areas.LykkePay.Models
         public string SelectedMerchant { get; set; }
         public IReadOnlyList<MerchantModel> Merchants { get; set; }
         public string MerchantName { get; set; }
+        public string SearchValue { get; set; }
     }
     public class PaymentRequestListViewModel : PagedListModel
     {

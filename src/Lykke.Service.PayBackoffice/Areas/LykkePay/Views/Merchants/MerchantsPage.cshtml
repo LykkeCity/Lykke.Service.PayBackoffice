@@ -1,0 +1,18 @@
+﻿@model BackOffice.Areas.LykkePay.Models.MerchantsListViewModel
+<div>
+    <h1>Merchants</h1>
+    <hr />
+    <form id="frmMerchantsPage">
+        @Html.HiddenFor(x => x.CurrentPage)
+        @Html.HiddenFor(x => x.PageSize)
+        <div class="row">
+        </div>
+    </form>
+    <div id="merchantsList"></div>
+</div>
+
+<script>
+        $(function () {
+            requests.doRequest({ url: '@Url.Action("MerchantsList")', formId: '#frmMerchantsPage', divResult: '#merchantsList' });
+        });
+</script>

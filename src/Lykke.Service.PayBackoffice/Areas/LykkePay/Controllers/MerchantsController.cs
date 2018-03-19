@@ -12,6 +12,7 @@ using BackOffice.Areas.LykkePay.Models;
 using BackOffice.Controllers;
 using BackOffice.Translates;
 using Lykke.Service.PayAuth.Client;
+using PagedList.Core;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -35,10 +36,34 @@ namespace BackOffice.Areas.LykkePay.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<ActionResult> MerchantsList()
+        public async Task<ActionResult> MerchantsPage()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> MerchantsList(MerchantsListViewModel vm)
         {
             var merchants = await _payInternalClient.GetMerchantsAsync();
-            return View(merchants);
+
+            vm.PageSize = vm.PageSize == 0 ? 10 : vm.PageSize;
+            var pagesize = Request.Cookies["PageSize"];
+            if (pagesize != null)
+                vm.PageSize = Convert.ToInt32(pagesize);
+            var list = new List<MerchantModel>(merchants).AsQueryable();
+            var pagedlist = new List<MerchantModel>();
+            var pageCount = Convert.ToInt32(Math.Ceiling((double)list.Count() / vm.PageSize));
+            var currentPage = vm.CurrentPage == 0 ? 1 : vm.CurrentPage;
+            if (list.Count() != 0)
+                pagedlist = list.ToPagedList(currentPage, vm.PageSize).ToList();
+
+            var viewmodel = new MerchantsListViewModel()
+            {
+                Merchants = pagedlist,
+                PageSize = vm.PageSize,
+                Count = pageCount,
+                CurrentPage = currentPage
+            };
+            return View(viewmodel);
         }
         [HttpPost]
         public async Task<ActionResult> AddOrEditMerchantDialog(string id = null)

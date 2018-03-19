@@ -1,93 +1,90 @@
 ﻿@using BackOffice.Translates
-@using Lykke.Service.PayInternal.Client.Models.Merchant
-@model IEnumerable<MerchantModel>
-    <div class="row" style="margin-left: 30px">
-        <h1>Merchants</h1>
-        <div class="col-md-2">
-            <a class="btn btn btn-success"
-               onclick="ui.showDialog('@Url.Action("AddOrEditMerchantDialog")');">
-                Add merchant
-            </a>
-        </div>
+@model BackOffice.Areas.LykkePay.Models.MerchantsListViewModel
+<div class="row" style="margin-left: 30px">
+    <div class="col-md-2">
+        <a class="btn btn btn-success"
+           onclick="ui.showDialog('@Url.Action("AddOrEditMerchantDialog")');">
+            Add merchant
+        </a>
     </div>
-    <hr />
-    @if (Model != null && Model.Any())
-    {
-            <table class="table table-striped">
-                <tr>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        ApiKey
-                    </th>
-                    <th>
-                        DeltaSpread
-                    </th>
-                    <th>
-                        TimeCacheRates
-                    </th>
-                    <th>
-                        LpMarkupPercent
-                    </th>
-                    <th>
-                        LpMarkupPips
-                    </th>
-                    <th>
-                        MarkupFixedFee
-                    </th>
-                    <th>
-                        LwId
-                    </th>
-                    <th></th>
-                </tr>
+</div>
+@if (Model.Merchants != null && Model.Merchants.Any())
+{
+    @Html.RenderPagination(Model.PageSize, Model.Count, Model.CurrentPage, "MerchantsList", "frmMerchantsPage", "merchantsList")
+    <table class="table table-striped">
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                ApiKey
+            </th>
+            <th>
+                DeltaSpread
+            </th>
+            <th>
+                TimeCacheRates
+            </th>
+            <th>
+                LpMarkupPercent
+            </th>
+            <th>
+                LpMarkupPips
+            </th>
+            <th>
+                MarkupFixedFee
+            </th>
+            <th>
+                LwId
+            </th>
+            <th></th>
+        </tr>
 
-                @foreach (var item in Model)
+        @foreach (var item in Model.Merchants)
                 {
-                    <tr>
-                        <td>
-                            @item.Name
-                        </td>
-                        <td>
-                            @item.ApiKey
-                        </td>
-                        <td>
-                            @item.DeltaSpread
-                        </td>
-                        <td>
-                            @item.TimeCacheRates
-                        </td>
-                        <td>
-                            @item.LpMarkupPercent
-                        </td>
-                        <td>
-                            @item.LpMarkupPips
-                        </td>
-                        <td>
-                            @item.MarkupFixedFee
-                        </td>
-                        <td>
-                            @item.LwId
-                        </td>
-                        <td style="text-align: right">
-                            <button class="btn btn-xs btn-default btn-raised"
-                                    onclick="ui.showDialog('@Url.Action("AddOrEditMerchantDialog")', { id: '@item.Id' });">
-                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                            </button>
-                            <button class="btn btn-xs btn-danger btn-raised"
-                                    onclick="ui.showDialog('@Url.Action("DeleteMerchantDialog")', { merchant: '@item.Name', id: '@item.Id' });">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
-                        </td>
-                    </tr>
-                }
-            </table>
-    }
-    else
-    {
-            <div class="row">
-                <p>@Phrases.NoRecordsFound</p>
-            </div>
-            }
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.ApiKey
+                </td>
+                <td>
+                    @item.DeltaSpread
+                </td>
+                <td>
+                    @item.TimeCacheRates
+                </td>
+                <td>
+                    @item.LpMarkupPercent
+                </td>
+                <td>
+                    @item.LpMarkupPips
+                </td>
+                <td>
+                    @item.MarkupFixedFee
+                </td>
+                <td>
+                    @item.LwId
+                </td>
+                <td style="text-align: right">
+                    <button class="btn btn-xs btn-default btn-raised"
+                            onclick="ui.showDialog('@Url.Action("AddOrEditMerchantDialog")', { id: '@item.Id' });">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    </button>
+                    <button class="btn btn-xs btn-danger btn-raised"
+                            onclick="ui.showDialog('@Url.Action("DeleteMerchantDialog")', { merchant: '@item.Name', id: '@item.Id' });">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <div class="row">
+        <p>@Phrases.NoRecordsFound</p>
+    </div>
+}
 
-        

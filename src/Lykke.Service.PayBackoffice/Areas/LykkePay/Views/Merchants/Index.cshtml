@@ -1,7 +1,7 @@
 ﻿@using BackOffice.Translates
 
 <ul id="tabs" class="nav nav-tabs">
-    <li id="merchants"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("MerchantsList")')">Merchants</a></li>
+    <li id="merchants"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("MerchantsPage")')">Merchants</a></li>
 </ul>
 
 <div id="MerchantsPage"></div>
@@ -15,5 +15,5 @@
         });
         requests.doRequest({ url: url, divResult: '#MerchantsPage' });
     }
-    selectTab('merchants', '@Url.Action("MerchantsList")');
+    selectTab('merchants', '@Url.Action("MerchantsPage")');
 </script>

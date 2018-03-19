@@ -79,6 +79,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (pagesize != null)
                 vm.PageSize = Convert.ToInt32(pagesize);
             var list = new List<PaymentRequestModel>(requests).AsQueryable();
+            if (!string.IsNullOrEmpty(vm.SearchValue))
+                list = list.Where(x => x.WalletAddress.Contains(vm.SearchValue)).AsQueryable();
             var pagedlist = new List<PaymentRequestModel>();
             var pageCount = Convert.ToInt32(Math.Ceiling((double)list.Count() / vm.PageSize));
             var currentPage = vm.CurrentPage == 0 ? 1 : vm.CurrentPage;
