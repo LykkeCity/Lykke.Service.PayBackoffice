@@ -76,3 +76,4 @@ app/
 **/UseDevelopmentStorage=true*
 /src/BackOffice/appsettings.Development.json
 /src/BackOffice/UseDevelopmentStorage=true.test
+/src/Lykke.Service.PayBackoffice/appsettings.json
