@@ -10,7 +10,6 @@ namespace BackOffice.Settings
         public BackOfficeServiceSettings Service { get; set; }
 
         public MatchingOrdersSettings MatchingEngine { get; set; }
-
         //public PaymentSystemsSettings PaymentSystems { get; set; }
         public LykkePayWalletListSettings LykkePayWalletList { get; set; }
 
