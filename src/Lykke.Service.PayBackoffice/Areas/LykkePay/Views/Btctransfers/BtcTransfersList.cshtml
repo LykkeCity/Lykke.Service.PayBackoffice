@@ -15,6 +15,12 @@
             <th>
                 WalletAddress
             </th>
+            <th>
+                Asset
+            </th>
+            <th>
+                Transactions amount
+            </th>
             @*<th></th>*@
         </tr>
 
@@ -22,16 +28,23 @@
         {
             <tr>
                 <td>
-                    @Html.RenderCheckbox(@item.WalletAddress, "", false)
+                    @Html.RenderCheckbox(@item.PaymentRequest.WalletAddress, "", false)
                 </td>
                 <td>
-                    @item.DueDate
+                    @item.PaymentRequest.DueDate
                 </td>
                 <td>
+                    @item.PaymentRequest.Amount
+                </td>
+                <td>
+                    @item.PaymentRequest.WalletAddress
+                </td>
+                <td>
+                    @item.AssetId
+                </td>
+                <td>
+                    <input type="hidden" id="walletamount_@item.PaymentRequest.WalletAddress" value="@item.Amount"/>
                     @item.Amount
-                </td>
-                <td>
-                    @item.WalletAddress
                 </td>
                 @*<td style="text-align: right">
                     <button class="btn btn-xs btn-default btn-raised"

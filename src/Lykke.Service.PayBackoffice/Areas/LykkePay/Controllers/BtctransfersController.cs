@@ -81,12 +81,22 @@ namespace BackOffice.Areas.LykkePay.Controllers
             var paymentrequests = await _payInternalClient.GetPaymentRequestsAsync(vm.SelectedMerchant);
             var addresses = paymentrequests.Select(p => p.WalletAddress).ToList();
             var transactions = (await GetTransactions(addresses)).ToList();
-            var filtered = transactions.Where(t => t.Amount != 0).ToList();
-            var list = new List<PaymentRequestModel>();
+            var filtered = transactions.Where(t => t.Amount > 0).ToList();
+            var list = new List<RequestTransferModel>();
             foreach (var transaction in filtered)
             {
                 var request = paymentrequests.FirstOrDefault(p => p.WalletAddress == transaction.WalletAddress);
-                list.Add(request);
+                var tm = list.FirstOrDefault(r => r.PaymentRequest.WalletAddress == transaction.WalletAddress);
+                if (tm != null)
+                    tm.Amount += transaction.Amount;
+                else
+                {
+                    tm = new RequestTransferModel();
+                    tm.Amount = transaction.Amount;
+                    tm.AssetId = transaction.AssetId;
+                    tm.PaymentRequest = request;
+                    list.Add(tm);
+                }
             }
             var viewModel = new BtctransfersListViewModel
             {
@@ -120,12 +130,13 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 foreach (var item in vm.SelectedPaymentRequests)
                 {
                     var sourceinfo = new BtcTransferSourceInfo();
-                    sourceinfo.Address = item;
+                    sourceinfo.Address = item.PaymentRequest.WalletAddress;
+                    sourceinfo.Amount = Convert.ToDecimal(item.Amount/100000000);
                     sources.Add(sourceinfo);
                 }
                 request.Sources = sources;
                 await _payInternalClient.BtcFreeTransferAsync(request);
-                return this.JsonRequestResult("#BtcTransferPage", Url.Action("BtcTransfersPage"), vm.SelectedMerchant);
+                return this.JsonRequestResult("#btcTransfersList", Url.Action("BtcTransfersList"), new BtctransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant } );
             }
             catch (Exception ex)
             {

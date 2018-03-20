@@ -55,9 +55,16 @@
             var listdiv = document.getElementById("btcTransfersList");
             var checkedBoxes = listdiv.querySelectorAll('input[type=checkbox]:checked');
             var list = [];
-            for (var i = 0; i < checkedBoxes.length; i++)
-                list.push(checkedBoxes[i].name);
-            ui.showDialog('@Url.Action("TransferMoneyDialog")', { selectedMerchant: '@Model.SelectedMerchant', selectedPaymentRequests: list });
+            for (var i = 0; i < checkedBoxes.length; i++) {
+                var model = {};
+                var paymentrequest = {};
+                paymentrequest.walletAddress = checkedBoxes[i].name;
+                model.amount = document.getElementById("walletamount_" + checkedBoxes[i].name).value;
+                model.paymentRequest = paymentrequest;
+                list.push(model);
+            }
+            var $merchantSelect = $('#selectedMerchant');
+            ui.showDialog('@Url.Action("TransferMoneyDialog")', { selectedMerchant: $merchantSelect.val(), selectedPaymentRequests: list });
         }
         $(function () {
             var $merchantSelect = $('#selectedMerchant');
