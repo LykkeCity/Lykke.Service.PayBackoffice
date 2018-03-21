@@ -4,19 +4,19 @@
     <div class="col-md-10 col-md-offset-0">
         <nav aria-label="Page pagination">
             <ul class="pagination">
-                @*<li class="page-item"><a class="page-link prev">Previous</a></li>*@
+                <li class="page-item"><a class="page-link prev">Previous</a></li>
                 @for (var i = 1; i <= Model.Count; i++)
                 {
                     if (i == Model.CurrentPage)
                     {
-                        <li class="page-item active"><a class="page-link">@i</a></li>
+                        <li class="page-item active"><a class="page-link item">@i</a></li>
                     }
                     else
                     {
-                        <li class="page-item"><a class="page-link">@i</a></li>
+                        <li class="page-item"><a class="page-link item">@i</a></li>
                     }
                 }
-                @*<li class="page-item"><a class="next">Next</a></li>*@
+                <li class="page-item"><a class="next">Next</a></li>
             </ul>
         </nav>
     </div>
@@ -50,17 +50,27 @@
     }
     $("#selectPageSize").val(pagesize);
 
-    $(".page-link").click(function () {
+    $(".page-link.item").click(function () {
         $("#CurrentPage").val($(this).text());
         requests.doRequest({ url: '@Url.Action(Model.Action)', formId: '#@Model.FormId', divResult: '#@Model.DivResult'});
     });
-    @*$(".next").click(function () {
-        debugger;
+    $(".next").click(function () {
         var currentpage = parseInt($("#CurrentPage").val());
-        currentpage = currentpage == 0 ? 2 : currentpage++;
-        $("#CurrentPage").val(currentpage);
-        requests.doRequest({ url: '@Url.Action(Model.Action)', formId: '#@Model.FormId', divResult: '#@Model.DivResult'});
-    });*@
+        if (currentpage != @Model.Count)
+        {
+            currentpage++;
+            $("#CurrentPage").val(currentpage);
+            requests.doRequest({ url: '@Url.Action(Model.Action)', formId: '#@Model.FormId', divResult: '#@Model.DivResult' });
+        }
+    });
+    $(".prev").click(function () {
+        var currentpage = parseInt($("#CurrentPage").val());
+        if (currentpage != 1) {
+            currentpage--;
+            $("#CurrentPage").val(currentpage);
+            requests.doRequest({ url: '@Url.Action(Model.Action)', formId: '#@Model.FormId', divResult: '#@Model.DivResult' });
+        }
+    });
     $("#selectPageSize").change(function () {
         setCookie("PageSize", $(this).val());
         $("#PageSize").val($(this).val());
