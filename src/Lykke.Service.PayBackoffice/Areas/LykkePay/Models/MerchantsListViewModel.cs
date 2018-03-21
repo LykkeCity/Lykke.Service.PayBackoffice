@@ -10,5 +10,6 @@ namespace BackOffice.Areas.LykkePay.Models
     public class MerchantsListViewModel : PagedListModel
     {
         public IEnumerable<MerchantModel> Merchants { get; set; }
+        public string SearchValue { get; set; }
     }
 }

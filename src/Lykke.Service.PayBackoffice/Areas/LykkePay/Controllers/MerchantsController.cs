@@ -38,7 +38,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> MerchantsPage()
         {
-            return View();
+            var model = new MerchantsListViewModel();
+            model.CurrentPage = 1;
+            return View(model);
         }
         [HttpPost]
         public async Task<ActionResult> MerchantsList(MerchantsListViewModel vm)
@@ -50,6 +52,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (pagesize != null)
                 vm.PageSize = Convert.ToInt32(pagesize);
             var list = new List<MerchantModel>(merchants).AsQueryable();
+            if (!string.IsNullOrEmpty(vm.SearchValue))
+                list = list.Where(x => x.Name.ToLower().Contains(vm.SearchValue.ToLower()) || x.ApiKey.ToLower().Contains(vm.SearchValue.ToLower())).AsQueryable();
             var pagedlist = new List<MerchantModel>();
             var pageCount = Convert.ToInt32(Math.Ceiling((double)list.Count() / vm.PageSize));
             var currentPage = vm.CurrentPage == 0 ? 1 : vm.CurrentPage;
