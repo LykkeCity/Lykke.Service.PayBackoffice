@@ -11,5 +11,6 @@ namespace BackOffice.Areas.LykkePay.Models
     {
         public IEnumerable<MerchantModel> Merchants { get; set; }
         public string SearchValue { get; set; }
+        public bool FilterByEmail { get; set; }
     }
 }
