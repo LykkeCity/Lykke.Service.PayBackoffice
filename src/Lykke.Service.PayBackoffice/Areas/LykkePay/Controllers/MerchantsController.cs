@@ -60,8 +60,15 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 try
                 {
-                    var merchantId = await _payInvoiceClient.GetMerchantIdByEmployeeEmail(vm.SearchValue);
-                    list = list.Where(x => x.Id == merchantId);
+                    var merchantsId = await _payInvoiceClient.GetMerchantsIdByEmployeeEmail(vm.SearchValue);
+                    var filtered = new List<MerchantModel>();
+                    foreach (var merchantId in merchantsId)
+                    {
+                        var merchant = list.FirstOrDefault(x => x.Id == merchantId);
+                        if (merchant != null)
+                            filtered.Add(merchant);
+                    }
+                    list = filtered.AsQueryable();
                 }
                 catch(Exception ex)
                 {
@@ -126,7 +133,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     return this.JsonFailResult("System id required", ErrorMessageAnchor);
                 if (string.IsNullOrEmpty(vm.PublicKey))
                     return this.JsonFailResult("Public key required", ErrorMessageAnchor);
-                if (merchants != null && merchants.Select(x => x.Name).Contains(vm.Name))
+                if (merchants != null && (merchants.Select(x => x.Name).Contains(vm.Name) || merchants.Select(x => x.ApiKey).Contains(vm.ApiKey)))
                 {
                     return this.JsonFailResult(Phrases.AlreadyExists, "#name");
                 }
