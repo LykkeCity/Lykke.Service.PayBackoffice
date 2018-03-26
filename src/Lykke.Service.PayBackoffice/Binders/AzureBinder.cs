@@ -317,7 +317,7 @@ namespace BackOffice.Binders
             var socketLog = new SocketLogDynamic(i => { },
                 str => Console.WriteLine(DateTime.UtcNow.ToIsoDateTime() + ": " + str));
 
-            ioc.BindMeClient(ipEndPoint, socketLog);
+            //ioc.BindMeClient(ipEndPoint, socketLog);
         }
 
         private static void BindMicroservices(ContainerBuilder container, BackOfficeBundle allSettings, ILog log)
