@@ -11,6 +11,7 @@ namespace BackOffice.Areas.LykkePay.Models
     public class StaffsPageViewModel
     {
         public string SelectedMerchant { get; set; }
+        public string SearchValue { get; set; }
         public IReadOnlyList<MerchantModel> Merchants { get; set; }
     }
     public class StaffsListViewModel
