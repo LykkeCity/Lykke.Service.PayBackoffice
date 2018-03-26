@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BackOffice.Binders;
 using PagedList.Core;
+using BackOffice.Helpers;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -51,12 +52,12 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     merchant = merchants.Select(x => x.Id).First();
                 }
             }
-
             return View(new PaymentRequestPageViewModel()
             {
                 SelectedMerchant = merchant,
-                Merchants = merchants
-            });
+                Merchants = merchants,
+                Statuses = Enum.GetValues(typeof(PaymentRequestStatusHelper)).Cast<PaymentRequestStatusHelper>().ToList()
+        });
         }
         [HttpPost]
         public async Task<ActionResult> PaymentRequestsList(PaymentRequestPageViewModel vm)
@@ -79,8 +80,19 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (pagesize != null)
                 vm.PageSize = Convert.ToInt32(pagesize);
             var list = new List<PaymentRequestModel>(requests).AsQueryable();
-            if (!string.IsNullOrEmpty(vm.SearchValue))
-                list = list.Where(x => x.WalletAddress.Contains(vm.SearchValue)).AsQueryable();
+            try
+            {
+                if (!string.IsNullOrEmpty(vm.SearchValue))
+                    list = list.Where(x => x.WalletAddress.Contains(vm.SearchValue)
+                    || x.Id.Contains(vm.SearchValue)
+                    || (string.IsNullOrEmpty(x.OrderId) && x.OrderId.Contains(vm.SearchValue))).AsQueryable();
+                if (vm.SelectedStatus != PaymentRequestStatusHelper.None)
+                    list = list.Where(x => x.Status.ToString() == vm.SelectedStatus.ToString()).AsQueryable();
+            }
+            catch(Exception ex)
+            {
+                list = new List<PaymentRequestModel>().AsQueryable();
+            }
             var pagedlist = new List<PaymentRequestModel>();
             var pageCount = Convert.ToInt32(Math.Ceiling((double)list.Count() / vm.PageSize));
             var currentPage = vm.CurrentPage == 0 ? 1 : vm.CurrentPage;
