@@ -20,24 +20,25 @@
             </div>
         </div>
     </div>
-        <hr />
-        <form id="frmStaffs">
-            <div class="row">
-                <div class="col-md-2 col-md-offset-0 input-lg">
-                    @Html.RenderSelect2("", "SelectedMerchant", merchantList, false, "Select merchant...")
-                </div>
-                <div class="col-md-3 col-md-offset-0 input-lg fa-search">
-                    <i class="glyphicon glyphicon-search"></i>@Html.TextBoxFor(m => m.SearchValue)
-                </div>
+    <hr />
+    <form id="frmStaffs">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-0 input-lg">
+                @Html.RenderSelect2("", "SelectedMerchant", merchantList, false, "Select merchant...")
             </div>
-        </form>
-        <div id="staffList"></div>
+            <div class="col-md-3 col-md-offset-0 input-lg fa-search">
+                <i class="glyphicon glyphicon-search"></i>@Html.TextBoxFor(m => m.SearchValue)
+            </div>
+        </div>
+    </form>
+    <div id="staffList"></div>
 
         <script>
         $(function () {
             var $merchantSelect = $('#selectedMerchant');
             $merchantSelect.select2().on("change",
                 function (e) {
+                    $("#SearchValue").val("");
                     requests.doRequest({
                         url: '@Url.Action("StaffsList")',
                         formId: '#frmStaffs',
@@ -52,6 +53,12 @@
             var $merchantSelect = $('#selectedMerchant');
             ui.showDialog('@Url.Action("AddOrEditStaffDialog")', { merchant: $merchantSelect.val() });
         }
+            $("#SearchValue").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    requests.doRequest({ url: '@Url.Action("StaffsList")', formId: '#frmStaffs', divResult: '#staffList' });
+                    e.preventDefault();
+                }
+            });
         </script>
 }
 else

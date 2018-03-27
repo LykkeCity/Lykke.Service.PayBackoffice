@@ -18,6 +18,7 @@ namespace BackOffice.Areas.LykkePay.Models
     {
         public string SelectedMerchant { get; set; }
         public IReadOnlyList<EmployeeModel> Staffs { get; set; }
+        public IReadOnlyList<StaffViewModel> Employees { get; set; }
     }
     public class AddStaffDialogViewModel : IPersonalAreaDialog
     {
