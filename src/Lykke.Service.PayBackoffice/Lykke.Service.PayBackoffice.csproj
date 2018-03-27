@@ -187,6 +187,7 @@
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
     <PackageReference Include="Lykke.Service.AntifraudDetector" Version="1.0.3" />
     <PackageReference Include="Lykke.SettingsReader" Version="1.1.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="PagedList.Core.Mvc" Version="1.0.1" />
     <PackageReference Include="QBitNinja.Client" Version="1.0.3.46" />
   </ItemGroup>
