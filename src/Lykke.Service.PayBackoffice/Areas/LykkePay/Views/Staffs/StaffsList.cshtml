@@ -1,10 +1,13 @@
 ﻿@using BackOffice.Translates
 @model BackOffice.Areas.LykkePay.Models.StaffsListViewModel
 
-@if (Model.Staffs != null && Model.Staffs.Any())
+@if (Model.Employees != null && Model.Employees.Any())
 {
     <table class="table table-striped">
         <tr>
+            <th>
+                Merchant
+            </th>
             <th>
                 Email
             </th>
@@ -17,9 +20,12 @@
             <th></th>
         </tr>
 
-        @foreach (var item in Model.Staffs)
+        @foreach (var item in Model.Employees)
         {
             <tr>
+                <td>
+                    @item.MerchantName
+                </td>
                 <td>
                     @item.Email
                 </td>

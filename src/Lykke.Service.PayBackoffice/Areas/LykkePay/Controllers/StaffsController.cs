@@ -68,10 +68,42 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (string.IsNullOrEmpty(vm.SelectedMerchant))
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, "#selectedMerchant");
 
-            var staffs = await _payInvoiceClient.GetEmployeesAsync(vm.SelectedMerchant);
+            var filteredstaffs = new List<StaffViewModel>();
+            if (!string.IsNullOrEmpty(vm.SearchValue))
+            {
+                var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+                var merchantsId = await _payInvoiceClient.GetMerchantsIdByEmployeeEmail(vm.SearchValue);
+                foreach(var merchantId in merchantsId)
+                {
+                    var merchantstaffs = await _payInvoiceClient.GetEmployeesAsync(merchantId);
+                    var merchant = merchants.FirstOrDefault(x => x.Id == merchantId);
+                    var list = merchantstaffs.Select(x => new StaffViewModel()
+                    {
+                        Id = x.Id,
+                        Email = x.Email,
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        MerchantId = merchantId,
+                        MerchantName = merchant.Name
+                    });
+                    filteredstaffs.AddRange(list);
+                }
+            }
+            else
+            {
+                var staffs = await _payInvoiceClient.GetEmployeesAsync(vm.SelectedMerchant);
+                filteredstaffs = staffs.Select(x => new StaffViewModel()
+                {
+                    Id = x.Id,
+                    Email = x.Email,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    MerchantId = vm.SelectedMerchant
+                }).ToList();
+            }
             var viewModel = new StaffsListViewModel
             {
-                Staffs = staffs,
+                Employees = filteredstaffs,
                 SelectedMerchant = vm.SelectedMerchant
             };
 
