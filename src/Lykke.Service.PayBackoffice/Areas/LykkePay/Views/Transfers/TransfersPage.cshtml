@@ -1,41 +1,47 @@
 ﻿@using BackOffice.Translates
 @using BackOffice.Models
-@model BackOffice.Areas.LykkePay.Models.BtctransfersPageViewModel
+@model BackOffice.Areas.LykkePay.Models.TransfersPageViewModel
 
 @{
     IEnumerable<ItemViewModel> merchantList = Model.Merchants.
         Select(m => new ItemViewModel { Id = m.Id, Title = m.Name }).ToArray();
+    IEnumerable<ItemViewModel> assetsList = Model.Assets.
+    Select(m => new ItemViewModel { Id = m, Title = m }).ToArray();
 }
 
 @if (merchantList.Any())
 {
-        <div class="row" style="margin-left: 30px">
-            <h1>BTC transfers</h1>
-            <div class="col-md-2">
-                <a class="btn btn btn-success"
-                   onclick="selectedCheckboxes()">
-                    Transfer
-                </a>
+        <div>
+            <h1>Transfers</h1>
+            <div class="row">
+                <div class="col-md-2">
+                    <a class="btn btn btn-success"
+                       onclick="selectedCheckboxes()">
+                        Settlement
+                    </a>
+                </div>
             </div>
         </div>
-        <hr />
-        <form id="frmBtcTransfers">
+        <form id="frmTransfers">
             <div class="row">
-                <div class="col-md-4 col-md-offset-0 input-lg">
-                    @Html.RenderSelect2("Merchant:", "SelectedMerchant", merchantList, false, "Select merchant...")
+                <div class="col-md-3 col-md-offset-0 input-lg">
+                    @Html.RenderSelect2("", "SelectedMerchant", merchantList, false, "Select merchant...")
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3 col-md-offset-0 input-lg">
+                    @Html.RenderSelect2("", "SelectedAsset", assetsList, false, "Select asset...")
+                </div>
+                <div class="col-md-2" style="margin-top: 14px;">
                     <input type="checkbox" onclick="selectAllCheckboxes()" id="selectall" />Select all
                 </div>
             </div>
         </form>
-        <div id="btcTransfersList"></div>
+        <div id="transfersList"></div>
 
     <script>
         function selectAllCheckboxes()
         {
             var selector = document.getElementById("selectall");
-            var listdiv = document.getElementById("btcTransfersList");
+            var listdiv = document.getElementById("transfersList");
             var checkedBoxes = listdiv.querySelectorAll('input[type=checkbox]');
             for (var i = 0; i < checkedBoxes.length; i++) {
                 if (selector.checked) {
@@ -52,7 +58,7 @@
 
         function selectedCheckboxes()
         {
-            var listdiv = document.getElementById("btcTransfersList");
+            var listdiv = document.getElementById("transfersList");
             var checkedBoxes = listdiv.querySelectorAll('input[type=checkbox]:checked');
             var list = [];
             for (var i = 0; i < checkedBoxes.length; i++) {
@@ -73,13 +79,24 @@
                     var selector = document.getElementById("selectall");
                     selector.checked = false;
                     requests.doRequest({
-                        url: '@Url.Action("BtcTransfersList")',
-                        formId: '#frmBtcTransfers',
-                        divResult: '#btcTransfersList'
+                        url: '@Url.Action("TransfersList")',
+                        formId: '#frmTransfers',
+                        divResult: '#transfersList'
+                    });
+                });
+            var $assetSelect = $('#selectedAsset');
+            $assetSelect.select2().on("change",
+                function (e) {
+                    var selector = document.getElementById("selectall");
+                    selector.checked = false;
+                    requests.doRequest({
+                        url: '@Url.Action("TransfersList")',
+                        formId: '#frmTransfers',
+                        divResult: '#transfersList'
                     });
                 });
             $('.select2-container--default').width(200);
-            requests.doRequest({ url: '@Url.Action("BtcTransfersList")', formId: '#frmBtcTransfers', divResult: '#btcTransfersList' });
+            requests.doRequest({ url: '@Url.Action("TransfersList")', formId: '#frmTransfers', divResult: '#transfersList' });
         });
     </script>
 }
