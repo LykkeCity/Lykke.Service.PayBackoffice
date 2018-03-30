@@ -20,6 +20,7 @@ using MoreLinq;
 using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
 using Core.Settings;
 using Newtonsoft.Json;
+using Lykke.Service.PayInternal.Client.Models.Transactions;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -81,39 +82,44 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (string.IsNullOrEmpty(vm.SelectedMerchant))
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, "#selectedMerchant");
 
-            var paymentrequests = await _payInternalClient.GetPaymentRequestsAsync(vm.SelectedMerchant);
-            var addresses = paymentrequests.Select(p => p.WalletAddress).ToList();
-            var transactions = (await GetTransactions(addresses)).ToList();
-            var filtered = transactions.Where(t => t.Amount > 0).ToList();
             var list = new List<RequestTransferModel>();
             var assetsList = new List<string>();
-            assetsList.Add("None");
-            foreach (var transaction in filtered)
+            var viewModel = new TransfersListViewModel();
+            try
             {
-                var request = paymentrequests.FirstOrDefault(p => p.WalletAddress == transaction.WalletAddress);
-                var tm = list.FirstOrDefault(r => r.PaymentRequest.WalletAddress == transaction.WalletAddress);
-                if (tm != null)
-                    tm.Amount += transaction.Amount;
-                else
+                var paymentrequests = await _payInternalClient.GetPaymentRequestsAsync(vm.SelectedMerchant);
+                var addresses = paymentrequests.Select(p => p.WalletAddress).ToList();
+                var transactions = (await GetTransactions(addresses)).ToList();
+                var filtered = transactions.Where(t => t.Amount > 0).ToList();
+                assetsList.Add("None");
+                foreach (var transaction in filtered)
                 {
-                    tm = new RequestTransferModel();
-                    tm.Amount = transaction.Amount;
-                    tm.AssetId = transaction.AssetId;
-                    tm.PaymentRequest = request;
-                    if (vm.SelectedAsset == "None" || tm.AssetId == vm.SelectedAsset)
-                        list.Add(tm);
+                    var request = paymentrequests.FirstOrDefault(p => p.WalletAddress == transaction.WalletAddress);
 
-                    if (!assetsList.Contains(transaction.AssetId))
-                        assetsList.Add(transaction.AssetId);
+                    var tm = list.FirstOrDefault(r => r.PaymentRequest.WalletAddress == transaction.WalletAddress);
+                    if (tm != null)
+                        tm.Amount += transaction.Amount;
+                    else
+                    {
+                        tm = new RequestTransferModel();
+                        tm.Amount = transaction.Amount;
+                        tm.AssetId = transaction.AssetId;
+                        tm.PaymentRequest = request;
+                        if (vm.SelectedAsset == "None" || tm.AssetId == vm.SelectedAsset)
+                            list.Add(tm);
+
+                        if (!assetsList.Contains(transaction.AssetId))
+                            assetsList.Add(transaction.AssetId);
+                    }
                 }
             }
-            
-            var viewModel = new TransfersListViewModel
+            catch (Exception ex)
             {
-                List = list,
-                SelectedMerchant = vm.SelectedMerchant,
-                Assets = JsonConvert.SerializeObject(assetsList)
-        };
+                viewModel.Error = ex.InnerException.Message;
+            }
+            viewModel.List = list;
+            viewModel.SelectedMerchant = vm.SelectedMerchant;
+            viewModel.Assets = JsonConvert.SerializeObject(assetsList);
             return View(viewModel);
         }
         [HttpPost]
@@ -142,12 +148,48 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 {
                     var sourceinfo = new BtcTransferSourceInfo();
                     sourceinfo.Address = item.PaymentRequest.WalletAddress;
-                    sourceinfo.Amount = Convert.ToDecimal(item.Amount/100000000);
+                    sourceinfo.Amount = Convert.ToDecimal(item.Amount / 100000000);
                     sources.Add(sourceinfo);
                 }
                 request.Sources = sources;
                 await _payInternalClient.BtcFreeTransferAsync(request);
-                return this.JsonRequestResult("#btcTransfersList", Url.Action("BtcTransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant } );
+                return this.JsonRequestResult("#btcTransfersList", Url.Action("BtcTransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant });
+            }
+            catch (Exception ex)
+            {
+                return this.JsonFailResult("Error: " + ex.InnerException.Message, ErrorMessageAnchor);
+            }
+        }
+        [HttpPost]
+        public async Task<ActionResult> RefundMoneyDialog(RefundModel model)
+        {
+            var viewmodel = new RefundMoneyDialogViewModel()
+            {
+                SelectedMerchant = model.SelectedMerchant,
+                SelectedPaymentRequest = model.SelectedPaymentRequest
+            };
+            return View(viewmodel);
+        }
+        [HttpPost]
+        public async Task<ActionResult> RefundMoney(RefundMoneyDialogViewModel vm)
+        {
+            try
+            {
+                var transactions = await _payInternalClient.GetTransactionsByPaymentRequestAsync(vm.SelectedPaymentRequest);
+                foreach (var transaction in transactions)
+                {
+                    foreach (var source in transaction.SourceWalletAddresses)
+                    {
+                        var refund = new RefundRequestModel()
+                        {
+                            DestinationAddress = source,
+                            PaymentRequestId = vm.SelectedPaymentRequest,
+                            MerchantId = vm.SelectedMerchant
+                        };
+                        await _payInternalClient.RefundAsync(refund);
+                    }
+                }
+                return this.JsonRequestResult("#btcTransfersList", Url.Action("BtcTransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant });
             }
             catch (Exception ex)
             {

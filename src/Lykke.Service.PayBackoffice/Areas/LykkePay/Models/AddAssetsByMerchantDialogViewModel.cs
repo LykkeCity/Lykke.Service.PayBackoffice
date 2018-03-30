@@ -10,8 +10,8 @@ namespace BackOffice.Areas.LykkePay.Models
     {
         public string Caption { get; set; }
         public string Width { get; set; }
-        public string AssetsPayment { get; set; }
-        public string AssetsSettlement { get; set; }
+        public string PaymentAssets { get; set; }
+        public string SettlementAssets { get; set; }
         public string MerchantId { get; set; }
     }
 }
