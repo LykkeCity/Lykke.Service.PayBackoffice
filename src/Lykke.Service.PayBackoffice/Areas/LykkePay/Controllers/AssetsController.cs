@@ -193,10 +193,10 @@ namespace BackOffice.Areas.LykkePay.Controllers
             return View(vm);
         }
         [HttpPost]
-        public async Task<ActionResult> AddAssetSettlement(string model)
+        public async Task<ActionResult> AddAssetSettlement(AddAssetPaymentDialogViewModel model)
         {
             var request = new UpdateAssetAvailabilityRequest();
-            request.AssetId = model;
+            request.AssetId = model.Id;
             request.Value = true;
             request.AvailabilityType = AssetAvailabilityType.Settlement;
             try
