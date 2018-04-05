@@ -21,6 +21,8 @@ using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
 using Core.Settings;
 using Newtonsoft.Json;
 using Lykke.Service.PayInternal.Client.Models.Transactions;
+using BackOffice.Helpers;
+using Lykke.Service.PayInternal.Client.Exceptions;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -88,8 +90,11 @@ namespace BackOffice.Areas.LykkePay.Controllers
             try
             {
                 var paymentrequests = await _payInternalClient.GetPaymentRequestsAsync(vm.SelectedMerchant);
-                var addresses = paymentrequests.Select(p => p.WalletAddress).ToList();
+                var addresses = paymentrequests.Where(p => (p.Status == PaymentRequestStatus.Confirmed || p.Status == PaymentRequestStatus.Error)
+                && p.Amount > 0).Select(p => p.WalletAddress).ToList();
                 var transactions = (await GetTransactions(addresses)).ToList();
+                //var balances = (await GetBalances(addresses)).ToList();
+                //var summary = (await GetBalanceSummary(addresses)).ToList();
                 var filtered = transactions.Where(t => t.Amount > 0).ToList();
                 assetsList.Add("None");
                 foreach (var transaction in filtered)
@@ -186,12 +191,12 @@ namespace BackOffice.Areas.LykkePay.Controllers
                             PaymentRequestId = vm.SelectedPaymentRequest,
                             MerchantId = vm.SelectedMerchant
                         };
-                        await _payInternalClient.RefundAsync(refund);
+                        var response = await _payInternalClient.RefundAsync(refund);
                     }
                 }
                 return this.JsonRequestResult("#btcTransfersList", Url.Action("BtcTransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant });
             }
-            catch (Exception ex)
+            catch (RefundErrorResponseException ex)
             {
                 return this.JsonFailResult("Error: " + ex.InnerException.Message, ErrorMessageAnchor);
             }
@@ -217,6 +222,45 @@ namespace BackOffice.Areas.LykkePay.Controllers
             }
             return balances.SelectMany(x => x.GetTransactions());
         }
+        private async Task<IEnumerable<WalletBalanceModel>> GetBalances(IEnumerable<string> addresses)
+        {
+            var balances = new List<WalletBalanceModel>();
+
+            foreach (var batch in addresses.Batch(BatchPieceSize))
+            {
+                await Task.WhenAll(batch.Select(address => _qBitNinjaClient.GetBalance(BitcoinAddress.Create(address))
+                    .ContinueWith(t =>
+                    {
+                        lock (balances)
+                        {
+                            balances.Add(new WalletBalanceModel
+                            {
+                                WalletAddress = address,
+                                Balance = t.Result
+                            });
+                        }
+                    })));
+            }
+            return balances;
+        }
+        private async Task<IEnumerable<BalanceSummary>> GetBalanceSummary(IEnumerable<string> addresses)
+        {
+            var balances = new List<BalanceSummary>();
+
+            foreach (var batch in addresses.Batch(BatchPieceSize))
+            {
+                await Task.WhenAll(batch.Select(address => _qBitNinjaClient.GetBalanceSummary(BitcoinAddress.Create(address))
+                    .ContinueWith(t =>
+                    {
+                        lock (balances)
+                        {
+                            balances.Add(t.Result);
+                        }
+                    })));
+            }
+            return balances;
+        }
+
         private class WalletBalanceModel
         {
             public string WalletAddress { get; set; }
