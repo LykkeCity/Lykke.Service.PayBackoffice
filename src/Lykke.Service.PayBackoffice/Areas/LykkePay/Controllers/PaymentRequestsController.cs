@@ -19,7 +19,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
 {
     [Authorize]
     [Area("LykkePay")]
-    [FilterFeaturesAccess(UserFeatureAccess.MenuAssets)]
+    [FilterFeaturesAccess(UserFeatureAccess.LykkePayPaymentRequests)]
     public class PaymentRequestsController : Controller
     {
         protected string BlockchainExplorerUrl

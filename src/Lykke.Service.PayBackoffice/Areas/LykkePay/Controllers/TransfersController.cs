@@ -24,8 +24,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
 {
     [Authorize]
     [Area("LykkePay")]
-    [FilterFeaturesAccess(UserFeatureAccess.MenuAssets)]
-    public class BtctransfersController : Controller
+    [FilterFeaturesAccess(UserFeatureAccess.LykkePayTransfersView)]
+    public class TransfersController : Controller
     {
         private readonly IPayInternalClient _payInternalClient;
         private readonly IPayInvoiceClient _payInvoiceClient;
@@ -35,7 +35,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         private const int BatchPieceSize = 15;
         private const string ErrorMessageAnchor = "#errorMessage";
 
-        public BtctransfersController(
+        public TransfersController(
             IPayInternalClient payInternalClient, IPayInvoiceClient payInvoiceClient, IPayAuthClient payAuthClient, QBitNinjaClient qBitNinjaClient, LykkePayWalletListSettings walletlist)
         {
             _payInternalClient = payInternalClient;
@@ -49,7 +49,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<ActionResult> BtcTransfersPage(string merchant = "")
+        public async Task<ActionResult> TransfersPage(string merchant = "")
         {
             var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
 
@@ -66,14 +66,15 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 }
             }
 
-            return View(new BtctransfersPageViewModel
+            return View(new TransfersPageViewModel
             {
                 SelectedMerchant = merchant,
-                Merchants = merchants
-            });
+                Merchants = merchants,
+                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayTransfersFull)
+        });
         }
         [HttpPost]
-        public async Task<ActionResult> BtcTransfersList(BtctransfersPageViewModel vm)
+        public async Task<ActionResult> TransfersList(TransfersPageViewModel vm)
         {
             if (string.IsNullOrEmpty(vm.SelectedMerchant))
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, "#selectedMerchant");
@@ -98,7 +99,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     list.Add(tm);
                 }
             }
-            var viewModel = new BtctransfersListViewModel
+            var viewModel = new TransfersListViewModel
             {
                 List = list,
                 SelectedMerchant = vm.SelectedMerchant
@@ -136,7 +137,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 }
                 request.Sources = sources;
                 await _payInternalClient.BtcFreeTransferAsync(request);
-                return this.JsonRequestResult("#btcTransfersList", Url.Action("BtcTransfersList"), new BtctransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant } );
+                return this.JsonRequestResult("#btcTransfersList", Url.Action("BtcTransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant } );
             }
             catch (Exception ex)
             {

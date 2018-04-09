@@ -7,16 +7,20 @@ using System.Threading.Tasks;
 
 namespace BackOffice.Areas.LykkePay.Models
 {
-    public class BtctransfersPageViewModel
+    public class TransfersPageViewModel
     {
         public string SelectedMerchant { get; set; }
         public IReadOnlyList<MerchantModel> Merchants { get; set; }
+        public string SelectedAsset { get; set; }
+        public IReadOnlyList<string> Assets { get; set; }
+        public bool IsFullAccess { get; set; }
     }
-    public class BtctransfersListViewModel
+    public class TransfersListViewModel
     {
         public string SelectedMerchant { get; set; }
         //public List<PaymentRequestModel> List { get; set; }
         public List<RequestTransferModel> List { get; set; }
+        public string Assets { get; set; }
     }
     public class RequestTransferModel
     {

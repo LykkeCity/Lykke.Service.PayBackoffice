@@ -10,7 +10,7 @@
 
 <form id="frmTransferMoney">
     @Html.HiddenFor(x => x.SelectedMerchant)
-    @for(int i = 0; i < Model.SelectedPaymentRequests.Count; i++)
+    @for (int i = 0; i < Model.SelectedPaymentRequests.Count; i++)
     {
         @Html.HiddenFor(model => Model.SelectedPaymentRequests[i].PaymentRequest.WalletAddress)
         @Html.HiddenFor(model => Model.SelectedPaymentRequests[i].Amount)
@@ -21,4 +21,4 @@
     </div>
 </form>
 
-@Html.RenderSaveCancelButtonPair(Url.Action("TransferMoney"), "#frmTransferMoney")
+@Html.RenderSaveCancelButtonPair(Url.Action("TransferMoney"), "#frmTransferMoney", "Transfer")
