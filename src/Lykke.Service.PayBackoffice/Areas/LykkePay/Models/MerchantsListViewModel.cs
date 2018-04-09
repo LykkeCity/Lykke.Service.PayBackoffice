@@ -10,5 +10,7 @@ namespace BackOffice.Areas.LykkePay.Models
     public class MerchantsListViewModel : PagedListModel
     {
         public IEnumerable<MerchantModel> Merchants { get; set; }
+        public bool IsEditAccess { get; set; }
+        public bool IsFullAccess { get; set; }
     }
 }
