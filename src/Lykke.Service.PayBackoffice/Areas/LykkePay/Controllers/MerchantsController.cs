@@ -38,7 +38,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> MerchantsPage()
         {
-            return View();
+            var model = new MerchantsListViewModel();
+            model.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
+            return View(model);
         }
         [HttpPost]
         public async Task<ActionResult> MerchantsList(MerchantsListViewModel vm)

@@ -6,6 +6,15 @@
         @Html.HiddenFor(x => x.CurrentPage)
         @Html.HiddenFor(x => x.PageSize)
         <div class="row">
+            <div class="col-md-1">
+                @if (Model.IsFullAccess)
+                {
+                    <a class="btn btn btn-success"
+                       onclick="ui.showDialog('@Url.Action("AddOrEditMerchantDialog")');">
+                        Add
+                    </a>
+                }
+            </div>
         </div>
     </form>
     <div id="merchantsList"></div>
