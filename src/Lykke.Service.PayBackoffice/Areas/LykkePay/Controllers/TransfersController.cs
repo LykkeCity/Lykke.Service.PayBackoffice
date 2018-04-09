@@ -28,7 +28,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
 {
     [Authorize]
     [Area("LykkePay")]
-    [FilterFeaturesAccess(UserFeatureAccess.MenuAssets)]
+    [FilterFeaturesAccess(UserFeatureAccess.LykkePayTransfersView)]
     public class TransfersController : Controller
     {
         private readonly IPayInternalClient _payInternalClient;
@@ -75,7 +75,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 SelectedMerchant = merchant,
                 Merchants = merchants,
-                Assets = assetsList
+                Assets = assetsList,
+                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayTransfersFull)
             });
         }
         [HttpPost]

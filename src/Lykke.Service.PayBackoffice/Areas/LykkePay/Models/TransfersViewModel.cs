@@ -13,6 +13,7 @@ namespace BackOffice.Areas.LykkePay.Models
         public IReadOnlyList<MerchantModel> Merchants { get; set; }
         public string SelectedAsset { get; set; }
         public IReadOnlyList<string> Assets { get; set; }
+        public bool IsFullAccess { get; set; }
     }
     public class TransfersListViewModel
     {
