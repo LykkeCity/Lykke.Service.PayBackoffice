@@ -19,7 +19,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
 {
     [Authorize]
     [Area("LykkePay")]
-    [FilterFeaturesAccess(UserFeatureAccess.MenuAssets)]
+    [FilterFeaturesAccess(UserFeatureAccess.LykkePayMerchantsView)]
     public class MerchantsController : Controller
     {
         private readonly IPayInternalClient _payInternalClient;
@@ -80,13 +80,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
             var currentPage = vm.CurrentPage == 0 ? 1 : vm.CurrentPage;
             if (list.Count() != 0)
                 pagedlist = list.ToPagedList(currentPage, vm.PageSize).ToList();
-
             var viewmodel = new MerchantsListViewModel()
             {
                 Merchants = pagedlist,
                 PageSize = vm.PageSize,
                 Count = pageCount,
-                CurrentPage = currentPage
+                CurrentPage = currentPage,
+                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsEdit),
+                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
             };
             return View(viewmodel);
         }
