@@ -20,7 +20,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
 {
     [Authorize]
     [Area("LykkePay")]
-    [FilterFeaturesAccess(UserFeatureAccess.MenuAssets)]
+    [FilterFeaturesAccess(UserFeatureAccess.LykkePayStaffsView)]
     public class StaffsController : Controller
     {
         private readonly IPayInternalClient _payInternalClient;
@@ -59,7 +59,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
             return View(new StaffsPageViewModel
             {
                 SelectedMerchant = merchant,
-                Merchants = merchants
+                Merchants = merchants,
+                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsFull),
+                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsEdit)
             });
         }
         [HttpPost]
@@ -72,7 +74,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
             var viewModel = new StaffsListViewModel
             {
                 Staffs = staffs,
-                SelectedMerchant = vm.SelectedMerchant
+                SelectedMerchant = vm.SelectedMerchant,
+                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsFull),
+                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsEdit)
             };
 
             return View(viewModel);

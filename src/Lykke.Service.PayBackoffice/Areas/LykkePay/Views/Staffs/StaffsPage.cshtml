@@ -12,10 +12,13 @@
         <div class="row" style="margin-left: 30px">
             <h1>Staffs</h1>
             <div class="col-md-2">
-                <a class="btn btn btn-success"
-                   onclick="openDialog()">
-                    Add Staff
-                </a>
+                @if (Model.IsFullAccess)
+                {
+                    <a class="btn btn btn-success"
+                       onclick="openDialog()">
+                        Add Staff
+                    </a>
+                }
             </div>
         </div>
         <hr />
