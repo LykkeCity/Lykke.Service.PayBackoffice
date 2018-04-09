@@ -43,6 +43,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         {
             var model = new MerchantsListViewModel();
             model.CurrentPage = 1;
+            model.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
             return View(model);
         }
         [HttpPost]
