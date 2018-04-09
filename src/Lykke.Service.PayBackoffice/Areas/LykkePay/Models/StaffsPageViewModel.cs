@@ -13,12 +13,16 @@ namespace BackOffice.Areas.LykkePay.Models
         public string SelectedMerchant { get; set; }
         public string SearchValue { get; set; }
         public IReadOnlyList<MerchantModel> Merchants { get; set; }
+        public bool IsFullAccess { get; set; }
+        public bool IsEditAccess { get; set; }
     }
     public class StaffsListViewModel
     {
         public string SelectedMerchant { get; set; }
         public IReadOnlyList<EmployeeModel> Staffs { get; set; }
         public IReadOnlyList<StaffViewModel> Employees { get; set; }
+        public bool IsFullAccess { get; set; }
+        public bool IsEditAccess { get; set; }
     }
     public class AddStaffDialogViewModel : IPersonalAreaDialog
     {

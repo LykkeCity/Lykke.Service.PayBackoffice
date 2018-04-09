@@ -13,10 +13,14 @@
         <h1>Portal Access</h1>
         <div class="row">
             <div class="col-md-2">
-                <a class="btn btn btn-success"
-                   onclick="openDialog()">
-                    Add
-                </a>
+
+                @if (Model.IsFullAccess)
+                {
+                    <a class="btn btn btn-success"
+                       onclick="openDialog()">
+                        Add
+                    </a>
+                }
             </div>
         </div>
     </div>
