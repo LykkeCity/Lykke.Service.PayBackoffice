@@ -48,7 +48,7 @@
                 </td>
                 <td style="text-align: right">
                     <a class="btn btn btn-success"
-                       onclick="selectedCheckboxes()">
+                       onclick="ui.showDialog('@Url.Action("RefundMoneyDialog")', { selectedMerchant: $('#selectedMerchant').val(), selectedPaymentRequest: '@item.PaymentRequest.Id' });">
                         Refund
                     </a>
                 </td>

@@ -20,6 +20,7 @@ namespace BackOffice.Areas.LykkePay.Models
         //public List<PaymentRequestModel> List { get; set; }
         public List<RequestTransferModel> List { get; set; }
         public string Assets { get; set; }
+        public string Error { get; set; }
     }
     public class RequestTransferModel
     {
