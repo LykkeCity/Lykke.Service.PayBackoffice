@@ -47,6 +47,15 @@
         RemoveLimitationOperation,
         GoogleDriveManagement,
         MenuRegulation,
-        MenuAlphaEngine
+        MenuAlphaEngine,
+        LykkePayMerchantsView,
+        LykkePayMerchantsEdit,
+        LykkePayMerchantsFull,
+        LykkePayStaffsView,
+        LykkePayStaffsEdit,
+        LykkePayStaffsFull,
+        LykkePayPaymentRequests,
+        LykkePayTransfersView,
+        LykkePayTransfersFull
     }
 }

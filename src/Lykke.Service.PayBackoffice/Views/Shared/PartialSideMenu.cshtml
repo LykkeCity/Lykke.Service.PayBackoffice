@@ -9,10 +9,10 @@
     Layout = null;
 }
 <ul class="sidemenu" style="width: 201px;">
-    @*@if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.MenuUsers))
+    @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.MenuUsers))
     {
         <li class="smi" data-url="@Url.Action("Index", "Menu", new {area = "Users"})" data-text="@Phrases.Users"></li>
-    }*@
+    }
     @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.MenuLykkePay))
     {
         <li class="smi" data-url="@Url.Action("Index", "Merchants", new {area = "LykkePay"})" data-text="Lykke Pay"></li>
