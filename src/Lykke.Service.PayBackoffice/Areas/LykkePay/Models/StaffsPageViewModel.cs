@@ -32,6 +32,7 @@ namespace BackOffice.Areas.LykkePay.Models
         public string Password { get; set; }
         public string Id { get; set; }
         public bool IsNewStaff { get; set; }
+        public bool IsBlocked { get; set; }
     }
     public class DeleteStaffDialogViewModel : IPersonalAreaDialog
     {
