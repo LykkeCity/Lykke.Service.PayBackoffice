@@ -188,7 +188,16 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     if (vm.IsNewStaff)
                         await _payAuthClient.RegisterAsync(rm);
                     else
-                        await _payAuthClient.UpdateAsync(rm);
+                    {
+                        var updatemodel = new UpdateCredentialsModel()
+                        {
+                            Email = vm.Email,
+                            EmployeeId = vm.Id,
+                            MerchantId = vm.SelectedMerchant,
+                            Password = vm.Password
+                        };
+                        await _payAuthClient.UpdateAsync(updatemodel);
+                    }
                 }
                 return this.JsonRequestResult("#staffList", Url.Action("StaffsList"), new StaffsPageViewModel() { SelectedMerchant = vm.SelectedMerchant });
             }
