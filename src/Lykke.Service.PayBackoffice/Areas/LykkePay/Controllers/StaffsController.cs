@@ -131,6 +131,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Email = employee.Email,
                 Id = employee.Id,
                 IsNewStaff = id == null,
+                //IsBlocked = employee.IsBlocked //TODO: update payauth
             };
             return View(viewmodel);
         }
@@ -194,7 +195,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                             Email = vm.Email,
                             EmployeeId = vm.Id,
                             MerchantId = vm.SelectedMerchant,
-                            Password = vm.Password
+                            Password = vm.Password,
+                            //IsBlocked = vm.IsBlocked //TODO: update payauth
                         };
                         await _payAuthClient.UpdateAsync(updatemodel);
                     }
