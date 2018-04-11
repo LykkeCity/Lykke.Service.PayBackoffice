@@ -40,5 +40,6 @@ namespace BackOffice.Settings
         public PayInternalServiceClientSettings PayInternalServiceClient { get; set; }
         public PayInvoiceServiceClientSettings PayInvoiceServiceClient { get; set; }
         public PayAuthServiceClientSettings PayAuthServiceClient { get; set; }
+        public EmailPartnerRouterServiceClientSettings EmailPartnerRouterServiceClient { get; set; }
     }
 }
