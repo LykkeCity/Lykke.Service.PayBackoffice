@@ -32,8 +32,9 @@
     });
     $("#SearchValue").keydown(function (e) {
         if (e.keyCode == 13) {
+            $("#CurrentPage").val("0");
             requests.doRequest({ url: '@Url.Action("MerchantsList")', formId: '#frmMerchantsPage', divResult: '#merchantsList' });
             e.preventDefault();
         }
-     });
+    });
 </script>
