@@ -139,25 +139,33 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 {
                     return this.JsonFailResult(Phrases.AlreadyExists, "#name");
                 }
-                var merchant = await _payInternalClient.CreateMerchantAsync(new CreateMerchantRequest
+                try
                 {
-                    Name = vm.Name,
-                    ApiKey = vm.ApiKey,
-                    DeltaSpread = vm.DeltaSpread,
-                    LpMarkupPercent = vm.LpMarkupPercent,
-                    LpMarkupPips = vm.LpMarkupPips,
-                    LwId = vm.LwId,
-                    MarkupFixedFee = vm.MarkupFixedFee,
-                    TimeCacheRates = vm.TimeCacheRates,
-                });
+                    var merchant = await _payInternalClient.CreateMerchantAsync(new CreateMerchantRequest
+                    {
+                        Name = vm.Name,
+                        ApiKey = vm.ApiKey,
+                        DeltaSpread = vm.DeltaSpread,
+                        LpMarkupPercent = vm.LpMarkupPercent,
+                        LpMarkupPips = vm.LpMarkupPips,
+                        LwId = vm.LwId,
+                        MarkupFixedFee = vm.MarkupFixedFee,
+                        TimeCacheRates = vm.TimeCacheRates,
+                        DisplayName = vm.Name
+                    });
 
-                await _payAuthClient.RegisterAsync(new Lykke.Service.PayAuth.Client.Models.RegisterRequest
+                    await _payAuthClient.RegisterAsync(new Lykke.Service.PayAuth.Client.Models.RegisterRequest
+                    {
+                        ApiKey = vm.ApiKey,
+                        Certificate = vm.PublicKey,
+                        ClientId = merchant.Id,
+                        SystemId = vm.SystemId
+                    });
+                }
+                catch(Exception ex)
                 {
-                    ApiKey = vm.ApiKey,
-                    Certificate = vm.PublicKey,
-                    ClientId = merchant.Id,
-                    SystemId = vm.SystemId
-                });
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
+                }
             }
             else
             {
