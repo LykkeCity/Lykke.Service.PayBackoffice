@@ -40,6 +40,7 @@ namespace BackOffice.Helpers
         /// <summary>
         /// An error occurred during processing payment request.
         /// </summary>
-        Error
+        Error,
+        Cancelled
     }
 }
