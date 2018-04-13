@@ -48,7 +48,7 @@
                 </td>
                 <td style="text-align: right">
                     <a class="btn btn btn-success"
-                       onclick="ui.showDialog('@Url.Action("RefundMoneyDialog")', { selectedMerchant: $('#selectedMerchant').val(), selectedPaymentRequest: '@item.PaymentRequest.Id' });">
+                       onclick="ui.showDialog('@Url.Action("RefundMoneyDialog")', { selectedMerchant: $('#selectedMerchant').val(), selectedPaymentRequest: '@item.PaymentRequest.Id', selectedWalletAddress: '@item.PaymentRequest.WalletAddress' });">
                         Refund
                     </a>
                 </td>
