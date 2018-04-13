@@ -185,7 +185,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 await _payInternalClient.UpdateMerchantAsync(updatereq);
             }
 
-            return this.JsonRequestResult("#MerchantsPage", Url.Action("MerchantsList"));
+            return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
         }
         [HttpPost]
         public ActionResult DeleteMerchantDialog(string merchant, string id)
