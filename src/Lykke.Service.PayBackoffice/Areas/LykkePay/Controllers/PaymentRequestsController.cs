@@ -83,9 +83,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
             try
             {
                 if (!string.IsNullOrEmpty(vm.SearchValue))
-                    list = list.Where(x => x.WalletAddress.Contains(vm.SearchValue)
+                    list = list.Where(x => (!string.IsNullOrEmpty(x.WalletAddress) && x.WalletAddress.Contains(vm.SearchValue))
                     || x.Id.Contains(vm.SearchValue)
-                    || (string.IsNullOrEmpty(x.OrderId) && x.OrderId.Contains(vm.SearchValue))).AsQueryable();
+                    || (!string.IsNullOrEmpty(x.OrderId) && x.OrderId.Contains(vm.SearchValue))).AsQueryable();
                 if (vm.SelectedStatus != PaymentRequestStatusHelper.None)
                     list = list.Where(x => x.Status.ToString() == vm.SelectedStatus.ToString()).AsQueryable();
             }
