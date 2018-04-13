@@ -10,6 +10,11 @@
     <SetLinkMetadataAutomatically>false</SetLinkMetadataAutomatically>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Pdf\**" />
+    <EmbeddedResource Remove="Pdf\**" />
+    <None Remove="Pdf\**" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Messages\EmailTemplates\BankCashInTemplate.cshtml" />
     <EmbeddedResource Include="Messages\EmailTemplates\BtcDepositDoneTemplate.cshtml" />
     <EmbeddedResource Include="Messages\EmailTemplates\CashInTemplate.cshtml" />

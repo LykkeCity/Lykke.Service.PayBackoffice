@@ -267,11 +267,11 @@ namespace Core.Settings
         public string ApiUrl { get; set; }
     }
 
-    public class PdfGeneratorSettings
-    {
-        public string ServiceUrl { get; set; }
-        public string ConnectionString { get; set; }
-    }
+    //public class PdfGeneratorSettings
+    //{
+    //    public string ServiceUrl { get; set; }
+    //    public string ConnectionString { get; set; }
+    //}
 
     public class GoogleDriveSettings
     {

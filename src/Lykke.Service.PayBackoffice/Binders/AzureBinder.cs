@@ -131,7 +131,7 @@ namespace BackOffice.Binders
             var cacheManager = new MemoryCacheManager();
             ioc.RegisterInstance<ICacheManager>(cacheManager);
             BindMicroservices(ioc, settings.CurrentValue, Log);
-            ioc.BindAzureRepositories(settings.Nested(x => x.BackOffice.Db), settings.Nested(x => x.SmsNotifications), settings.ConnectionString(x => x.BackOffice.PdfGenerator.ConnectionString), settings.CurrentValue.BackOffice.DefaultWithdrawalLimit, cacheManager, Log);
+            //ioc.BindAzureRepositories(settings.Nested(x => x.BackOffice.Db), settings.Nested(x => x.SmsNotifications), settings.ConnectionString(x => x.BackOffice.PdfGenerator.ConnectionString), settings.CurrentValue.BackOffice.DefaultWithdrawalLimit, cacheManager, Log);
             ioc.BindBackOfficeRepositories(settings.Nested(x => x.BackOffice.Db), Log);
 
             BindBackOfficeServices(ioc, settings.CurrentValue);
