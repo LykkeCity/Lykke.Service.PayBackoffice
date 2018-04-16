@@ -122,7 +122,7 @@ namespace AzureRepositories
         public static void BindAzureRepositories(this ContainerBuilder container,
             IReloadingManager<DbSettings> dbSettings,
             IReloadingManager<SmsNotificationsSettings> smsNotificationsSettigns,
-            IReloadingManager<string> pdfGeneratorConnectionString,
+            //IReloadingManager<string> pdfGeneratorConnectionString,
             double defaultWithdrawalLimit,
             ICacheManager cacheManager,
             ILog log)
@@ -409,11 +409,6 @@ namespace AzureRepositories
             container.RegisterInstance<IInternalTransferRepository>(new InternalTransferRepository(
                 AzureTableStorage<InternalTransferEntity>.Create(dbSettings.ConnectionString(x => x.InternalTransactionsConnectionString),
                     "InternalTransferInfo", log)));
-
-            if (!string.IsNullOrWhiteSpace(pdfGeneratorConnectionString?.CurrentValue))
-            {
-                container.RegisterInstance<IPdfGeneratorRepository>(new PdfGeneratorRepository(AzureBlobStorage.Create(pdfGeneratorConnectionString), log));
-            }
 
             container.RegisterInstance<ISkipKycRepository>(
                 new SkipKycRepository(AzureTableStorage<SkipKycClientEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "SkipKycClients", log)));
