@@ -11,6 +11,7 @@ using Lykke.Service.PayInternal.Client.Models.Asset;
 using BackOffice.Controllers;
 using BackOffice.Areas.LykkePay.Models;
 using BackOffice.Translates;
+using AutoMapper;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -60,13 +61,13 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AssetByMerchantList(AssetByMerchantViewModel vm)
         {
-            var assets = await _payInternalClient.GetAvailableAsync(vm.SelectedMerchant);
+            var assets = await _payInternalClient.GetPersonalAvailableAssetsAsync(vm.SelectedMerchant);
             return View(assets);
         }
         [HttpPost]
         public async Task<ActionResult> AssetPaymentList()
         {
-            var assetPaymentList = await _payInternalClient.GetAvailableAsync(AssetAvailabilityType.Payment);
+            var assetPaymentList = await _payInternalClient.GetGeneralAvailableAssetsAsync(AssetAvailabilityType.Payment);
             return View(assetPaymentList.Assets);
         }
         [HttpPost]
@@ -77,7 +78,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AssetSettlementList()
         {
-            var assetSettlementList = await _payInternalClient.GetAvailableAsync(AssetAvailabilityType.Settlement);
+            var assetSettlementList = await _payInternalClient.GetGeneralAvailableAssetsAsync(AssetAvailabilityType.Settlement);
             return View(assetSettlementList.Assets);
         }
         [HttpPost]
@@ -103,25 +104,20 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddAssetByMerchantDialog(string merchant = null)
         {
-            var assets = await _payInternalClient.GetAvailableAsync(merchant);
+            var assets = await _payInternalClient.GetPersonalAvailableAssetsAsync(merchant);
             var vm = new AddAssetsByMerchantDialogViewModel
             {
                 Caption = "Add assets to merchant",
                 MerchantId = merchant,
-                AssetsPayment = assets != null ? assets.AssetsPayment : string.Empty,
-                AssetsSettlement = assets != null ? assets.AssetsSettlement : string.Empty,
+                PaymentAssets = assets?.PaymentAssets ?? string.Empty,
+                SettlementAssets = assets?.SettlementAssets ?? string.Empty,
             };
             return View(vm);
         }
         [HttpPost]
         public async Task<ActionResult> AddAssetByMerchant(AddAssetsByMerchantDialogViewModel vm)
         {
-            await _payInternalClient.SetAvailabilityByMerchantAsync(new UpdateAssetAvailabilityByMerchantRequest()
-            {
-                MerchantId = vm.MerchantId,
-                PaymentAssets = vm.AssetsPayment,
-                SettlementAssets = vm.AssetsSettlement
-            });
+            await _payInternalClient.SetPersonalAvailableAssetsAsync(Mapper.Map<UpdateAssetAvailabilityByMerchantRequest>(vm));
             return this.JsonRequestResult("#assetByMerchantList", Url.Action("AssetByMerchantList"), new AssetByMerchantViewModel() { SelectedMerchant = vm.MerchantId });
         }
         [HttpPost]
@@ -138,20 +134,20 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> DeleteAssetByMerchant(AddAssetsByMerchantDialogViewModel vm)
         {
-            await _payInternalClient.SetAvailabilityByMerchantAsync(new UpdateAssetAvailabilityByMerchantRequest()
+            await _payInternalClient.SetPersonalAvailableAssetsAsync(new UpdateAssetAvailabilityByMerchantRequest()
             {
                 MerchantId = vm.MerchantId
             });
             return this.JsonRequestResult("#assetByMerchantList", Url.Action("AssetByMerchantList"), new AssetByMerchantViewModel() { SelectedMerchant = vm.MerchantId });
         }
         [HttpPost]
-        public async Task<ActionResult> AddAssetPayment(AssetModel model)
+        public async Task<ActionResult> AddAssetPayment(AddAssetPaymentDialogViewModel model)
         {
             var request = new UpdateAssetAvailabilityRequest();
             request.AssetId = model.Id;
             request.Value = true;
             request.AvailabilityType = AssetAvailabilityType.Payment;
-            await _payInternalClient.SetAvailabilityAsync(request);
+            await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
             return this.JsonRequestResult("#assetPaymentList", Url.Action("AssetPaymentList"));
         }
         [HttpPost]
@@ -161,7 +157,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             request.AssetId = model.Id;
             request.Value = false;
             request.AvailabilityType = AssetAvailabilityType.Payment;
-            await _payInternalClient.SetAvailabilityAsync(request);
+            await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
             return this.JsonRequestResult("#assetPaymentList", Url.Action("AssetPaymentList"));
         }
         [HttpPost]
@@ -185,13 +181,13 @@ namespace BackOffice.Areas.LykkePay.Controllers
             return View(vm);
         }
         [HttpPost]
-        public async Task<ActionResult> AddAssetSettlement(AssetModel model)
+        public async Task<ActionResult> AddAssetSettlement(AddAssetPaymentDialogViewModel model)
         {
             var request = new UpdateAssetAvailabilityRequest();
             request.AssetId = model.Id;
             request.Value = true;
             request.AvailabilityType = AssetAvailabilityType.Settlement;
-            await _payInternalClient.SetAvailabilityAsync(request);
+            await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
             return this.JsonRequestResult("#assetSettlementList", Url.Action("AssetSettlementList"));
         }
         [HttpPost]
@@ -201,7 +197,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             request.AssetId = model.Id;
             request.Value = false;
             request.AvailabilityType = AssetAvailabilityType.Settlement;
-            await _payInternalClient.SetAvailabilityAsync(request);
+            await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
             return this.JsonRequestResult("#assetSettlementList", Url.Action("AssetSettlementList"));
         }
     }

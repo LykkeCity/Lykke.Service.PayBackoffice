@@ -5,6 +5,8 @@
 @{
     IEnumerable<ItemViewModel> merchantList = Model.Merchants.
         Select(m => new ItemViewModel { Id = m.Id, Title = m.Name }).ToArray();
+    IEnumerable<ItemViewModel> statusesList = Model.Statuses.
+        Select(m => new ItemViewModel { Id = m.ToString(), Title = m.ToString() }).ToArray();
 }
 
 @if (merchantList.Any())
@@ -18,6 +20,9 @@
             <div class="row">
                 <div class="col-md-2 col-md-offset-0 input-lg" style="padding-top: 14px;">
                     @Html.RenderSelect2("", "SelectedMerchant", merchantList, false, "Select merchant...")
+                </div>
+                <div class="col-md-2 col-md-offset-0 input-lg" style="padding-top: 14px;">
+                    @Html.RenderSelect2("", "SelectedStatus", statusesList, false, "Select status...")
                 </div>
                 <div class="col-md-3 col-md-offset-0 input-lg">
                     <i class="glyphicon glyphicon-search"></i>
@@ -33,6 +38,15 @@
         $(function () {
             var $merchantSelect = $('#selectedMerchant');
             $merchantSelect.select2().on("change",
+                function(e) {
+                    requests.doRequest({
+                        url: '@Url.Action("PaymentRequestsList")',
+                        formId: '#frmPaymentRequests',
+                        divResult: '#paymentrequestsList'
+                    });
+                });
+            var $statusSelect = $('#selectedStatus');
+            $statusSelect.select2().on("change",
                 function(e) {
                     requests.doRequest({
                         url: '@Url.Action("PaymentRequestsList")',
