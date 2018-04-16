@@ -410,11 +410,6 @@ namespace AzureRepositories
                 AzureTableStorage<InternalTransferEntity>.Create(dbSettings.ConnectionString(x => x.InternalTransactionsConnectionString),
                     "InternalTransferInfo", log)));
 
-            //if (!string.IsNullOrWhiteSpace(pdfGeneratorConnectionString?.CurrentValue))
-            //{
-            //    container.RegisterInstance<IPdfGeneratorRepository>(new PdfGeneratorRepository(AzureBlobStorage.Create(pdfGeneratorConnectionString), log));
-            //}
-
             container.RegisterInstance<ISkipKycRepository>(
                 new SkipKycRepository(AzureTableStorage<SkipKycClientEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "SkipKycClients", log)));
 
