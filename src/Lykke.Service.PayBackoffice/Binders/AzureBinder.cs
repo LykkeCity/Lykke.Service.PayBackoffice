@@ -108,7 +108,6 @@ namespace BackOffice.Binders
             //ioc.RegisterInstance(settings.CurrentValue.BackOffice.CacheSettings);
             //ioc.RegisterInstance(settings.CurrentValue.BackOffice.PaymentSystems);
             ioc.RegisterInstance(settings.CurrentValue.BackOffice.LykkePayWalletList);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.PdfGenerator);
             //ioc.RegisterInstance(settings.CurrentValue.BackOffice.SupportTools);
             ioc.RegisterInstance(settings.CurrentValue.BackOffice.TwoFactorVerification ?? new TwoFactorVerificationSettingsEx());
             //ioc.RegisterInstance(settings.CurrentValue.BackOffice.InternalTransfersSettings);
@@ -130,7 +129,7 @@ namespace BackOffice.Binders
             var cacheManager = new MemoryCacheManager();
             ioc.RegisterInstance<ICacheManager>(cacheManager);
             BindMicroservices(ioc, settings.CurrentValue, Log);
-            ioc.BindAzureRepositories(settings.Nested(x => x.BackOffice.Db), settings.Nested(x => x.SmsNotifications), settings.ConnectionString(x => x.BackOffice.PdfGenerator.ConnectionString), settings.CurrentValue.BackOffice.DefaultWithdrawalLimit, cacheManager, Log);
+            ioc.BindAzureRepositories(settings.Nested(x => x.BackOffice.Db), settings.Nested(x => x.SmsNotifications), settings.CurrentValue.BackOffice.DefaultWithdrawalLimit, cacheManager, Log);
             ioc.BindBackOfficeRepositories(settings.Nested(x => x.BackOffice.Db), Log);
 
             BindBackOfficeServices(ioc, settings.CurrentValue);
@@ -317,7 +316,7 @@ namespace BackOffice.Binders
             var socketLog = new SocketLogDynamic(i => { },
                 str => Console.WriteLine(DateTime.UtcNow.ToIsoDateTime() + ": " + str));
 
-            ioc.BindMeClient(ipEndPoint, socketLog);
+            //ioc.BindMeClient(ipEndPoint, socketLog);
         }
 
         private static void BindMicroservices(ContainerBuilder container, BackOfficeBundle allSettings, ILog log)

@@ -16,11 +16,13 @@
             @Html.HiddenFor(x=>x.CurrentPage)
             @Html.HiddenFor(x => x.PageSize)
             <div class="row">
-                <div class="col-md-4 col-md-offset-0 input-lg">
-                    @Html.RenderSelect2("Merchant:", "SelectedMerchant", merchantList, false, "Select merchant...")
+                <div class="col-md-2 col-md-offset-0 input-lg" style="padding-top: 14px;">
+                    @Html.RenderSelect2("", "SelectedMerchant", merchantList, false, "Select merchant...")
                 </div>
-                <div class="col-md-4 col-md-offset-0 input-lg">
-                    Search by wallet @Html.TextBoxFor(m=>m.SearchValue)
+                <div class="col-md-3 col-md-offset-0 input-lg">
+                    <i class="glyphicon glyphicon-search"></i>
+                    <div class="caption" style="position: absolute;top: -14px;left: 50px; color: lightgray;font-size: 14px;">search by wallet</div>
+                    @Html.TextBoxFor(m => m.SearchValue)
                 </div>
             </div>
         </form>

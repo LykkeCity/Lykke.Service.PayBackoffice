@@ -13,6 +13,7 @@ using BackOffice.Controllers;
 using BackOffice.Translates;
 using Lykke.Service.PayAuth.Client;
 using PagedList.Core;
+using Lykke.Service.PayInvoice.Client;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -23,13 +24,15 @@ namespace BackOffice.Areas.LykkePay.Controllers
     {
         private readonly IPayInternalClient _payInternalClient;
         private readonly IPayAuthClient _payAuthClient;
+        private readonly IPayInvoiceClient _payInvoiceClient;
         private const string ErrorMessageAnchor = "#errorMessage";
         public MerchantsController(
             IPayInternalClient payInternalClient,
-            IPayAuthClient payAuthClient)
+            IPayAuthClient payAuthClient, IPayInvoiceClient payInvoiceClient)
         {
             _payInternalClient = payInternalClient;
             _payAuthClient = payAuthClient;
+            _payInvoiceClient = payInvoiceClient;
         }
         public async Task<IActionResult> Index()
         {
@@ -38,18 +41,40 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> MerchantsPage()
         {
-            return View();
+            var model = new MerchantsListViewModel();
+            model.CurrentPage = 1;
+            return View(model);
         }
         [HttpPost]
         public async Task<ActionResult> MerchantsList(MerchantsListViewModel vm)
         {
             var merchants = await _payInternalClient.GetMerchantsAsync();
-
             vm.PageSize = vm.PageSize == 0 ? 10 : vm.PageSize;
             var pagesize = Request.Cookies["PageSize"];
             if (pagesize != null)
                 vm.PageSize = Convert.ToInt32(pagesize);
             var list = new List<MerchantModel>(merchants).AsQueryable();
+            if (!string.IsNullOrEmpty(vm.SearchValue) && !vm.FilterByEmail)
+                list = list.Where(x => x.Name.ToLower().Contains(vm.SearchValue.ToLower()) || x.ApiKey.ToLower().Contains(vm.SearchValue.ToLower())).AsQueryable();
+            if (vm.FilterByEmail)
+            {
+                try
+                {
+                    var merchantsId = await _payInvoiceClient.GetMerchantsIdByEmployeeEmail(vm.SearchValue);
+                    var filtered = new List<MerchantModel>();
+                    foreach (var merchantId in merchantsId)
+                    {
+                        var merchant = list.FirstOrDefault(x => x.Id == merchantId);
+                        if (merchant != null)
+                            filtered.Add(merchant);
+                    }
+                    list = filtered.AsQueryable();
+                }
+                catch(Exception ex)
+                {
+                    list = new List<MerchantModel>().AsQueryable();
+                }
+            }
             var pagedlist = new List<MerchantModel>();
             var pageCount = Convert.ToInt32(Math.Ceiling((double)list.Count() / vm.PageSize));
             var currentPage = vm.CurrentPage == 0 ? 1 : vm.CurrentPage;
@@ -108,29 +133,37 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     return this.JsonFailResult("System id required", ErrorMessageAnchor);
                 if (string.IsNullOrEmpty(vm.PublicKey))
                     return this.JsonFailResult("Public key required", ErrorMessageAnchor);
-                if (merchants != null && merchants.Select(x => x.Name).Contains(vm.Name))
+                if (merchants != null && (merchants.Select(x => x.Name).Contains(vm.Name) || merchants.Select(x => x.ApiKey).Contains(vm.ApiKey)))
                 {
                     return this.JsonFailResult(Phrases.AlreadyExists, "#name");
                 }
-                var merchant = await _payInternalClient.CreateMerchantAsync(new CreateMerchantRequest
+                try
                 {
-                    Name = vm.Name,
-                    ApiKey = vm.ApiKey,
-                    DeltaSpread = vm.DeltaSpread,
-                    LpMarkupPercent = vm.LpMarkupPercent,
-                    LpMarkupPips = vm.LpMarkupPips,
-                    LwId = vm.LwId,
-                    MarkupFixedFee = vm.MarkupFixedFee,
-                    TimeCacheRates = vm.TimeCacheRates,
-                });
+                    var merchant = await _payInternalClient.CreateMerchantAsync(new CreateMerchantRequest
+                    {
+                        Name = vm.Name,
+                        ApiKey = vm.ApiKey,
+                        DeltaSpread = vm.DeltaSpread,
+                        LpMarkupPercent = vm.LpMarkupPercent,
+                        LpMarkupPips = vm.LpMarkupPips,
+                        LwId = vm.LwId,
+                        MarkupFixedFee = vm.MarkupFixedFee,
+                        TimeCacheRates = vm.TimeCacheRates,
+                        DisplayName = vm.Name
+                    });
 
-                await _payAuthClient.RegisterAsync(new Lykke.Service.PayAuth.Client.Models.RegisterRequest
+                    await _payAuthClient.RegisterAsync(new Lykke.Service.PayAuth.Client.Models.RegisterRequest
+                    {
+                        ApiKey = vm.ApiKey,
+                        Certificate = vm.PublicKey,
+                        ClientId = merchant.Id,
+                        SystemId = vm.SystemId
+                    });
+                }
+                catch(Exception ex)
                 {
-                    ApiKey = vm.ApiKey,
-                    Certificate = vm.PublicKey,
-                    ClientId = merchant.Id,
-                    SystemId = vm.SystemId
-                });
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
+                }
             }
             else
             {

@@ -1,13 +1,6 @@
 ﻿@using BackOffice.Translates
 @model BackOffice.Areas.LykkePay.Models.MerchantsListViewModel
-<div class="row" style="margin-left: 30px">
-    <div class="col-md-2">
-        <a class="btn btn btn-success"
-           onclick="ui.showDialog('@Url.Action("AddOrEditMerchantDialog")');">
-            Add merchant
-        </a>
-    </div>
-</div>
+
 @if (Model.Merchants != null && Model.Merchants.Any())
 {
     @Html.RenderPagination(Model.PageSize, Model.Count, Model.CurrentPage, "MerchantsList", "frmMerchantsPage", "merchantsList")
