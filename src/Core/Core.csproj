@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CoreCompat.System.Drawing" Version="1.0.0-beta006" />
-    <PackageReference Include="Lykke.Common" Version="6.0.0" />
+    <PackageReference Include="Lykke.Common" Version="6.2.0" />
     <PackageReference Include="Lykke.MarginTrading.DataReaderClient" Version="1.0.14" />
     <PackageReference Include="Lykke.Messages" Version="1.0.22" />
     <PackageReference Include="Lykke.Service.FeeCalculator.Client" Version="1.4.0" />
