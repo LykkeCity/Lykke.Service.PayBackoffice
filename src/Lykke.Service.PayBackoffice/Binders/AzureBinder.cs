@@ -101,18 +101,9 @@ namespace BackOffice.Binders
             var ioc = builder ?? new ContainerBuilder();
             ioc.RegisterInstance(settings.CurrentValue.BackOffice);
             ioc.RegisterInstance(settings.CurrentValue.BackOffice.GoogleAuthSettings);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.SwiftSettings);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.CashoutSettings);
             ioc.RegisterInstance(settings.CurrentValue.BackOffice.DeploymentSettings);
             ioc.RegisterInstance(settings.CurrentValue.BackOffice.BitcoinCoreSettings);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.CacheSettings);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.PaymentSystems);
-            ioc.RegisterInstance(settings.CurrentValue.BackOffice.LykkePayWalletList);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.SupportTools);
             ioc.RegisterInstance(settings.CurrentValue.BackOffice.TwoFactorVerification ?? new TwoFactorVerificationSettingsEx());
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.InternalTransfersSettings);
-            //ioc.RegisterInstance(settings.CurrentValue.JumioServiceClient);
-            //ioc.RegisterInstance(settings.CurrentValue.FeeSettings);
 
             Log = ioc.BindLog(settings.ConnectionString(x => x.BackOffice.Db.LogsConnString), "Backoffice", "LogBackoffce");
 
