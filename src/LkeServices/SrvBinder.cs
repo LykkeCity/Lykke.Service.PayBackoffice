@@ -15,7 +15,6 @@ using LkeServices.LykkeServiceApi;
 using LkeServices.Messages.Email;
 using LkeServices.PaymentSystems;
 using LkeServices.PaymentSystems.PaymentOkNotificators;
-using LkeServices.Pdf;
 using Lykke.MatchingEngine.Connector.Services;
 using Lykke.MonitoringServiceApiCaller;
 using LkeServices.Export;
@@ -116,7 +115,6 @@ namespace LkeServices
             ioc.RegisterType<SrvEmailsFacade>().As<ISrvEmailsFacade>().SingleInstance();
             
             ioc.RegisterType<ExportService>().SingleInstance();
-            ioc.RegisterType<SrvPdfGenerator>().SingleInstance();
 
             ioc.RegisterType<BitcoinTransactionService>().As<IBitcoinTransactionService>().SingleInstance();
             ioc.RegisterType<JumioService>().As<IJumioService>().SingleInstance();

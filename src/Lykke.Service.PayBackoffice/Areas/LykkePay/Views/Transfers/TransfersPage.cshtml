@@ -70,7 +70,9 @@
                 list.push(model);
             }
             var $merchantSelect = $('#selectedMerchant');
-            ui.showDialog('@Url.Action("TransferMoneyDialog")', { selectedMerchant: $merchantSelect.val(), selectedPaymentRequests: list });
+            if (list.length > 0)
+                ui.showDialog('@Url.Action("TransferMoneyDialog")', { selectedMerchant: $merchantSelect.val(), selectedPaymentRequests: list });
+            else alert("Please, choose payment requests");
         }
         $(function () {
             var $merchantSelect = $('#selectedMerchant');

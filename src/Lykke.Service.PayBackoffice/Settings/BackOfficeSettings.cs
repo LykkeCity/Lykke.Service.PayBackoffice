@@ -36,8 +36,6 @@ namespace BackOffice.Settings
 
         public SwiftSettings SwiftSettings { get; set; }
 
-        public PdfGeneratorSettings PdfGenerator { get; set; }
-
         public SupportToolsSettings SupportTools { get; set; }
 
         public TwoFactorVerificationSettingsEx TwoFactorVerification { get; set; }
