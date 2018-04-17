@@ -52,7 +52,6 @@ namespace Core.Settings
         public string ReportsServiceConnString { get; set; }
         public string MarginTradingFrontendConnString { get; set; }
         public string InternalTransactionsConnectionString { get; set; }
-        public string AlphaEngineAuditConnString { get; set; }
     }
 
 

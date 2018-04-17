@@ -11,9 +11,6 @@ namespace BackOffice.Settings
 
         public MatchingOrdersSettings MatchingEngine { get; set; }
 
-        //public PaymentSystemsSettings PaymentSystems { get; set; }
-        public LykkePayWalletListSettings LykkePayWalletList { get; set; }
-
         public LykkeServiceApiSettings LykkeServiceApi { get; set; }
 
         public DeploymentSettings DeploymentSettings { get; set; }
