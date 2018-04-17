@@ -156,7 +156,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 }
                 request.Sources = sources;
                 await _payInternalClient.BtcFreeTransferAsync(request);
-                return this.JsonRequestResult("#transfersList", Url.Action("TransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant });
+                return this.JsonRequestResult("#transfersList", Url.Action("TransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant, SelectedAsset = "None" });
             }
             catch (Exception ex)
             {

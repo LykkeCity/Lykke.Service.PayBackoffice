@@ -10,6 +10,11 @@
     <SetLinkMetadataAutomatically>false</SetLinkMetadataAutomatically>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Pdf\**" />
+    <EmbeddedResource Remove="Pdf\**" />
+    <None Remove="Pdf\**" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
   <ItemGroup>
