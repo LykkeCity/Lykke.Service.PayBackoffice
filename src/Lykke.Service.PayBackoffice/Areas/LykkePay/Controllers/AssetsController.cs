@@ -117,7 +117,12 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddAssetByMerchant(AddAssetsByMerchantDialogViewModel vm)
         {
-            await _payInternalClient.SetPersonalAvailableAssetsAsync(Mapper.Map<UpdateAssetAvailabilityByMerchantRequest>(vm));
+            await _payInternalClient.SetPersonalAvailableAssetsAsync(new UpdateAssetAvailabilityByMerchantRequest()
+            {
+                MerchantId = vm.MerchantId,
+                PaymentAssets = vm.PaymentAssets,
+                SettlementAssets = vm.SettlementAssets
+            });
             return this.JsonRequestResult("#assetByMerchantList", Url.Action("AssetByMerchantList"), new AssetByMerchantViewModel() { SelectedMerchant = vm.MerchantId });
         }
         [HttpPost]
