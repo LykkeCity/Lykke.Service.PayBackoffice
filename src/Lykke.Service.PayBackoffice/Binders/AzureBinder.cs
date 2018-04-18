@@ -101,19 +101,9 @@ namespace BackOffice.Binders
             var ioc = builder ?? new ContainerBuilder();
             ioc.RegisterInstance(settings.CurrentValue.BackOffice);
             ioc.RegisterInstance(settings.CurrentValue.BackOffice.GoogleAuthSettings);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.SwiftSettings);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.CashoutSettings);
             ioc.RegisterInstance(settings.CurrentValue.BackOffice.DeploymentSettings);
             ioc.RegisterInstance(settings.CurrentValue.BackOffice.BitcoinCoreSettings);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.CacheSettings);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.PaymentSystems);
-            ioc.RegisterInstance(settings.CurrentValue.BackOffice.LykkePayWalletList);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.PdfGenerator);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.SupportTools);
             ioc.RegisterInstance(settings.CurrentValue.BackOffice.TwoFactorVerification ?? new TwoFactorVerificationSettingsEx());
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.InternalTransfersSettings);
-            //ioc.RegisterInstance(settings.CurrentValue.JumioServiceClient);
-            //ioc.RegisterInstance(settings.CurrentValue.FeeSettings);
 
             Log = ioc.BindLog(settings.ConnectionString(x => x.BackOffice.Db.LogsConnString), "Backoffice", "LogBackoffce");
 
@@ -130,7 +120,7 @@ namespace BackOffice.Binders
             var cacheManager = new MemoryCacheManager();
             ioc.RegisterInstance<ICacheManager>(cacheManager);
             BindMicroservices(ioc, settings.CurrentValue, Log);
-            ioc.BindAzureRepositories(settings.Nested(x => x.BackOffice.Db), settings.Nested(x => x.SmsNotifications), settings.ConnectionString(x => x.BackOffice.PdfGenerator.ConnectionString), settings.CurrentValue.BackOffice.DefaultWithdrawalLimit, cacheManager, Log);
+            ioc.BindAzureRepositories(settings.Nested(x => x.BackOffice.Db), settings.Nested(x => x.SmsNotifications), settings.CurrentValue.BackOffice.DefaultWithdrawalLimit, cacheManager, Log);
             ioc.BindBackOfficeRepositories(settings.Nested(x => x.BackOffice.Db), Log);
 
             BindBackOfficeServices(ioc, settings.CurrentValue);

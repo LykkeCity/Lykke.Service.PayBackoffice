@@ -11,6 +11,7 @@ using Lykke.Service.PayInternal.Client.Models.Asset;
 using BackOffice.Controllers;
 using BackOffice.Areas.LykkePay.Models;
 using BackOffice.Translates;
+using AutoMapper;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -108,20 +109,15 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 Caption = "Add assets to merchant",
                 MerchantId = merchant,
-                AssetsPayment = assets != null ? assets.PaymentAssets : string.Empty,
-                AssetsSettlement = assets != null ? assets.SettlementAssets : string.Empty,
+                PaymentAssets = assets?.PaymentAssets ?? string.Empty,
+                SettlementAssets = assets?.SettlementAssets ?? string.Empty,
             };
             return View(vm);
         }
         [HttpPost]
         public async Task<ActionResult> AddAssetByMerchant(AddAssetsByMerchantDialogViewModel vm)
         {
-            await _payInternalClient.SetPersonalAvailableAssetsAsync(new UpdateAssetAvailabilityByMerchantRequest()
-            {
-                MerchantId = vm.MerchantId,
-                PaymentAssets = vm.AssetsPayment,
-                SettlementAssets = vm.AssetsSettlement
-            });
+            await _payInternalClient.SetPersonalAvailableAssetsAsync(Mapper.Map<UpdateAssetAvailabilityByMerchantRequest>(vm));
             return this.JsonRequestResult("#assetByMerchantList", Url.Action("AssetByMerchantList"), new AssetByMerchantViewModel() { SelectedMerchant = vm.MerchantId });
         }
         [HttpPost]

@@ -52,7 +52,6 @@ namespace Core.Settings
         public string ReportsServiceConnString { get; set; }
         public string MarginTradingFrontendConnString { get; set; }
         public string InternalTransactionsConnectionString { get; set; }
-        public string AlphaEngineAuditConnString { get; set; }
     }
 
 
@@ -265,12 +264,6 @@ namespace Core.Settings
     public class BcnReportsSettings
     {
         public string ApiUrl { get; set; }
-    }
-
-    public class PdfGeneratorSettings
-    {
-        public string ServiceUrl { get; set; }
-        public string ConnectionString { get; set; }
     }
 
     public class GoogleDriveSettings

@@ -122,7 +122,7 @@ namespace AzureRepositories
         public static void BindAzureRepositories(this ContainerBuilder container,
             IReloadingManager<DbSettings> dbSettings,
             IReloadingManager<SmsNotificationsSettings> smsNotificationsSettigns,
-            IReloadingManager<string> pdfGeneratorConnectionString,
+            //IReloadingManager<string> pdfGeneratorConnectionString,
             double defaultWithdrawalLimit,
             ICacheManager cacheManager,
             ILog log)
@@ -410,11 +410,6 @@ namespace AzureRepositories
                 AzureTableStorage<InternalTransferEntity>.Create(dbSettings.ConnectionString(x => x.InternalTransactionsConnectionString),
                     "InternalTransferInfo", log)));
 
-            if (!string.IsNullOrWhiteSpace(pdfGeneratorConnectionString?.CurrentValue))
-            {
-                container.RegisterInstance<IPdfGeneratorRepository>(new PdfGeneratorRepository(AzureBlobStorage.Create(pdfGeneratorConnectionString), log));
-            }
-
             container.RegisterInstance<ISkipKycRepository>(
                 new SkipKycRepository(AzureTableStorage<SkipKycClientEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "SkipKycClients", log)));
 
@@ -527,23 +522,6 @@ namespace AzureRepositories
             container.RegisterInstance<IOrderTradesLinkRepository>(
                 new OrderTradesLinkRepository(AzureTableStorage<OrderTradeLinkEntity>.Create(dbSettings.ConnectionString(x => x.HMarketOrdersConnString),
                     "OrderTradesLinks", log)));
-
-            container.RegisterInstance<ICoastlineTraderStateRepository>(
-                new CoastlineTraderStateRepository(
-                    AzureTableStorage<CoastlineTraderStateEntity>.Create(dbSettings.ConnectionString(x => x.AlphaEngineAuditConnString), "CoastlineTradersStates", log),
-                    AzureTableStorage<CoastlineTraderOrderEntity>.Create(dbSettings.ConnectionString(x => x.AlphaEngineAuditConnString), "CoastlineTradersOrders", log)));
-
-            container.RegisterInstance<ICoastlineTraderOperationRepository>(
-                new CoastlineTraderOperationRepository(AzureTableStorage<CoastlineTraderOperationDataEntity>.Create(dbSettings.ConnectionString(x => x.AlphaEngineAuditConnString),
-                    "CoastlineTradersOperations", log)));
-
-            container.RegisterInstance<IExchangeStateRepository>(
-                new ExchangeStateRepository(AzureTableStorage<ExchangeStateDataEntity>.Create(dbSettings.ConnectionString(x => x.AlphaEngineAuditConnString),
-                    "ExchangesStates", log)));
-
-            container.RegisterInstance<IExchangeOperationRepository>(
-                new ExchangeOperationRepository(AzureTableStorage<ExchangeOperationDataEntity>.Create(dbSettings.ConnectionString(x => x.AlphaEngineAuditConnString),
-                    "ExchangesOperations", log)));
         }
 
         public static void BindBitCoinRepos(this ContainerBuilder container, IReloadingManager<DbSettings> dbSettings, ILog log)

@@ -6,13 +6,31 @@
         @Html.HiddenFor(x => x.CurrentPage)
         @Html.HiddenFor(x => x.PageSize)
         <div class="row">
+            <div class="col-md-1">
+                <a class="btn btn btn-success"
+                   onclick="ui.showDialog('@Url.Action("AddOrEditMerchantDialog")');">
+                    Add
+                </a>
+            </div>
+            <div class="col-md-3 col-md-offset-0 input-lg fa-search">
+                <i class="glyphicon glyphicon-search"></i>@Html.TextBoxFor(m => m.SearchValue)
+            </div>
+            <div class="col-md-2 col-md-offset-0" style="margin-top: 14px;">
+                @Html.CheckBoxFor(m => m.FilterByEmail) search by email
+            </div>
         </div>
     </form>
     <div id="merchantsList"></div>
 </div>
 
 <script>
-        $(function () {
+    $(function () {
+        requests.doRequest({ url: '@Url.Action("MerchantsList")', formId: '#frmMerchantsPage', divResult: '#merchantsList' });
+    });
+    $("#SearchValue").keydown(function (e) {
+        if (e.keyCode == 13) {
             requests.doRequest({ url: '@Url.Action("MerchantsList")', formId: '#frmMerchantsPage', divResult: '#merchantsList' });
-        });
+            e.preventDefault();
+        }
+     });
 </script>
