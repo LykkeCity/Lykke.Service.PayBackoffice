@@ -91,7 +91,7 @@
     <PackageReference Include="System.ServiceModel.Security" Version="4.4.0" />
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
     <PackageReference Include="WampSharp.Default" Version="1.2.5.35-beta" />
-    <PackageReference Include="Lykke.Common" Version="4.5.0" />
+    <PackageReference Include="Lykke.Common" Version="6.2.0" />
     <PackageReference Include="Lykke.RabbitMqBroker" Version="1.0.77" />
     <PackageReference Include="Flurl.Http" Version="1.2.0" />
     <PackageReference Include="RestSharp.NetCore" Version="105.2.3" />

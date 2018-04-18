@@ -30,7 +30,6 @@ namespace BackOffice
 		{
 			BackOfficeUsersRepository = ioc.Resolve<IBackOfficeUsersRepository>();
 			BackofficeUserRolesRepository = ioc.Resolve<IBackofficeUserRolesRepository>();
-			TcpMeClient = ioc.Resolve<TcpMatchingEngineClient>();
 		}
 
 		public static IContainer BindDependecies(IServiceCollection collection, IConfigurationRoot configuration)
