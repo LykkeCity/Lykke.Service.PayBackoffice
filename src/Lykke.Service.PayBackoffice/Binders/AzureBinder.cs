@@ -96,56 +96,28 @@ namespace BackOffice.Binders
         public ContainerBuilder Bind(IConfigurationRoot configuration, ContainerBuilder builder = null, bool fromTest = false)
         {
             var settings = configuration.LoadSettings<BackOfficeBundle>();
-            var monitoringServiceUrl = settings.CurrentValue.BackOffice.Service.MonitoringUrl;
-            BlockchainExplorerUrl = settings.CurrentValue.BackOffice.BlockchainExplorerUrl;
+            var monitoringServiceUrl = settings.CurrentValue.PayBackOffice.Service.MonitoringUrl;
+            BlockchainExplorerUrl = settings.CurrentValue.PayBackOffice.BlockchainExplorerUrl;
             var ioc = builder ?? new ContainerBuilder();
-            ioc.RegisterInstance(settings.CurrentValue.BackOffice);
-            ioc.RegisterInstance(settings.CurrentValue.BackOffice.GoogleAuthSettings);
-            ioc.RegisterInstance(settings.CurrentValue.BackOffice.DeploymentSettings);
-            ioc.RegisterInstance(settings.CurrentValue.BackOffice.BitcoinCoreSettings);
-            ioc.RegisterInstance(settings.CurrentValue.BackOffice.TwoFactorVerification ?? new TwoFactorVerificationSettingsEx());
+            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice);
+            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.GoogleAuthSettings);
+            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.DeploymentSettings);
+            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.BitcoinCoreSettings);
+            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.TwoFactorVerification ?? new TwoFactorVerificationSettingsEx());
+            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.LykkePayWalletList);
 
-            Log = ioc.BindLog(settings.ConnectionString(x => x.BackOffice.Db.LogsConnString), "Backoffice", "LogBackoffce");
+            Log = ioc.BindLog(settings.ConnectionString(x => x.PayBackOffice.Db.LogsConnString), "Backoffice", "LogBackoffce");
 
             Log.WriteInfoAsync("DResolver", "Binding", "", "Start");
-
-            //var redis = new RedisCache(new RedisCacheOptions
-            //{
-            //    Configuration = settings.CurrentValue.BackOffice.CacheSettings.RedisConfiguration,
-            //    InstanceName = settings.CurrentValue.BackOffice.CacheSettings.FinanceDataCacheInstance
-            //});
-
-            //ioc.RegisterInstance(redis).As<IDistributedCache>().SingleInstance();
 
             var cacheManager = new MemoryCacheManager();
             ioc.RegisterInstance<ICacheManager>(cacheManager);
             BindMicroservices(ioc, settings.CurrentValue, Log);
-            ioc.BindAzureRepositories(settings.Nested(x => x.BackOffice.Db), settings.Nested(x => x.SmsNotifications), settings.CurrentValue.BackOffice.DefaultWithdrawalLimit, cacheManager, Log);
-            ioc.BindBackOfficeRepositories(settings.Nested(x => x.BackOffice.Db), Log);
+            ioc.BindAzureRepositories(settings.Nested(x => x.PayBackOffice.Db), cacheManager, Log);
+            ioc.BindBackOfficeRepositories(settings.Nested(x => x.PayBackOffice.Db), Log);
 
             BindBackOfficeServices(ioc, settings.CurrentValue);
             ioc.RegisterMonitoringServices(monitoringServiceUrl);
-            //ioc.RegisterAllServices(settings.CurrentValue.BackOffice.SupportTools);
-
-            //ioc.RegisterInstance<ISrvBlockchainReader>(new SrvNinjaBlockChainReader(settings.CurrentValue.NinjaServiceClient.ServiceUrl));
-            //ioc.RegisterType<ClientOffchainExplorer>();
-            //ioc.BindLykkeServicesApi(settings.CurrentValue.BackOffice.LykkeServiceApi);
-            //ioc.RegisterMetricsClient(settings.CurrentValue.BackOffice.Service.MetricsUrl);
-            //ioc.RegisterClientAssetRuleClient(settings.CurrentValue.ClientAssetRuleServiceClient);
-            //ioc.RegisterRegulationClient(settings.CurrentValue.RegulationServiceClient.ServiceUrl);
-            //ioc.RegisterSwiftCredentialsClient(settings.CurrentValue.SwiftCredentialsServiceClient);
-            //ioc.RegisterInstance<IAssetDisclaimersClient>(new AssetDisclaimersClient(settings.CurrentValue.AssetDisclaimersServiceClient));
-            //ioc.RegisterInstance<IPersonalDataService>(new PersonalDataService(settings.CurrentValue.PersonalDataServiceClient, Log));
-            //ioc.RegisterGoogleDriveUploadService(settings.CurrentValue.BackOffice.GoogleDrive.GoogleDriveServiceUrl, Log);
-            //ioc.RegisterInstance(settings.CurrentValue.BackOffice.GoogleDrive);
-
-            //ioc.RegisterTemplateFormatter(settings.CurrentValue.BackOffice.Service.TemplateFormatterUrl, Log);
-
-            //ioc.RegisterType<FeeCalculatorClient>()
-            //    .WithParameter("serviceUrl", settings.CurrentValue.FeeCalculatorServiceClient.ServiceUrl)
-            //    .WithParameter(TypedParameter.From(Log))
-            //    .As<IFeeCalculatorClient>()
-            //    .SingleInstance();
 
             ioc.RegisterInstance<IPayInternalClient>(new PayInternalClient(new PayInternalServiceClientSettings() { ServiceUrl = settings.CurrentValue.PayInternalServiceClient.ServiceUrl }));
             ioc.RegisterInstance<IPayInvoiceClient>(new PayInvoiceClient(new PayInvoiceServiceClientSettings() { ServiceUrl = settings.CurrentValue.PayInvoiceServiceClient.ServiceUrl }));
@@ -154,150 +126,17 @@ namespace BackOffice.Binders
 
             Log.WriteInfoAsync("DResolver", "Binding", "", "App Stated");
 
-            //ioc.RegisterInstance<IAssetsService>(new AssetsService(new Uri(settings.CurrentValue.BackOffice.Service.AssetsUrl)));
-
-            //#region BLL dependecies
-
-            //ioc.RegisterType<ClientAccountLogic>().SingleInstance();
-            //#endregion
-
-            if (settings.CurrentValue.BackOffice.MatchingEngine != null)
-            {
-#if DEBUG
-                BindMatchingEngineChannel(
-                    ioc,
-                    fromTest
-                        ? new IPEndPoint(8888, 8888)
-                        : settings.CurrentValue.BackOffice.MatchingEngine.IpEndpoint.GetClientIpEndPoint());
-#else
-                BindMatchingEngineChannel(
-                    ioc,
-                    fromTest
-                        ? new IPEndPoint(8888, 8888)
-                        : settings.CurrentValue.BackOffice.MatchingEngine.IpEndpoint.GetClientIpEndPoint(true));
-#endif
-            }
-
-            Log.WriteInfoAsync("DResolver", "Binding", "", "App Stated");
-
             return ioc;
         }
 
         public static void BindBackOfficeServices(ContainerBuilder ioc, BackOfficeBundle settings)
         {
-            //ioc.RegisterType<SrvClientFinder>().SingleInstance();
             ioc.RegisterType<ClientSigningService>().As<IClientSigningService>().SingleInstance();
-            //ioc.RegisterType<SrvBlockchainHelper>().As<ISrvBlockchainHelper>().SingleInstance();
-            //ioc.RegisterType<HttpRequestClient>();
-            //ioc.BindCachedDicts();
-            //ioc.RegisterClientServices(settings.PersonalDataServiceClient);
-            //var exchangeOperationsService = new ExchangeOperationsServiceClient(settings.ExchangeOperationsServiceClient.ServiceUrl);
-            //ioc.RegisterInstance(exchangeOperationsService).As<IExchangeOperationsServiceClient>().SingleInstance();
-
-            //ioc.RegisterLykkeServiceClient(settings.ClientAccountServiceClient.ServiceUrl);
-
-            //ioc.RegisterType<SrvIpGeolocation>().As<ISrvIpGetLocation>().SingleInstance();
-
-            //ioc.RegisterInstance(settings.KycServiceClient);
-            //ioc.RegisterType<KycStatusServiceClient>().As<IKycStatusService>().SingleInstance();
-            //ioc.RegisterType<KycDocumentsServiceClient>().As<IKycDocumentsService>().SingleInstance();
-            //ioc.RegisterType<KycProfileServiceClient>().As<IKycProfileService>().SingleInstance();
-            //ioc.RegisterType<KycInProgressServiceClient>().As<IKycInProgressService>().SingleInstance();
-            //ioc.RegisterType<KycTempatesServiceClient>().As<IKycTempatesService>().SingleInstance();
-            //ioc.RegisterType<SrvKycManager>().SingleInstance();
-
-            //ioc.RegisterType<OrderBookService>().As<IOrderBooksService>().SingleInstance();
-            //ioc.Register<IAppNotifications>(x => new SrvAppNotifications(settings.BackOffice.Jobs.NotificationsHubConnectionString,
-            //    settings.BackOffice.Jobs.NotificationsHubName));
-
-            //ioc.RegisterType<QueueSmsRequestProducer>().As<ISmsRequestProducer>().SingleInstance();
-
-            //ioc.RegisterInstance(settings.BackOffice.CacheSettings);
-            //ioc.RegisterType<SrvAssetsHelper>().SingleInstance();
 
             ioc.RegisterType<SrvSecurityHelper>().As<ISrvSecurityHelper>().SingleInstance();
-            //ioc.RegisterType<SrvPaymentProcessor>().SingleInstance();
-            //ioc.RegisterType<SrvIcoLkkSoldCounter>().SingleInstance();
-
-            //ioc.Register<IBitcoinApiClient>(x => new BitcoinApiClient(settings.BackOffice.BitcoinCoreSettings.BitcoinCoreApiUrl)).SingleInstance();
-
-            //ioc.RegisterInstance(settings.BackOffice.MarginSettings);            
-            //ioc.Register(context =>
-            //      MarginTradingDataReaderApiClientFactory.CreateDefaultClientsPair(
-            //          settings.BackOffice.MarginSettings.DataReaderDemoApiUrl,
-            //          settings.BackOffice.MarginSettings.DataReaderLiveApiUrl,
-            //          settings.BackOffice.MarginSettings.DataReaderDemoApiKey,
-            //          settings.BackOffice.MarginSettings.DataReaderLiveApiKey,
-            //          "LykkeWallet.Backoffice"))
-            //          .SingleInstance();
-            //ioc.RegisterType<MarginDataServiceResolver>().As<IMarginDataServiceResolver>().SingleInstance();
-            //ioc.RegisterType<PaymentSystemFacade>().As<IPaymentSystemFacade>();
-            //ioc.RegisterType<OffchainRequestService>().As<IOffchainRequestService>();
-            //ioc.RegisterType<MonitoringServiceCallerService>().As<IMonitoringServiceCallerService>().SingleInstance();
-            //var addressTransactionsReportsSettings = new AddressTransactionsReportsSettings
-            //{
-            //    BaseUri = settings.BackOffice.BcnReports.ApiUrl
-            //};
-            //ioc.RegisterInstance(addressTransactionsReportsSettings).SingleInstance();
-            //ioc.RegisterType<AddressTransactionsReportsService>().As<IAddressTransactionsReportsService>();
-
-            //var strategiesSettings = new StrategiesSettings
-            //{
-            //    BaseUri = settings.StrategiesSettings.BaseUri
-            //};
-            //ioc.RegisterInstance(strategiesSettings).SingleInstance();
-            //ioc.RegisterType<MmApiClient>().As<IMmApiClient>();
-            //ioc.RegisterType<StrategyService>().As<IStrategyService>();
-
-            //var assetTransactionsReportsSettings = new AssetTransactionsReportsSettings
-            //{
-            //    BaseUri = settings.BackOffice.BcnReports.ApiUrl
-            //};
-            //ioc.RegisterInstance(assetTransactionsReportsSettings).SingleInstance();
-            //ioc.RegisterType<AssetTransactionsReportsService>().As<IAssetTransactionsReportsService>();
-
-            //var blockTransactionsReportSettings = new BlockTransactionsReportSettings
-            //{
-            //    BaseUri = settings.BackOffice.BcnReports.ApiUrl
-            //};
-            //ioc.RegisterInstance(blockTransactionsReportSettings).SingleInstance();
-            //ioc.RegisterType<BlockTransactionsReportsService>().As<IBlockTransactionsReportsService>();
-            //ioc.RegisterType<ConfirmationCodesService>().As<IConfirmationCodesService>();
-            //ioc.RegisterType<CashoutRequestsManager>().SingleInstance();
             
             Microsoft.Extensions.DependencyInjection.IServiceCollection services = new Microsoft.Extensions.DependencyInjection.ServiceCollection();
-            //services.RegisterMtBackendClientsPair(
-            //    settings.BackOffice.MarginSettings.DemoApiRootUrl,
-            //    settings.BackOffice.MarginSettings.ApiRootUrl,
-            //    settings.BackOffice.MarginSettings.DemoApiKey,
-            //    settings.BackOffice.MarginSettings.ApiKey,
-            //    "LykkeWallet.Backoffice");
-            
-            //services.RegisterMtMarketMakerClient(settings.BackOffice.MarginSettings.MarketMakerApiUrl, "LykkeWallet.Backoffice");
-            //services.RegisterMtRiskManagementRiskControlSystemClientsPair(
-            //    settings.RiskManagementServiceClient.DemoUri,
-            //    settings.RiskManagementServiceClient.DemoApiKey,
-            //    settings.RiskManagementServiceClient.BaseUri,
-            //    settings.RiskManagementServiceClient.ApiKey,
-            //    "LykkeWallet.Backoffice");
-
-            //services.RegisterMtRiskManagementHedgingServiceClientsPair(
-            //    settings.RiskManagementServiceClient.HedgingServiceDemoUrl,
-            //    settings.RiskManagementServiceClient.HedgingServiceDemoApiKey,
-            //    settings.RiskManagementServiceClient.HedgingServiceUrl,
-            //    settings.RiskManagementServiceClient.HedgingServiceApiKey,
-            //    "LykkeWallet.Backoffice");
-            //ioc.Populate(services);
             ioc.RegisterLykkeServiceClient(settings.ClientAccountServiceClient.ServiceUrl);
-
-            //var assetsCache = new DictionaryCache<Asset>(
-            //    new DateTimeProvider(),
-            //    TimeSpan.FromSeconds(settings.BackOffice.InternalTransfersSettings.AssetsCacheExpirationSeconds)
-            //);
-
-            //var assetsService = new AssetsService(new Uri(settings.BackOffice.Service.AssetsUrl));
-            //var assetsServiceWithCache = new AssetsServiceWithCache(assetsService, assetsCache, null);
-            //ioc.RegisterInstance(assetsServiceWithCache).AsImplementedInterfaces().SingleInstance();
         }
 
         public ILog Log { get; set; }
@@ -306,24 +145,14 @@ namespace BackOffice.Binders
         {
             var socketLog = new SocketLogDynamic(i => { },
                 str => Console.WriteLine(DateTime.UtcNow.ToIsoDateTime() + ": " + str));
-
-            //ioc.BindMeClient(ipEndPoint, socketLog);
         }
 
         private static void BindMicroservices(ContainerBuilder container, BackOfficeBundle allSettings, ILog log)
         {
-            BackOfficeServiceSettings settings = allSettings.BackOffice.Service;
+            BackOfficeServiceSettings settings = allSettings.PayBackOffice.Service;
             
             container.RegisterClientSessionService(settings.SessionUrl, log);
-            //container.RegisterSeoReportsClient(settings.SeoReportsUrl, log);
-            //container.RegisterRegistrationClient(settings.RegistrationUrl, log);
             container.RegisterAntifraudDetectorClient(settings.AntifraudDetectorUrl, log);
-            //container.RegisterKycReportsClient(settings.KycReportsServiceUrl, log);
-            //container.RegisterLimitationsServiceClient(settings.LimitationsServiceUrl);
-            //container.RegisterTrackerClient(settings.TrackerServiceApiUrl, log);
-            //container.RegisterRateCalculatorClient(settings.RateCalculatorServiceApiUrl, log);
-            //container.RegisterInstance<IAssetsService>(new AssetsService(new Uri(settings.AssetsUrl)));
-            //container.RegisterFeeCalculatorClient(allSettings.FeeCalculatorServiceClient.ServiceUrl, log);
         }
     }
 }

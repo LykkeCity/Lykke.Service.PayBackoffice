@@ -121,18 +121,10 @@ namespace AzureRepositories
 
         public static void BindAzureRepositories(this ContainerBuilder container,
             IReloadingManager<DbSettings> dbSettings,
-            IReloadingManager<SmsNotificationsSettings> smsNotificationsSettigns,
-            //IReloadingManager<string> pdfGeneratorConnectionString,
-            double defaultWithdrawalLimit,
             ICacheManager cacheManager,
             ILog log)
         {
             MapEntities();
-
-            container.RegisterInstance<IEthererumPendingActionsRepository>(
-              new EthererumPendingActionsRepository(
-                  AzureTableStorage<EthererumPendingActionEntity>.Create(
-                      dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString), "EthererumPendingActions", log)));
 
             container.RegisterInstance<IAddressBookEntityRepository>(
                 AzureRepoFactories.Clients.CreateAddressBookEntityRepository(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), log));
@@ -169,10 +161,6 @@ namespace AzureRepositories
                 AzureRepoFactories.Applications.CreateApplicationsRepository(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString),
                     log));
 
-            container.RegisterInstance<IClientBalanceChangeLogRepository>(
-                AzureRepoFactories.Clients.CreateBalanceChangeLogRepository(dbSettings.ConnectionString(x => x.ClientBalanceLogsConnString),
-                    log));
-
             container.RegisterInstance<ITemporaryIdRepository>(
                 new TemporaryIdRepository(AzureTableStorage<TemporaryIdRecord>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString),
                         "TemporaryClientLinks", log)));
@@ -204,25 +192,11 @@ namespace AzureRepositories
                     AzureTableStorage<ExchangeSettingsEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString),
                         "ExchangeSettings", log)));
 
-            container.RegisterInstance<IBitCoinTransactionsRepository>(
-                new BitCoinTransactionsRepository(
-                    AzureTableStorage<BitCoinTransactionEntity>.Create(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString),
-                        "BitCoinTransactions", log)));
-
-            container.RegisterInstance(new BitcoinTransactionContextBlobStorage(AzureBlobStorage.Create(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString))))
-                .As<IBitcoinTransactionContextBlobStorage>();
-
             container.RegisterInstance<IBackupQrRepository>(
                 new BackupQrRepository(AzureBlobStorage.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString))));
 
             container.RegisterInstance<IAttachmentFileRepository>(new AttachmentFileRepository(
                 AzureBlobStorage.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString))));
-
-            container.RegisterInstance<IFeeOutputsStatusRepository>(new FeeOutputsStatusRepository(
-                AzureBlobStorage.Create(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString))));
-
-            container.RegisterInstance<IAssetPairDetailedRatesRepository>(new AssetPairDetailedRatesRepository(
-                AzureBlobStorage.Create(dbSettings.ConnectionString(x => x.HLiquidityConnString)), cacheManager));
 
             container.RegisterInstance<IEmailAttachmentsMockRepository>(
                 new EmailAttachmentsMockRepository(
@@ -283,35 +257,6 @@ namespace AzureRepositories
             container.RegisterInstance<IClientCommentsRepository>(
                 new ClientCommentsRepository(AzureTableStorage<ClientCommentEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "ClientComments", log)));
 
-            container.RegisterInstance<IMarketDataRepository>
-                (new MarketDataRepository(
-                    AzureTableStorage<MarketDataEntity>.Create(dbSettings.ConnectionString(x => x.HTradesConnString), "MarketsData", log)));
-
-            container.RegisterInstance<IRouterCommandProducer>
-                (new RouterCommandProducer(AzureQueueExt.Create(dbSettings.ConnectionString(x => x.SharedStorageConnString), "router-income-queue")));
-
-            container.RegisterInstance<ISrvSolarCoinCommandProducer>(
-                new SrvSolarCoinCommandProducer(AzureQueueExt.Create(dbSettings.ConnectionString(x => x.SolarCoinConnString), "solar-out")));
-                        
-            container.RegisterInstance<IRegulatorRepository>
-            (new RegulatorRepository(
-                AzureTableStorage<RegulatorEntity>.Create(dbSettings.ConnectionString(x => x.SharedStorageConnString), "Residences", log)));
-
-            container.RegisterInstance<ISwiftCredentialsRepository>
-            (new SwiftCredentialsRepository(
-                AzureTableStorage<SwiftCredentialsEntity>.Create(dbSettings.ConnectionString(x => x.DictsConnString), "SwiftCredentials", log)));
-
-            container.RegisterInstance<IPartnerAccountPolicyRepository>
-            (new PartnerAccountPolicyRepository(
-                AzureTableStorage<PartnerAccountPolicyEntity>.Create(dbSettings.ConnectionString(x => x.SharedStorageConnString), "PartnerAccountPolicy", log)));
-
-            container.RegisterInstance<IPartnerClientAccountRepository>
-            (new PartnerClientAccountRepository(
-                AzureTableStorage<PartnerClientAccountEntity>.Create(dbSettings.ConnectionString(x => x.SharedStorageConnString), "PartnerClientAccounts", log)));
-
-            container.RegisterInstance<IBitcoinCommandSender>(
-                new BitcoinCommandSender(AzureQueueExt.Create(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString), "intransactions")));
-
             container.RegisterInstance<IClientDictionaryRepository>(
                 new ClientDictionaryRepository(
                     AzureTableStorage<Clients.KeyValueEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "ClientsDictionaries", log)));
@@ -320,71 +265,8 @@ namespace AzureRepositories
                 new DictionaryRepository(
                     AzureTableStorage<Application.KeyValueEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "AppDictionaries", log)));
 
-            container.RegisterInstance<IDailyBalancesRepository>(
-                new DailyBalancesRepository(
-                    AzureTableStorage<DailyBalances>.Create(dbSettings.ConnectionString(x => x.OlapConnString), "DailyBalances", log)));
-
-            container.RegisterInstance<IChronoBankCommandProducer>(
-                new SrvChronoBankCommandProducer(AzureQueueExt.Create(dbSettings.ConnectionString(x => x.ChronoBankSrvConnString), "chronobank-out")));
-
-            container.RegisterInstance<IForwardWithdrawalRepository>(
-                new ForwardWithdrawalRepository(
-                    AzureTableStorage<ForwardWithdrawalEntity>.Create(dbSettings.ConnectionString(x => x.BalancesInfoConnString),
-                        "ForwardWithdrawal", log)));
-
-            container.RegisterInstance<IQuantaCommandProducer>(
-                new SrvQuantaCommandProducer(AzureQueueExt.Create(dbSettings.ConnectionString(x => x.QuantaSrvConnString), "quanta-out")));
-
-            container.RegisterInstance<IUnsignedTransactionsRepository>(
-                new UnsignedTransactionsRepository(
-                    AzureTableStorage<UnsignedTransactionEntity>.Create(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString),
-                        "UnsignedTransactions", log)));
-
             container.RegisterInstance<ISignedMultisigTransactionsSender>(
                 new SignedMultisigTransactionsSender(AzureQueueExt.Create(dbSettings.ConnectionString(x => x.ClientSignatureConnString), "client-signed-transactions")));
-
-            container.RegisterInstance<ISlackNotificationsProducer>(
-                new SlackNotificationsProducer(AzureQueueExt.Create(dbSettings.ConnectionString(x => x.SharedStorageConnString), "slack-notifications")));
-
-            container.RegisterInstance<IInternalOperationsRepository>(new InternalOperationsRepository(
-                AzureTableStorage<InternalOperationEntity>.Create(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString),
-                    "InternalOperations", log)));
-
-            container.RegisterInstance<ILastProcessedBlockRepository>(new LastProcessedBlockRepository(
-                AzureTableStorage<LastProcessedBlockEntity>.Create(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString),
-                    "LastProcessedBlocks", log)));
-
-            container.RegisterInstance<IBalanceChangeTransactionsRepository>(new BalanceChangeTransactionsRepository(
-                AzureTableStorage<BalanceChangeTransactionEntity>.Create(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString),
-                    "BalanceChangeTransactions", log)));
-
-            container.RegisterInstance<IConfirmPendingTxsQueue>(
-                new ConfirmPendingTxsQueue(AzureQueueExt.Create(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString),
-                    "txs-confirm-pending")));
-
-            container.RegisterInstance<IConfirmedTransactionsRepository>(
-                new ConfirmedTransactionsRepository(AzureTableStorage<ConfirmedTransactionRecord>.Create(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString),
-                        "ConfirmedTransactions", log)));
-
-            container.RegisterInstance<IBcnClientCredentialsRepository>(
-                new BcnClientCredentialsRepository(
-                    AzureTableStorage<BcnCredentialsRecordEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString),
-                        "BcnClientCredentials", log)));
-
-            container.RegisterInstance<IEthereumTransactionRequestRepository>(
-                new EthereumTransactionRequestRepository(
-                    AzureTableStorage<EthereumTransactionReqEntity>.Create(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString),
-                        "EthereumTxRequest", log)));
-
-            container.RegisterInstance<IEthClientEventLogs>(
-                new EthClientEventLogs(
-                    AzureTableStorage<EthClientEventRecord>.Create(dbSettings.ConnectionString(x => x.LwEthLogsConnString),
-                        "EthClientEventLogs", log)));
-
-            container.RegisterInstance<IAccessTokensRepository>(
-                new AccessTokensRepository(
-                    AzureTableStorage<AccessTokenRecord>.Create(dbSettings.ConnectionString(x => x.SecurityEventsConnString),
-                        "AccessTokens", log)));
 
             container.RegisterInstance<ICashoutTemplateRepository>(
                 new CashoutTemplateRepository(
@@ -394,21 +276,12 @@ namespace AzureRepositories
                 new CashoutTemplateLogRepository(
                     AzureTableStorage<CashoutTemplateLogRecord>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "CashoutLogs", log)));
 
-            container.RegisterInstance<IWithdrawLimitsRepository>(
-                new WithdrawLimitsRepository(
-                    AzureTableStorage<WithdrawLimitRecord>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "WithdrawLimits", log),
-                    defaultWithdrawalLimit));
-
             container.RegisterInstance<IClientDialogsRepository>(
                 new ClientDialogsRepository(
                     AzureTableStorage<ClientDialogEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "ClientDialogs",
                         log),
                     AzureTableStorage<TestSubmit>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "ClientDialogSubmitStub",
                         log)));
-
-            container.RegisterInstance<IInternalTransferRepository>(new InternalTransferRepository(
-                AzureTableStorage<InternalTransferEntity>.Create(dbSettings.ConnectionString(x => x.InternalTransactionsConnectionString),
-                    "InternalTransferInfo", log)));
 
             container.RegisterInstance<ISkipKycRepository>(
                 new SkipKycRepository(AzureTableStorage<SkipKycClientEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "SkipKycClients", log)));
@@ -418,14 +291,9 @@ namespace AzureRepositories
                     AzureTableStorage<ClientWithdrawalItem>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "WithdrawalCache", log)));
 
             container.BindSignatureRequests(dbSettings, log);
-            container.BindTradingRepos(dbSettings, log);            
-            container.BindBitCoinRepos(dbSettings, log);
             container.BindEventLog(dbSettings, log);
             container.BindPersonalInfoAndOther(dbSettings, log);
             container.BindEmailMessagesRepos(dbSettings, log);
-            container.BindSmsMessagesRepos(smsNotificationsSettigns, log);
-            container.BindCashTansferRepos(dbSettings, log);
-            container.BindOffchain(dbSettings, log);
         }
 
         private static void BindSignatureRequests(this ContainerBuilder container, IReloadingManager<DbSettings> dbSettings, ILog log)
@@ -433,9 +301,6 @@ namespace AzureRepositories
             container.RegisterInstance<ISignatureRequestRepository>(
              new SignatureRequestRepository(AzureTableStorage<SignatureRequestEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString),
                    "SignRequests", log)));
-
-            container.RegisterInstance<ISignatureCommandProducer>
-                (new SignatureCommandProducer(AzureQueueExt.Create(dbSettings.ConnectionString(x => x.SharedStorageConnString), "router-signed-request-queue")));
         }
 
         private static void BindPersonalInfoAndOther(this ContainerBuilder container, IReloadingManager<DbSettings> dbSettings, ILog log)
@@ -483,10 +348,6 @@ namespace AzureRepositories
             container.RegisterInstance<ILimitTradeEventsRepository>(
                 new LimitTradeEventsRepository(
                     AzureTableStorage<LimitTradeEventEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "LimitTradeEvents", log)));
-
-            container.RegisterInstance<Core.MarginTrading.Repositories.IMaintenanceInfoRepository>(
-                new MaintenanceInfoRepository(
-                    AzureTableStorage<MaintenanceInfoEntity>.Create(dbSettings.ConnectionString(x => x.MarginTradingFrontendConnString), "MaintenanceInfo", log)));
         }
 
         private static void BindRequestsLog(ContainerBuilder container, IReloadingManager<DbSettings> dbSettings, ILog log)
@@ -497,39 +358,6 @@ namespace AzureRepositories
             repository.Start();
 
             container.RegisterInstance<IRequestsLogRepository>(repository);
-        }
-        
-        private static void BindTradingRepos(this ContainerBuilder container, IReloadingManager<DbSettings> dbSettings, ILog log)
-        {
-            container.RegisterInstance<IClientTradesRepository>(
-                new ClientTradesRepository(AzureTableStorage<ClientTradeEntity>.Create(dbSettings.ConnectionString(x => x.HTradesConnString), "Trades", log)));
-
-            container.RegisterInstance<IWalletsRepository>(
-                AzureRepoFactories.Wallets.CreateAccountsRepository(dbSettings.ConnectionString(x => x.BalancesInfoConnString), log));
-
-            container.RegisterInstance<IBalancePendingRepository>(
-                new BalancePendingRepository(AzureTableStorage<BalancePendingEntity>.Create(dbSettings.ConnectionString(x => x.BalancesInfoConnString),
-                    "BalancePending", log)));
-
-            container.RegisterInstance<IMarketOrdersRepository>(
-                new MarketOrdersRepository(AzureTableStorage<MarketOrderEntity>.Create(dbSettings.ConnectionString(x => x.HMarketOrdersConnString),
-                    "MarketOrders", log)));
-
-            container.RegisterInstance<ILimitOrdersRepository>(
-                new LimitOrdersRepository(AzureTableStorage<LimitOrderEntity>.Create(dbSettings.ConnectionString(x => x.HMarketOrdersConnString),
-                    "LimitOrders", log)));
-
-            container.RegisterInstance<IOrderTradesLinkRepository>(
-                new OrderTradesLinkRepository(AzureTableStorage<OrderTradeLinkEntity>.Create(dbSettings.ConnectionString(x => x.HMarketOrdersConnString),
-                    "OrderTradesLinks", log)));
-        }
-
-        public static void BindBitCoinRepos(this ContainerBuilder container, IReloadingManager<DbSettings> dbSettings, ILog log)
-        {
-            container.RegisterInstance<IBlockchainTransactionsCache>(
-                AzureRepoFactories.Bitcoin.CreateBlockchainTransactionsCache(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString),
-                    log)
-                );
         }
 
 
@@ -578,50 +406,6 @@ namespace AzureRepositories
                 AzureTableStorage<SmsMessageMockEntity>.Create(
                     settings.ConnectionString(x => x.AzureQueue.ConnectionString),
                     "MockSms", log)));
-        }
-
-        public static void BindCashTansferRepos(this ContainerBuilder container, IReloadingManager<DbSettings> dbSettings, ILog log)
-        {
-            container.RegisterInstance<ICashOutAttemptRepository>(
-                new CashOutAttemptRepository(
-                    AzureTableStorage<CashOutAttemptEntity>.Create(dbSettings.ConnectionString(x => x.BalancesInfoConnString), "CashOutAttempt", log)));
-
-            container.RegisterInstance<ICashoutRequestLogRepository>(
-                new CashoutRequestLogRepository(
-                    AzureTableStorage<CashoutRequestLogRecord>.Create(dbSettings.ConnectionString(x => x.BalancesInfoConnString), "CashOutAttemptLog", log)));
-
-            container.RegisterInstance<ICashoutsProcessedReportRepository>(
-                new CashoutsProcessedReportRepository(
-                    AzureTableStorage<CashoutProcessedReportRowEntity>.Create(dbSettings.ConnectionString(x => x.BalancesInfoConnString), "CashoutsProcessedReport", log)));
-
-            container.RegisterInstance<ICashoutPaymentDateRepository>(
-                new CashOperations.CashoutPaymentDateRepository(
-                    AzureTableStorage<CashoutPaymentDateEntity>.Create(dbSettings.ConnectionString(x => x.BalancesInfoConnString), "CashoutPaymentDates", log)));
-        }
-
-        public static void BindOffchain(this ContainerBuilder container, IReloadingManager<DbSettings> dbSettings, ILog log)
-        {
-            container.RegisterInstance<IOffchainRequestRepository>(
-                new OffchainRequestRepository(
-                    AzureTableStorage<OffchainRequestEntity>.Create(dbSettings.ConnectionString(x => x.OffchainConnString), "OffchainRequests", log)));
-
-            container.RegisterInstance<IOffchainTransferRepository>(
-                new OffchainTransferRepository(
-                    AzureTableStorage<OffchainTransferEntity>.Create(dbSettings.ConnectionString(x => x.OffchainConnString), "OffchainTransfers", log)));
-
-            container.RegisterInstance<IOffchainOrdersRepository>(
-                new OffchainOrderRepository(
-                    AzureTableStorage<OffchainOrder>.Create(dbSettings.ConnectionString(x => x.OffchainConnString), "OffchainOrders", log)));
-
-            container.RegisterInstance<IOffchainEncryptedKeysRepository>(
-                new OffchainEncryptedKeyRepository(
-                    AzureTableStorage<OffchainEncryptedKeyEntity>.Create(dbSettings.ConnectionString(x => x.OffchainConnString), "OffchainEncryptedKeys", log)));
-
-            container.RegisterInstance<IOffchainSettingsRepository>(
-                new OffchainSettingsRepository(
-                    AzureTableStorage<OffchainSettingEntity>.Create(dbSettings.ConnectionString(x => x.OffchainConnString), "OffchainSettings", log)));
-
-            container.RegisterInstance<IOffchainFinalizeCommandProducer>(new OffchainFinalizeCommandProducer(AzureQueueExt.Create(dbSettings.ConnectionString(x => x.BitCoinQueueConnectionString), "offchain-finalization")));
         }
 
         public static ILog BindLog(this ContainerBuilder container, IReloadingManager<string> connectionString, string appName, string tableName)
