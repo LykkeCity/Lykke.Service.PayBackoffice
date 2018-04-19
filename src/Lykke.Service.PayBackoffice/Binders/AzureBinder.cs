@@ -104,6 +104,7 @@ namespace BackOffice.Binders
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.DeploymentSettings);
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.BitcoinCoreSettings);
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.TwoFactorVerification ?? new TwoFactorVerificationSettingsEx());
+            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.LykkePayWalletList);
 
             Log = ioc.BindLog(settings.ConnectionString(x => x.PayBackOffice.Db.LogsConnString), "Backoffice", "LogBackoffce");
 
