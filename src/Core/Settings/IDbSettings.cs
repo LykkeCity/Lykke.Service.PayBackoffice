@@ -30,29 +30,10 @@ namespace Core.Settings
     public class DbSettings
     {
         public string ClientPersonalInfoConnString { get; set; }
-        public string BalancesInfoConnString { get; set; }
-        public string HMarketOrdersConnString { get; set; }
-        public string HTradesConnString { get; set; }
-        public string HLiquidityConnString { get; set; }
         public string BackOfficeConnString { get; set; }
-        public string BitCoinQueueConnectionString { get; set; }
-        public string DictsConnString { get; set; }
         public string LogsConnString { get; set; }
-        public string SharedStorageConnString { get; set; }
-        public string OlapConnString { get; set; }
-        public string ChronoBankSrvConnString { get; set; }
-        public string QuantaSrvConnString { get; set; }
         public string ClientSignatureConnString { get; set; }
-        public string SolarCoinConnString { get; set; }
-        public string OffchainConnString { get; set; }
-        public string ClientBalanceLogsConnString { get; set; }
-        public string ApiLogsConnString { get; set; }
-        public string LwEthLogsConnString { get; set; }
-        public string SecurityEventsConnString { get; set; }
-        public string ReportsServiceConnString { get; set; }
-        public string MarginTradingFrontendConnString { get; set; }
-        public string InternalTransactionsConnectionString { get; set; }
-        public string AlphaEngineAuditConnString { get; set; }
+        public string SharedStorageConnString { get; set; }
     }
 
 

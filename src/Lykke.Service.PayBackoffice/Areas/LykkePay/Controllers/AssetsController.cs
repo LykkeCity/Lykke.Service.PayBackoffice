@@ -11,6 +11,7 @@ using Lykke.Service.PayInternal.Client.Models.Asset;
 using BackOffice.Controllers;
 using BackOffice.Areas.LykkePay.Models;
 using BackOffice.Translates;
+using AutoMapper;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -109,8 +110,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 Caption = "Add assets to merchant",
                 MerchantId = merchant,
-                PaymentAssets = assets != null ? assets.PaymentAssets : string.Empty,
-                SettlementAssets = assets != null ? assets.SettlementAssets : string.Empty,
+                PaymentAssets = assets?.PaymentAssets ?? string.Empty,
+                SettlementAssets = assets?.SettlementAssets ?? string.Empty,
             };
             return View(vm);
         }
