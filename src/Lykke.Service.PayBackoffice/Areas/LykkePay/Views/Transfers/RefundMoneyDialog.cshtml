@@ -3,6 +3,9 @@
 
 @{
     Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+
+    IEnumerable<SelectListItem> walletsList = Model.Wallets.
+        Select(x => new SelectListItem { Value = x, Text = x }).ToArray();
 }
 
 <form id="frmRefundMoney">
@@ -12,6 +15,9 @@
     <div id="errorMessage"></div>
     <div class="form-group">
         Are you sure?
+    </div>
+    <div class="form-group">
+        Wallet: @Html.DropDownListFor(model => model.SelectedWallet, walletsList)
     </div>
 </form>
 

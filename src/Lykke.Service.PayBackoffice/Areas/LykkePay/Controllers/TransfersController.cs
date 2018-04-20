@@ -165,11 +165,13 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> RefundMoneyDialog(RefundModel model)
         {
+            var sources = await _payInternalClient.GetTransactionsSourceWalletsAsync(model.SelectedPaymentRequest);
             var viewmodel = new RefundMoneyDialogViewModel()
             {
                 SelectedMerchant = model.SelectedMerchant,
                 SelectedPaymentRequest = model.SelectedPaymentRequest,
-                SelectedWalletAddress = model.SelectedWalletAddress
+                SelectedWalletAddress = model.SelectedWalletAddress,
+                Wallets = sources
             };
             return View(viewmodel);
         }
@@ -178,19 +180,17 @@ namespace BackOffice.Areas.LykkePay.Controllers
         {
             try
             {
-                var sources = await _payInternalClient.GetTransactionsSourceWalletsAsync(vm.SelectedWalletAddress);
-                foreach (var source in sources)
+                if (string.IsNullOrEmpty(vm.SelectedWallet))
+                    return this.JsonFailResult("Error: needs to select source wallet", ErrorMessageAnchor);
+
+                var refund = new RefundRequestModel()
                 {
-                    var refund = new RefundRequestModel()
-                    {
-                        DestinationAddress = source,
-                        PaymentRequestId = vm.SelectedPaymentRequest,
-                        MerchantId = vm.SelectedMerchant
-                    };
-                    var response = await _payInternalClient.RefundAsync(refund);
-                }
-                if (sources.Count == 0)
-                    throw new RefundErrorResponseException("Source wallets not found");
+                    DestinationAddress = vm.SelectedWallet,
+                    PaymentRequestId = vm.SelectedPaymentRequest,
+                    MerchantId = vm.SelectedMerchant
+                };
+                var response = await _payInternalClient.RefundAsync(refund);
+
                 return this.JsonRequestResult("#transfersList", Url.Action("TransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant, SelectedAsset = "None"  });
             }
             catch (RefundErrorResponseException ex)
