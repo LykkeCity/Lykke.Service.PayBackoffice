@@ -13,6 +13,8 @@ namespace BackOffice.Areas.LykkePay.Models
         public string SelectedMerchant { get; set; }
         public string SelectedPaymentRequest { get; set; }
         public string SelectedWalletAddress { get; set; }
+        public IReadOnlyList<string> Wallets { get; set; }
+        public string SelectedWallet { get; set; }
     }
     public class RefundModel
     {
