@@ -189,11 +189,16 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     };
                     var response = await _payInternalClient.RefundAsync(refund);
                 }
-                return this.JsonRequestResult("#transfersList", Url.Action("TransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant });
+                if (sources.Count == 0)
+                    throw new RefundErrorResponseException("Source wallets not found");
+                return this.JsonRequestResult("#transfersList", Url.Action("TransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant, SelectedAsset = "None"  });
             }
             catch (RefundErrorResponseException ex)
             {
-                return this.JsonFailResult("Error: " + ex.InnerException.Message, ErrorMessageAnchor);
+                if (ex.InnerException != null)
+                    return this.JsonFailResult("Error: " + ex.InnerException.Message, ErrorMessageAnchor);
+                else
+                    return this.JsonFailResult("Error: " + ex.Message, ErrorMessageAnchor);
             }
         }
         private async Task<IEnumerable<BlockchainTransaction>> GetTransactions(IEnumerable<string> addresses)
