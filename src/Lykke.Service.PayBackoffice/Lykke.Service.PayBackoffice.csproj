@@ -191,6 +191,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="PagedList.Core.Mvc" Version="1.0.1" />
     <PackageReference Include="QBitNinja.Client" Version="1.0.3.46" />
+    <PackageReference Include="Refit" Version="4.2.0" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm install" />

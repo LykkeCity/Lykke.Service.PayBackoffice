@@ -12,6 +12,8 @@ using BackOffice.Controllers;
 using BackOffice.Areas.LykkePay.Models;
 using BackOffice.Translates;
 using AutoMapper;
+using Lykke.Service.PayInternal.Client.Exceptions;
+using Lykke.Common.Api.Contract.Responses;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -157,9 +159,15 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
             }
-            catch(Exception ex)
+            catch(DefaultErrorResponseException ex)
             {
-                return this.JsonFailResult("Error: " + ex.InnerException?.Message, ErrorMessageAnchor);
+                if (ex.InnerException != null)
+                {
+                    var content = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(((Refit.ApiException)ex.InnerException).Content);
+                    return this.JsonFailResult(content.ErrorMessage, ErrorMessageAnchor);
+                }
+                else
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
             }
             return this.JsonRequestResult("#assetPaymentList", Url.Action("AssetPaymentList"));
         }
@@ -204,9 +212,15 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
             }
-            catch (Exception ex)
+            catch (DefaultErrorResponseException ex)
             {
-                return this.JsonFailResult("Error: " + ex.InnerException?.Message, ErrorMessageAnchor);
+                if (ex.InnerException != null)
+                {
+                    var content = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(((Refit.ApiException)ex.InnerException).Content);
+                    return this.JsonFailResult(content.ErrorMessage, ErrorMessageAnchor);
+                }
+                else
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
             }
             return this.JsonRequestResult("#assetSettlementList", Url.Action("AssetSettlementList"));
         }
