@@ -8,6 +8,7 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <SetLinkMetadataAutomatically>false</SetLinkMetadataAutomatically>
+	<Version>1.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Pdf\**" />
