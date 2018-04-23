@@ -24,7 +24,6 @@ namespace BackOffice.Areas.LykkePay.Controllers
     {
         private const string ErrorMessageAnchor = "#errorMessage";
         private readonly IPayInternalClient _payInternalClient;
-        private const string ErrorMessageAnchor = "#errorMessage";
         public AssetsController(
             IPayInternalClient payInternalClient)
         {
