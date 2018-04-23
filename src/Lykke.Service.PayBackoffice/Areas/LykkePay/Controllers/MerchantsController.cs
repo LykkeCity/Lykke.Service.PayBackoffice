@@ -115,7 +115,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 PublicKey = merchant.PublicKey,
                 TimeCacheRates = merchant.TimeCacheRates,
                 Certificate = merchant.PublicKey,
-                SystemId = string.Empty
+                SystemId = string.Empty,
+                DisplayName = merchant.DisplayName
             };
 
             return View(viewModel);
@@ -128,6 +129,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 return this.JsonFailResult("ApiKey id required", ErrorMessageAnchor);
             if (string.IsNullOrEmpty(vm.Name))
                 return this.JsonFailResult("Name required", ErrorMessageAnchor);
+            if (string.IsNullOrEmpty(vm.DisplayName))
+                return this.JsonFailResult("DisplayName required", ErrorMessageAnchor);
 
             if (vm.IsNewMerchant)
             {
@@ -179,7 +182,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     LwId = vm.LwId,
                     MarkupFixedFee = vm.MarkupFixedFee,
                     TimeCacheRates = vm.TimeCacheRates,
-                    Name = vm.Name
+                    Name = vm.Name,
+                    DisplayName = vm.DisplayName
                 };
 
                 await _payInternalClient.UpdateMerchantAsync(updatereq);
