@@ -97,7 +97,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             var pageCount = Convert.ToInt32(Math.Ceiling((double)list.Count() / vm.PageSize));
             var currentPage = vm.CurrentPage == 0 ? 1 : vm.CurrentPage;
             if (list.Count() != 0)
-                pagedlist = list.ToPagedList(currentPage, vm.PageSize).ToList();
+                pagedlist = list.OrderByDescending(x=>x.DueDate).ToPagedList(currentPage, vm.PageSize).ToList();
 
             var viewModel = new PaymentRequestListViewModel()
             {
