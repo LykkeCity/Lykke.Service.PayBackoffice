@@ -13,7 +13,7 @@ namespace BackOffice.Areas.LykkePay.Models
         public string Width { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
-        
+        public string DisplayName { get; set; }
         public string PublicKey { get; set; }
         public string ApiKey { get; set; }
         public double DeltaSpread { get; set; }
