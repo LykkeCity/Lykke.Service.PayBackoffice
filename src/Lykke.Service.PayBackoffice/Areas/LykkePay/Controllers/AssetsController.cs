@@ -22,6 +22,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
     [FilterFeaturesAccess(UserFeatureAccess.MenuAssets)]
     public class AssetsController : Controller
     {
+        private const string ErrorMessageAnchor = "#errorMessage";
         private readonly IPayInternalClient _payInternalClient;
         private const string ErrorMessageAnchor = "#errorMessage";
         public AssetsController(
@@ -120,6 +121,12 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddAssetByMerchant(AddAssetsByMerchantDialogViewModel vm)
         {
+            if (string.IsNullOrEmpty(vm.PaymentAssets))
+                return this.JsonFailResult("PaymentAssets required", ErrorMessageAnchor);
+            if (string.IsNullOrEmpty(vm.SettlementAssets))
+                return this.JsonFailResult("SettlementAssets required", ErrorMessageAnchor);
+            vm.SettlementAssets = vm.SettlementAssets.Replace(' ', ';').Replace(',', ';');
+            vm.PaymentAssets = vm.PaymentAssets.Replace(' ', ';').Replace(',', ';');
             await _payInternalClient.SetPersonalAvailableAssetsAsync(new UpdateAssetAvailabilityByMerchantRequest()
             {
                 MerchantId = vm.MerchantId,
