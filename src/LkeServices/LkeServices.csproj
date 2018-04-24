@@ -8,7 +8,7 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <SetLinkMetadataAutomatically>false</SetLinkMetadataAutomatically>
-	<Version>1.0.0</Version>
+    <Version>1.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Pdf\**" />
@@ -72,6 +72,7 @@
     <PackageReference Include="Lykke.Payments.Client" Version="1.0.6" />
     <PackageReference Include="Lykke.Payments.Contracts" Version="1.0.4" />
     <PackageReference Include="Lykke.Service.Assets.Client" Version="3.3.1" />
+    <PackageReference Include="Lykke.Service.Balances.Client" Version="1.1.0" />
     <PackageReference Include="Lykke.Service.EthereumCore.Client" Version="1.0.39" />
     <PackageReference Include="Lykke.Service.ExchangeOperations.Client" Version="1.1.4" />
     <PackageReference Include="Lykke.Service.JumioIntegration.Client" Version="1.0.12" />

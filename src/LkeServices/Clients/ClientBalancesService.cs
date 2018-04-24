@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Common;
 using Core;
-using Core.Accounts;
 using Core.Accounts.PrivateWallets;
 using Core.Bitcoin;
 using Core.BitCoin;
@@ -11,13 +9,14 @@ using Core.Clients;
 using Lykke.Service.RateCalculator.Client;
 using Core.Ethereum;
 using Lykke.Service.Assets.Client.Models;
+using Lykke.Service.Balances.Client;
 
 namespace LkeServices.Clients
 {
     public class ClientBalancesService : IClientBalancesService
     {
         private readonly ISrvBlockchainReader _srvBlockchainReader;
-        private readonly IWalletsRepository _walletsRepository;
+        private readonly IBalancesClient _balancesClient;
         private readonly IRateCalculatorClient _rateCalculatorClient;
         private readonly IPrivateWalletsRepository _privateWalletsRepository;
         private readonly CachedTradableAssetsDictionary _tradableAssetsDict;
@@ -25,14 +24,14 @@ namespace LkeServices.Clients
         private readonly ISrvEthereumHelper _srvEthereumHelper;
 
         public ClientBalancesService(ISrvBlockchainReader srvBlockchainReader,
-            IWalletsRepository walletsRepository, IRateCalculatorClient rateCalculatorClient,
+            IBalancesClient balancesClient, IRateCalculatorClient rateCalculatorClient,
             IPrivateWalletsRepository privateWalletsRepository,
             CachedTradableAssetsDictionary tradableAssetsDict,
             IWalletCredentialsRepository walletCredentialsRepository,
             ISrvEthereumHelper srvEthereumHelper)
         {
             _srvBlockchainReader = srvBlockchainReader;
-            _walletsRepository = walletsRepository;
+            _balancesClient = balancesClient;
             _rateCalculatorClient = rateCalculatorClient;
             _privateWalletsRepository = privateWalletsRepository;
             _tradableAssetsDict = tradableAssetsDict;
@@ -44,13 +43,13 @@ namespace LkeServices.Clients
         {
             var clientBalance = new ClientBalance();
 
-            var wallets = (await _walletsRepository.GetAsync(clientId)).ToArray();
+            var wallets = (await _balancesClient.GetClientBalances(clientId)).ToArray();
 
             if (wallets.Any(x => x.Balance > 0))
             {
                 var toBase =
                     await _rateCalculatorClient.GetAmountInBaseAsync(
-                        wallets.Where(x => x.Balance > 0).Select(x => new Lykke.Service.RateCalculator.Client.AutorestClient.Models.BalanceRecord(x.Balance, x.AssetId)), baseAssetId);
+                        wallets.Where(x => x.Balance > 0).Select(x => new Lykke.Service.RateCalculator.Client.AutorestClient.Models.BalanceRecord((double)x.Balance, x.AssetId)), baseAssetId);
 
 
                 clientBalance.TradingBalance = toBase.Sum(x => x.Balance);

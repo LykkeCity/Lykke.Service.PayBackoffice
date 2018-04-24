@@ -44,10 +44,6 @@ namespace AzureRepositories
            ioc.RegisterInstance<IMenuBadgesRepository>(
                 new MenuBadgesRepository(new AzureTableStorageLocal<MenuBadgeEntity>(localHost, "MenuBadgesRepository")));
 
-
-           ioc.RegisterInstance<IWalletsRepository>(
-                new WalletsRepository(new AzureTableStorageLocal<WalletEntity>(localHost, "Accounts")));
-
            ioc.RegisterInstance<IPinSecurityRepository>(
                 new PinSecurityRepository(new AzureTableStorageLocal<PinSecurityEntity>(localHost, "ClientPins")));
 
@@ -105,13 +101,8 @@ namespace AzureRepositories
            ioc.RegisterInstance<IMenuBadgesRepository>(
                 new MenuBadgesRepository(new NoSqlTableInMemory<MenuBadgeEntity>()));
 
-
-           ioc.RegisterInstance<IWalletsRepository>(
-                new WalletsRepository(new NoSqlTableInMemory<WalletEntity>()));
-
            ioc.RegisterInstance<IPinSecurityRepository>(
                 new PinSecurityRepository(new NoSqlTableInMemory<PinSecurityEntity>()));
-
 
            ioc.RegisterInstance<IMarketOrdersRepository>(
                 new MarketOrdersRepository(new NoSqlTableInMemory<MarketOrderEntity>()));

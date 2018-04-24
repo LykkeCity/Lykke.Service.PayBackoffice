@@ -1,4 +1,5 @@
 ﻿using Core.Settings.LocalClients;
+using Lykke.Service.Balances.Client;
 using Lykke.Service.ClientAccount.Client;
 using Lykke.Service.PayInternal.Client;
 using Lykke.Service.PayInvoice.Client;
@@ -14,5 +15,6 @@ namespace BackOffice.Settings
         public PayInternalServiceClientSettings PayInternalServiceClient { get; set; }
         public PayInvoiceServiceClientSettings PayInvoiceServiceClient { get; set; }
         public PayAuthServiceClientSettings PayAuthServiceClient { get; set; }
+        public BalancesServiceClientSettings BalancesServiceClient { get; set; }
     }
 }

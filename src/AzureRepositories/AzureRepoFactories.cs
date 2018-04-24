@@ -1,6 +1,4 @@
-﻿using AzureRepositories.Accounts;
-using AzureRepositories.Application;
-using AzureRepositories.Assets;
+﻿using AzureRepositories.Application;
 using AzureRepositories.BackOffice;
 using AzureRepositories.Bitcoin;
 using AzureRepositories.Clients;
@@ -40,14 +38,6 @@ namespace AzureRepositories
         {
             const string tableName = "PaymentTransactions";
             return new PaymentTransactionsRepository(AzureTableStorage<PaymentTransactionEntity>.Create(connString, tableName, log), AzureTableStorage<AzureMultiIndex>.Create(connString, tableName, log));
-        }
-
-        public static class Wallets
-        {
-            public static WalletsRepository CreateAccountsRepository(IReloadingManager<string> connString, ILog log)
-            {
-                return new WalletsRepository(AzureTableStorage<WalletEntity>.Create(connString, "Accounts", log));
-            }
         }
 
         public static class EventLogs
