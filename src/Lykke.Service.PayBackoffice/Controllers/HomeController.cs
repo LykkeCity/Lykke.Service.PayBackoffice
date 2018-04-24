@@ -11,16 +11,10 @@ using BackOffice.Services;
 using BackOffice.Settings;
 using BackOffice.Translates;
 using Core;
-using Core.AuditLog;
-using Core.BitCoin;
-using Core.Clients;
-using Core.Security;
 using Core.Settings;
 using Core.Users;
 using Google.Apis.Auth;
-using LkeServices.Kyc;
 using Lykke.GoogleAuthenticator;
-using Lykke.Service.ClientAccount.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 
@@ -30,34 +24,16 @@ namespace BackOffice.Controllers
     {
         private readonly IBrowserSessionsRepository _browserSessionsRepository;
         private readonly IBackOfficeUsersRepository _backOfficeUsersRepository;
-        private readonly IClientAccountClient _clientAccountService;
-        private readonly ISrvSecurityHelper _srvSecurityHelper;
-        private readonly IWalletCredentialsRepository _walletCredentialsRepository;
-        private readonly IAuditLogRepository _auditLogRepository;
-        private readonly ITemporaryIdRepository _temporaryIdRepository;
-        private readonly IPinSecurityRepository _pinSecurityRepository;
-        private readonly IClientSigningService _clientSigningService;
         private readonly GoogleAuthSettings _googleAuthSettings;
         private readonly TwoFactorVerificationSettingsEx _twoFactorVerificationSettings;
 
         public HomeController(IBrowserSessionsRepository browserSessionsRepository,
             IBackOfficeUsersRepository backOfficeUsersRepository,
-            ISrvSecurityHelper srvSecurityHelper, IWalletCredentialsRepository walletCredentialsRepository,
-            IAuditLogRepository auditLogRepository, ITemporaryIdRepository temporaryIdRepository,
-            IPinSecurityRepository pinSecurityRepository, IClientAccountClient clientAccountService,
-            IClientSigningService clientSigningService,
             GoogleAuthSettings googleAuthSettings,
             TwoFactorVerificationSettingsEx twoFactorVerificationSettings)
         {
             _browserSessionsRepository = browserSessionsRepository;
             _backOfficeUsersRepository = backOfficeUsersRepository;
-            _clientAccountService = clientAccountService;
-            _srvSecurityHelper = srvSecurityHelper;
-            _walletCredentialsRepository = walletCredentialsRepository;
-            _auditLogRepository = auditLogRepository;
-            _temporaryIdRepository = temporaryIdRepository;
-            _pinSecurityRepository = pinSecurityRepository;
-            _clientSigningService = clientSigningService;
             _googleAuthSettings = googleAuthSettings;
             _twoFactorVerificationSettings = twoFactorVerificationSettings;
         }
@@ -174,130 +150,6 @@ namespace BackOffice.Controllers
         public ActionResult Version()
         {
             return new JsonResult(new { Version = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion });
-        }
-
-        public async Task<ActionResult> ChangePassword(string id)
-        {
-            var clientId = id != null ? await _temporaryIdRepository.GetRealId(id) : null;
-
-            var client = !string.IsNullOrEmpty(clientId) ? await _clientAccountService.GetByIdAsync(clientId) : null;
-
-            if (client == null)
-                return RedirectToAction("Result", new { message = "Change password link is inactive or incorrect." });
-
-            var vm = new ChangePasswordVm
-            {
-                TemporaryId = id,
-                Email = client.Email
-            };
-
-            return View(vm);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> ChangePassword(ChangePasswordVm vm)
-        {
-            var clientId = vm.TemporaryId != null ? await _temporaryIdRepository.GetRealId(vm.TemporaryId) : null;
-
-            var client = !string.IsNullOrEmpty(clientId) ? await _clientAccountService.GetByIdAsync(clientId) : null;
-
-            if (client == null)
-                return RedirectToAction("Result", new { message = "Client not found" });
-
-            if (vm.Password != vm.ConfirmPassword)
-            {
-                ModelState.AddModelError("Password", "Not equal");
-                ModelState.AddModelError("ConfirmPassword", "Not equal");
-            }
-
-            if (vm.PIN != vm.ConfirmPIN)
-            {
-                ModelState.AddModelError("PIN", "Not equal");
-                ModelState.AddModelError("ConfirmPIN", "Not equal");
-            }
-
-            if (ModelState.IsValid)
-            {
-                await _clientAccountService.ChangeClientPasswordAsync(clientId, vm.Password);
-
-                if (vm.PIN != null)
-                {
-                    var pin = vm.PIN.Value.ToString("0000");
-                    await _pinSecurityRepository.SaveAsync(clientId, pin);
-                    await _clientAccountService.SetPinAsync(clientId, pin);
-                    await _auditLogRepository.AddOtherEventAsync(clientId, "PIN changed.", RecordChanger.Client);
-                }
-
-                var walletCredsBefore = await _walletCredentialsRepository.GetAsync(clientId);
-
-                if (walletCredsBefore != null)
-                {
-                    var pk = await _clientSigningService.GetPrivateKey(walletCredsBefore.Address);
-                    var encodedPrivateKey = _srvSecurityHelper.EncodePrivateKey(pk, vm.Password);
-                    await _walletCredentialsRepository.SetEncodedPrivateKey(clientId, encodedPrivateKey);
-                    await _clientAccountService.SetHashedAsync(clientId, false);
-                    await _auditLogRepository.AddOtherEventAsync(clientId, "Password changed.", RecordChanger.Client);
-                }
-
-                await _temporaryIdRepository.RemoveTemporaryIdRecord(vm.TemporaryId);
-
-                return RedirectToAction("Result", new { message = "Password was changed." });
-            }
-
-            return View(vm);
-        }
-
-        public async Task<ActionResult> ChangePin(string id)
-        {
-            var clientId = id != null ? await _temporaryIdRepository.GetRealId(id) : null;
-
-            var client = !string.IsNullOrEmpty(clientId) ? await _clientAccountService.GetByIdAsync(clientId) : null;
-
-            if (client == null)
-                return RedirectToAction("Result", new { message = "Change PIN link is inactive or incorrect." });
-
-            var vm = new ChangePin
-            {
-                TemporaryId = id,
-                Email = client.Email
-            };
-
-            return View(vm);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> ChangePin(ChangePin vm)
-        {
-            var clientId = vm.TemporaryId != null ? await _temporaryIdRepository.GetRealId(vm.TemporaryId) : null;
-
-            var client = !string.IsNullOrEmpty(clientId) ? await _clientAccountService.GetByIdAsync(clientId) : null;
-
-            if (client == null)
-                return RedirectToAction("Result", new { message = "Client not found" });
-
-            if (vm.PIN == null)
-            {
-                ModelState.AddModelError("PIN", "Please, enter PIN");
-            }
-
-            if (vm.PIN != vm.ConfirmPIN)
-            {
-                ModelState.AddModelError("PIN", "Not equal");
-                ModelState.AddModelError("ConfirmPIN", "Not equal");
-            }
-
-            if (ModelState.IsValid)
-            {
-                var pin = vm.PIN?.ToString("0000");
-                await _pinSecurityRepository.SaveAsync(clientId, pin);
-                await _clientAccountService.SetPinAsync(clientId, pin);
-
-                await _auditLogRepository.AddOtherEventAsync(clientId, "PIN changed.", RecordChanger.Client);
-
-                return RedirectToAction("Result", new { message = "Your PIN was changed." });
-            }
-
-            return View(vm);
         }
 
         public ActionResult Result(string message)

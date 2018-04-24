@@ -1,4 +1,4 @@
-﻿namespace Core.Settings.LocalClients
+﻿namespace BackOffice.Settings
 {
     public class NinjaServiceClientSettings
     {

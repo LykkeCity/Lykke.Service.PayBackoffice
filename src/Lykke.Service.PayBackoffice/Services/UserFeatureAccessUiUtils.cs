@@ -1,5 +1,4 @@
 ﻿using BackOffice.Translates;
-using Core.PaymentSystems;
 using Core.Users;
 
 namespace BackOffice.Services
@@ -97,26 +96,6 @@ namespace BackOffice.Services
             }
 
             return userFeatureAccess.ToString();
-        }
-
-
-        public static string GetPaymentStatusColor(this PaymentStatus paymentStatus)
-        {
-            switch (paymentStatus)
-            {
-              case PaymentStatus.NotifyProcessed:
-                    return "darkgreen";
-
-                case PaymentStatus.NotifyDeclined:
-                    return "darkred";
-
-                case PaymentStatus.Processing:
-                    return "yellow";
-            }
-
-
-            return "darkgray";
-
         }
     }
 }

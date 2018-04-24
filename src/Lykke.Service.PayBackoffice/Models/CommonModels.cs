@@ -1,18 +1,13 @@
 ﻿using System.Collections.Generic;
-using Core.Clients;
-using Lykke.Service.PersonalData.Client.Models;
-using Lykke.Service.PersonalData.Contract.Models;
 
 namespace BackOffice.Models
 {
-
     public static class WebSiteConstants
     {
         public const string PersonalAreaDiv = "#pamain";
 
         public const string LykkePurple = "#c91ec9";
     }
-
 
     public interface IPersonalAreaDialog
     {
@@ -39,13 +34,6 @@ namespace BackOffice.Models
 
         string Value { get; }
     }
-
-    public class FoundOtherClientViewModel
-    {        
-        public SearchPersonalDataModel PersonalData { get; set; }
-    }
-
-
 
     public class AreaMenuItem
     {
@@ -78,7 +66,6 @@ namespace BackOffice.Models
 
     public class ClientPartnerRelationIndexViewModel : IFindClientViewModel
     {
-        public ISearchPersonalData<PersonalDataModel> SearchPersolnalData { get; set; }
         public ClientPartnerRelationViewModel[] Relations { get; set; }
         public string Div { get; set; }
         public string RequestUrl { get; set; }

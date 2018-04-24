@@ -8,7 +8,6 @@ using BackOffice.Models;
 using BackOffice.Services;
 using Common.Log;
 using Core.BackOffice;
-using Lykke.Service.Session;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,16 +18,13 @@ namespace BackOffice.Controllers
     public class BackOfficeController : Controller
     {
         private readonly IMenuBadgesRepository _menuBadgesRepository;
-        private readonly IClientsSessionsRepository _sessionsRepository;
         private readonly ILog _log;
 
         public BackOfficeController(
             IMenuBadgesRepository menuBadgesRepository,
-            IClientsSessionsRepository sessionsRepository,
             ILog log)
         {
             _menuBadgesRepository = menuBadgesRepository;
-            _sessionsRepository = sessionsRepository;
             _log = log;
         }
 
@@ -59,7 +55,7 @@ namespace BackOffice.Controllers
 
             try
             {
-                var sessionsCount = await _sessionsRepository.GetActiveUsersCount();
+                var sessionsCount = 0;
 
                 if (sessionsCount > 0)
                     badges.Add(new MenuBadge {Id = MenuBadges.ActiveSessionCount, Value = sessionsCount.ToString()});

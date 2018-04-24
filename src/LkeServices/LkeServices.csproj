@@ -8,82 +8,27 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <SetLinkMetadataAutomatically>false</SetLinkMetadataAutomatically>
-    <Version>1.0.0</Version>
+	<Version>1.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Account\**" />
+    <Compile Remove="Feed\**" />
     <Compile Remove="Pdf\**" />
+    <EmbeddedResource Remove="Account\**" />
+    <EmbeddedResource Remove="Feed\**" />
     <EmbeddedResource Remove="Pdf\**" />
+    <None Remove="Account\**" />
+    <None Remove="Feed\**" />
     <None Remove="Pdf\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Messages\EmailTemplates\BankCashInTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\BtcDepositDoneTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\CashInTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\DeclinedDocumentsTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\DirectTransferCompleteTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\EmailConfirmation.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\MyLykkeCashInTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\NoRefundDepositDoneTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\NoRefundOCashOutTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\OCashOutDoneTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\PrivateWalletAddressTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\PrivateWalletBackupTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\RejectedTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\RemindPasswordTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\SolarCashOutTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\SolarCoinAddressTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\SwapDoneTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\SwiftCashOutRequest.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\SwiftConfirmedTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\TransferCompleteTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\UserRegisteredTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\WelcomeFxTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\WelcomeTemplate.cshtml" />
-    <EmbeddedResource Include="Messages\EmailTemplates\Html\DeclinedDocumentsTemplate.html" />
-    <EmbeddedResource Include="Messages\EmailTemplates\Html\DirectTransferCompleteTemplate.html" />
-    <EmbeddedResource Include="Messages\EmailTemplates\Html\MyLykkeBtcCashInTemplate.html" />
-    <EmbeddedResource Include="Messages\EmailTemplates\Html\MyLykkeCashInTemplate.html" />
-    <EmbeddedResource Include="Messages\EmailTemplates\Html\PrivateWalletAddressTemplate.html" />
-    <EmbeddedResource Include="Messages\EmailTemplates\Html\RemindPasswordTemplate.html" />
-    <EmbeddedResource Include="Messages\EmailTemplates\Html\SolarCashOutTemplate.html" />
-    <EmbeddedResource Include="Messages\EmailTemplates\Html\SolarCoinAddressTemplate.html" />
-    <EmbeddedResource Include="Messages\EmailTemplates\Html\SwiftCashOutRequest.html" />
-    <EmbeddedResource Include="Messages\EmailTemplates\Html\SwiftConfirmedTemplate.html" />
-    <EmbeddedResource Include="Messages\EmailTemplates\Html\TransferCompleteTemplate.html" />
-    <None Update="Messages\EmailTemplates\*.cshtml;Messages\EmailTemplates\Html\*.html">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\AzureRepositories\AzureRepositories.csproj" />
-    <ProjectReference Include="..\LkeDomain\LkeDomain.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.1.1" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
-    <PackageReference Include="Lykke.Bitcoin.Api.Client" Version="1.0.16" />
     <PackageReference Include="Lykke.Common" Version="6.2.0" />
-    <PackageReference Include="Lykke.MarginTrading.DataReaderClient" Version="1.0.14" />
-    <PackageReference Include="Lykke.MarginTrading.RiskManagerClient" Version="1.0.3" />
-    <PackageReference Include="Lykke.MatchingEngineConnector" Version="2.1.0" />
-    <PackageReference Include="Lykke.MatchingEngineConnector.Abstractions" Version="2.1.0" />
-    <PackageReference Include="Lykke.Messages" Version="1.0.22" />
-    <PackageReference Include="Lykke.Payments.Client" Version="1.0.6" />
-    <PackageReference Include="Lykke.Payments.Contracts" Version="1.0.4" />
-    <PackageReference Include="Lykke.Service.Assets.Client" Version="3.3.1" />
-    <PackageReference Include="Lykke.Service.Balances.Client" Version="1.1.0" />
-    <PackageReference Include="Lykke.Service.EthereumCore.Client" Version="1.0.39" />
-    <PackageReference Include="Lykke.Service.ExchangeOperations.Client" Version="1.1.4" />
-    <PackageReference Include="Lykke.Service.JumioIntegration.Client" Version="1.0.12" />
-    <PackageReference Include="Lykke.Service.ClientAccount.Client" Version="1.3.0" />
-    <PackageReference Include="Lykke.Service.GoogleDriveUpload.Client" Version="1.0.8" />
-    <PackageReference Include="Lykke.Service.Kyc.Client" Version="1.0.40" />
-    <PackageReference Include="Lykke.Service.MarketProfile.Client" Version="1.0.20" />
-    <PackageReference Include="Lykke.Service.RateCalculator.Client" Version="1.0.11" />
-    <PackageReference Include="Lykke.Service.PersonalData" Version="1.0.32" />
-    <PackageReference Include="Lykke.Service.Kyc.Abstractions" Version="1.0.40" />
-    <PackageReference Include="Lykke.Service.PersonalData" Version="1.0.29" />
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
     <PackageReference Include="morelinq" Version="2.9.0" />
     <PackageReference Include="NBitcoin" Version="3.0.0.72" />
@@ -103,12 +48,5 @@
     <PackageReference Include="Flurl.Http" Version="1.2.0" />
     <PackageReference Include="RestSharp.NetCore" Version="105.2.3" />
     <PackageReference Include="CsvHelper" Version="2.16.3" />
-    <PackageReference Include="Lykke.EmailSenderProducer" Version="1.0.4" />
-    <PackageReference Include="Lykke.Service.Session" Version="1.0.33" />
-    <PackageReference Include="Lykke.MonitoringServiceApiCaller" Version="1.0.39" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Account\" />
-    <Folder Include="Feed\" />
   </ItemGroup>
 </Project>
