@@ -6,24 +6,9 @@ namespace LkeServices
 {
     public static class SrvBinder
     {
-        public static void BindLykkeServicesApi(this ContainerBuilder ioc, LykkeServiceApiSettings serviceApiSettings)
-        {
-        }
 
-        #region MatchingEngine
-
-        public static void StartMatchingEngineServices(this ContainerBuilder ioc)
-        {
-
-        }
-
-        #endregion
-
-        public static void RegisterAllServices(this ContainerBuilder ioc, SupportToolsSettings supportToolsSettings)
-        {
-            // Settings
-            ioc.RegisterInstance(supportToolsSettings);
-            
+        public static void RegisterAllServices(this ContainerBuilder ioc)
+        {           
             ioc.RegisterType<ExportService>().SingleInstance();
         }
     }

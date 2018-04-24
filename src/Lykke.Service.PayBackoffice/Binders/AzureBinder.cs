@@ -24,13 +24,10 @@ namespace BackOffice.Binders
         public ContainerBuilder Bind(IConfigurationRoot configuration, ContainerBuilder builder = null, bool fromTest = false)
         {
             var settings = configuration.LoadSettings<BackOfficeBundle>();
-            var monitoringServiceUrl = settings.CurrentValue.PayBackOffice.Service.MonitoringUrl;
             BlockchainExplorerUrl = settings.CurrentValue.PayBackOffice.BlockchainExplorerUrl;
             var ioc = builder ?? new ContainerBuilder();
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice);
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.GoogleAuthSettings);
-            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.DeploymentSettings);
-            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.BitcoinCoreSettings);
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.TwoFactorVerification ?? new TwoFactorVerificationSettingsEx());
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.LykkePayWalletList);
 
@@ -40,7 +37,6 @@ namespace BackOffice.Binders
 
             var cacheManager = new MemoryCacheManager();
             ioc.RegisterInstance<ICacheManager>(cacheManager);
-            BindMicroservices(ioc, settings.CurrentValue, Log);
             ioc.BindAzureRepositories(settings.Nested(x => x.PayBackOffice.Db), cacheManager, Log);
             ioc.BindBackOfficeRepositories(settings.Nested(x => x.PayBackOffice.Db), Log);
             
@@ -57,11 +53,5 @@ namespace BackOffice.Binders
         }
 
         public ILog Log { get; set; }
-
-        private static void BindMicroservices(ContainerBuilder container, BackOfficeBundle allSettings, ILog log)
-        {
-            BackOfficeServiceSettings settings = allSettings.PayBackOffice.Service;
-            
-        }
     }
 }
