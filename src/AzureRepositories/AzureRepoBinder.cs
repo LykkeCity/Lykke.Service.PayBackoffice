@@ -22,7 +22,7 @@ namespace AzureRepositories
     {
         public static void MapEntities()
         {
-            Mapper.Configuration.AssertConfigurationIsValid();
+            //Mapper.Configuration.AssertConfigurationIsValid();
         }
 
         public static void BindAzureRepositories(this ContainerBuilder container,
