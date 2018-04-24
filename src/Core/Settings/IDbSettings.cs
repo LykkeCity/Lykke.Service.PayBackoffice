@@ -31,8 +31,6 @@ namespace Core.Settings
         public string ClientPersonalInfoConnString { get; set; }
         public string BackOfficeConnString { get; set; }
         public string LogsConnString { get; set; }
-        public string ClientSignatureConnString { get; set; }
-        public string SharedStorageConnString { get; set; }
     }
 
 
