@@ -12,7 +12,6 @@ using Lykke.Service.PayAuth.Client;
 using BackOffice.Controllers;
 using BackOffice.Translates;
 using BackOffice.Areas.LykkePay.Models;
-using Core.Accounts;
 using QBitNinja.Client;
 using QBitNinja.Client.Models;
 using NBitcoin;

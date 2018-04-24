@@ -5,6 +5,7 @@ namespace BackOffice.Settings
     public class BackOfficeSettings
     {
         public string BlockchainExplorerUrl { get; set; }
+
         public DbSettings Db { get; set; }
 
         public BackOfficeServiceSettings Service { get; set; }
