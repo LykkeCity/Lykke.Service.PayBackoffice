@@ -4,7 +4,6 @@ using BackOffice.Settings;
 using Common.Cache;
 using Common.IocContainer;
 using Common.Log;
-using Lykke.Service.Session;
 using Microsoft.Extensions.Configuration;
 using Lykke.SettingsReader;
 using Lykke.Service.PayInternal.Client;
@@ -63,7 +62,6 @@ namespace BackOffice.Binders
         {
             BackOfficeServiceSettings settings = allSettings.PayBackOffice.Service;
             
-            container.RegisterClientSessionService(settings.SessionUrl, log);
         }
     }
 }
