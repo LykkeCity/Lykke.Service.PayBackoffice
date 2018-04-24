@@ -8,15 +8,11 @@ namespace BackOffice.Settings
 
         public DbSettings Db { get; set; }
 
-        public BackOfficeServiceSettings Service { get; set; }
-
-        public DeploymentSettings DeploymentSettings { get; set; }
-
-        public BitcoinCoreSettings BitcoinCoreSettings { get; set; }
 
         public GoogleAuthSettings GoogleAuthSettings { get; set; }
 
         public TwoFactorVerificationSettingsEx TwoFactorVerification { get; set; }
+
         public LykkePayWalletListSettings LykkePayWalletList { get; set; }
     }
 }
