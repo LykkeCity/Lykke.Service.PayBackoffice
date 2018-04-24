@@ -126,6 +126,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 return this.JsonFailResult("SettlementAssets required", ErrorMessageAnchor);
             vm.SettlementAssets = vm.SettlementAssets.Replace(' ', ';').Replace(',', ';');
             vm.PaymentAssets = vm.PaymentAssets.Replace(' ', ';').Replace(',', ';');
+            vm.SettlementAssets = String.Join(";", vm.SettlementAssets.Split(';').Where(x => !string.IsNullOrEmpty(x)).ToArray());
+            vm.PaymentAssets = String.Join(";", vm.PaymentAssets.Split(';').Where(x => !string.IsNullOrEmpty(x)).ToArray());
             await _payInternalClient.SetPersonalAvailableAssetsAsync(new UpdateAssetAvailabilityByMerchantRequest()
             {
                 MerchantId = vm.MerchantId,
