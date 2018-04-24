@@ -47,6 +47,7 @@ using LkeServices.Bitcoin;
 using LkeServices.Security;
 //using LkeServices.Settings;
 using Lykke.Service.AntifraudDetector;
+using Lykke.Service.Balances.Client;
 //using Lykke.Service.Assets.Client;
 //using Lykke.Service.ClientAssetRule.Client;
 using Lykke.Service.ClientAccount.Client;
@@ -157,6 +158,7 @@ namespace BackOffice.Binders
             
             container.RegisterClientSessionService(settings.SessionUrl, log);
             container.RegisterAntifraudDetectorClient(settings.AntifraudDetectorUrl, log);
+            container.RegisterBalancesClient(allSettings.BalancesServiceClient.ServiceUrl, log);
         }
     }
 }

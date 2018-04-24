@@ -7,8 +7,6 @@ using Lykke.Bitcoin.Api.Client.BitcoinApi.Models;
 using Common;
 using Common.Log;
 using Core;
-using Core.Accounts;
-using Core.Assets;
 using Core.BitCoin;
 using Core.Exceptions;
 using Core.Exchange;
@@ -20,12 +18,14 @@ using Lykke.MatchingEngine.Connector.Abstractions.Services;
 using ME = Lykke.MatchingEngine.Connector;
 using Lykke.MatchingEngine.Connector.Abstractions.Models;
 using Lykke.Service.Assets.Client.Models;
-using Lykke.Service.ClientAccount.Client;
+using Lykke.Service.Balances.AutorestClient.Models;
+using Lykke.Service.Balances.Client;
 using Lykke.Service.RateCalculator.Client;
 using Lykke.Service.RateCalculator.Client.AutorestClient.Models;
 using OrderAction = Core.Exchange.OrderAction;
 using AssetPair = Lykke.Service.Assets.Client.Models.AssetPair;
 using ErrorResponse = Lykke.Bitcoin.Api.Client.BitcoinApi.Models.ErrorResponse;
+using IWalletCredentials = Core.BitCoin.IWalletCredentials;
 
 namespace LkeServices.Offchain
 {
@@ -46,12 +46,10 @@ namespace LkeServices.Offchain
         private readonly IRateCalculatorClient _rateCalculatorClient;
         private readonly IOffchainEncryptedKeysRepository _offchainEncryptedKeysRepository;
         private readonly IOffchainRequestService _offchainRequestService;
-        private readonly IWalletsRepository _walletsRepository;
+        private readonly IBalancesClient _balancesClient;
         private readonly IOffchainFinalizeCommandProducer _offchainFinalizeCommandProducer;
         private readonly IOrderBooksService _orderBooksService;
         private readonly IBitcoinTransactionService _bitcoinTransactionService;
-        private readonly IClientAccountClient _clientAccountClient;
-        private readonly ILimitOrdersRepository _limitOrdersRepository;
 
         public OffchainService(
             IBitcoinApiClient bitcoinApiClient,
@@ -67,10 +65,10 @@ namespace LkeServices.Offchain
             IOffchainEncryptedKeysRepository offchainEncryptedKeysRepository,
             IOffchainRequestService offchainRequestService,
             CachedTradableAssetsDictionary tradableAssets,
-            IWalletsRepository walletsRepository,
+            IBalancesClient balancesClient,
             IOffchainFinalizeCommandProducer offchainFinalizeCommandProducer,
             IOrderBooksService orderBooksService,
-            IBitcoinTransactionService bitcoinTransactionService, IClientAccountClient clientAccountClient, ILimitOrdersRepository limitOrdersRepository)
+            IBitcoinTransactionService bitcoinTransactionService)
         {
             _bitcoinApiClient = bitcoinApiClient;
             _logger = logger;
@@ -85,12 +83,10 @@ namespace LkeServices.Offchain
             _offchainEncryptedKeysRepository = offchainEncryptedKeysRepository;
             _offchainRequestService = offchainRequestService;
             _tradableAssets = tradableAssets;
-            _walletsRepository = walletsRepository;
+            _balancesClient = balancesClient;
             _offchainFinalizeCommandProducer = offchainFinalizeCommandProducer;
             _orderBooksService = orderBooksService;
             _bitcoinTransactionService = bitcoinTransactionService;
-            _clientAccountClient = clientAccountClient;
-            _limitOrdersRepository = limitOrdersRepository;
         }
 
         public async Task<OffchainResult> CreateTransfer(string clientId, string assetPair, string asset, decimal amount, string prevTempPrivateKey)
@@ -114,7 +110,11 @@ namespace LkeServices.Offchain
                 if (neededAmount == 0 || neededAsset == LykkeConstants.BitcoinAssetId && neededAmount < (decimal)_exchangeSettings.MinBtcOrderAmount)
                     throw new OffchainException(ErrorCode.LowVolume, neededAsset);
 
-                var wallet = await _walletsRepository.GetAsync(clientId, neededAsset);
+                var wallet = await _balancesClient.GetClientBalanceByAssetId(new ClientBalanceByAssetIdModel
+                {
+                    AssetId = neededAsset,
+                    ClientId = clientId
+                });
 
                 if (wallet == null)
                     throw new OffchainException(ErrorCode.NotEnoughtClientFunds, neededAsset);
@@ -124,17 +124,21 @@ namespace LkeServices.Offchain
                 // + 2%
                 neededAmount = neededAmount * (decimal)(1 + AdditionalPercentForOrder / 100.0);
 
-                neededAmount = Math.Min((decimal)wallet.Balance, neededAmount.TruncateDecimalPlaces(assetModel.Accuracy, true));
+                neededAmount = Math.Min(wallet.Balance, neededAmount.TruncateDecimalPlaces(assetModel.Accuracy, true));
             }
             else
             {
                 neededAmount = Math.Abs(amount);
                 neededAsset = assetPairModel.BaseAssetId == asset ? assetPairModel.BaseAssetId : assetPairModel.QuotingAssetId;
 
-                var wallet = await _walletsRepository.GetAsync(clientId, neededAsset);
+                var wallet = await _balancesClient.GetClientBalanceByAssetId(new ClientBalanceByAssetIdModel
+                {
+                    AssetId = neededAsset,
+                    ClientId = clientId
+                });
                 assetModel = await _tradableAssets.GetItemAsync(neededAsset);
 
-                neededAmount = Math.Min((decimal)wallet.Balance, neededAmount.TruncateDecimalPlaces(assetModel.Accuracy, true));
+                neededAmount = Math.Min(wallet.Balance, neededAmount.TruncateDecimalPlaces(assetModel.Accuracy, true));
             }
 
             var credentials = await _walletCredentialsRepository.GetAsync(clientId);
@@ -186,13 +190,17 @@ namespace LkeServices.Offchain
                 if (neededAmount == 0 || neededAsset == LykkeConstants.BitcoinAssetId && neededAmount < (decimal)_exchangeSettings.MinBtcOrderAmount)
                     throw new OffchainException(ErrorCode.LowVolume, neededAsset);
 
-                var wallet = await _walletsRepository.GetAsync(clientId, neededAsset);
+                var wallet = await _balancesClient.GetClientBalanceByAssetId(new ClientBalanceByAssetIdModel
+                {
+                    AssetId = neededAsset,
+                    ClientId = clientId
+                });
 
                 assetModel = await _tradableAssets.GetItemAsync(neededAsset);
 
                 neededAmount = neededAmount.TruncateDecimalPlaces(assetModel.Accuracy, true);
 
-                if (wallet == null || (decimal)wallet.Balance < neededAmount)
+                if (wallet == null || wallet.Balance < neededAmount)
                     throw new OffchainException(ErrorCode.NotEnoughtClientFunds, neededAsset);
             }
             else
@@ -200,10 +208,15 @@ namespace LkeServices.Offchain
                 neededAmount = Math.Abs(amount);
                 neededAsset = assetPairModel.BaseAssetId == asset ? assetPairModel.BaseAssetId : assetPairModel.QuotingAssetId;
 
-                var wallet = await _walletsRepository.GetAsync(clientId, neededAsset);
+                var wallet = await _balancesClient.GetClientBalanceByAssetId(new ClientBalanceByAssetIdModel
+                {
+                    AssetId = neededAsset,
+                    ClientId = clientId
+                });
+                
                 assetModel = await _tradableAssets.GetItemAsync(neededAsset);
 
-                neededAmount = Math.Min((decimal)wallet.Balance, neededAmount.TruncateDecimalPlaces(assetModel.Accuracy, true));
+                neededAmount = Math.Min(wallet.Balance, neededAmount.TruncateDecimalPlaces(assetModel.Accuracy, true));
             }
 
             var credentials = await _walletCredentialsRepository.GetAsync(clientId);
@@ -871,7 +884,7 @@ namespace LkeServices.Offchain
         public async Task CheckOrderPrice(string assetPair, OrderAction action, decimal price)
         {
             var isBuy = action == OrderAction.Buy;
-            var orderBook = await _orderBooksService.GetAsync(assetPair);
+            var orderBook = (await _orderBooksService.GetAsync(assetPair)).ToList();
             var deviation = _exchangeSettings.MaxLimitOrderDeviationPercent / 100;
             var bestPrice = 0.0;
 
