@@ -48,9 +48,6 @@ namespace AzureRepositories
             container.RegisterInstance<IBackofficeUserRolesRepository>(
                 new BackOfficeUserRolesRepository(
                     AzureTableStorage<BackofficeUserRoleEntity>.Create(dbSettings.ConnectionString(x => x.BackOfficeConnString), "Roles", log)));
-
-            container.RegisterInstance<IUserSettingsRepository>(
-                new UserSettingsRepository(AzureTableStorage<UserSettingsEntity>.Create(dbSettings.ConnectionString(x => x.BackOfficeConnString), "UserSettings", log)));
         }
 
         public static ILog BindLog(this ContainerBuilder container, IReloadingManager<string> connectionString, string appName, string tableName)
