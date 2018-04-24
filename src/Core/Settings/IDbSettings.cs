@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Core.Wallets;
 
 namespace Core.Settings
 {
@@ -49,17 +48,6 @@ namespace Core.Settings
     }
 
     /// <summary>
-    /// System parameters for FxPaygate site API
-    /// </summary>
-    public class FxpaygateSettings
-    {
-        public string[] Currencies { get; set; }
-        public string[] Countries { get; set; }
-        public Dictionary<OwnerType, string> ServiceUrls { get; set; }
-        public string[] SupportedCurrencies { get; set; }
-    }
-
-    /// <summary>
     /// system parameters for Credit voucers API. See https://www.creditvouchers.com/site/getapi.html
     /// </summary>
     public class CreditVouchersSettings
@@ -73,11 +61,6 @@ namespace Core.Settings
         public string[] SupportedCurrencies { get; set; }
     }
 
-    public class PaymentSystemsSettings
-    {
-        public CreditVouchersSettings CreditVouchers { get; set; }
-        public FxpaygateSettings Fxpaygate { get; set; }
-    }
     public class LykkePayWalletListSettings
     {
         public LykkePayWalletSettings[] Wallets { get; set; }
@@ -262,23 +245,6 @@ namespace Core.Settings
     public class SupportToolsSettings
     {
         public int PriorityCodeExpirationInterval { get; set; }
-    }
-
-    public class RiskManagementServiceClientSettings
-    {
-        public string BaseUri { get; set; }
-        public string ApiKey { get; set; }
-        public string DemoUri { get; set; }
-        public string DemoApiKey { get; set; }
-
-        [Lykke.SettingsReader.Attributes.Optional]
-        public string HedgingServiceUrl { get; set; }
-        [Lykke.SettingsReader.Attributes.Optional]
-        public string HedgingServiceApiKey { get; set; }
-        [Lykke.SettingsReader.Attributes.Optional]
-        public string HedgingServiceDemoUrl { get; set; }
-        [Lykke.SettingsReader.Attributes.Optional]
-        public string HedgingServiceDemoApiKey { get; set; }
     }
 
     public class MicrographCacheServiceClientSettings

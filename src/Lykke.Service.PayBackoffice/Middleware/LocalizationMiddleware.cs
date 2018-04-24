@@ -1,9 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using BackOffice.Extensions;
+﻿using System.Threading.Tasks;
 using BackOffice.Services;
-using Core.Application;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
 namespace BackOffice.Middleware

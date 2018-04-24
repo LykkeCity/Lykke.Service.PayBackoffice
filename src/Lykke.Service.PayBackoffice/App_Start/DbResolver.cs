@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac.Extensions.DependencyInjection;
 using Core.Settings;
-using Lykke.MatchingEngine.Connector.Services;
 
 namespace BackOffice
 {
@@ -14,7 +13,6 @@ namespace BackOffice
 	{
 		public static IBackOfficeUsersRepository BackOfficeUsersRepository { get; private set; }
 		public static IBackofficeUserRolesRepository BackofficeUserRolesRepository { get; private set; }
-	    public static TcpMatchingEngineClient TcpMeClient { get; private set; }
 
         private static void CreateAdminUser(IContainer ioc)
 		{
