@@ -15,9 +15,6 @@ namespace AzureRepositories
         {
             var localHost = @"http://127.0.0.1:8998";
             
-           ioc.RegisterInstance<IIdentityGenerator>(
-                new IdentityGenerator(new AzureTableStorageLocal<IdentityEntity>(localHost, "IdentityGenerator")));
-
            ioc.RegisterInstance<IBrowserSessionsRepository>(
                 new BrowserSessionsRepository(new AzureTableStorageLocal<BrowserSessionEntity>(localHost, "BrowserSessionsRepository")));
 
@@ -36,9 +33,7 @@ namespace AzureRepositories
 
         public static void BindAzureReposInMemForTests(this ContainerBuilder ioc)
         {
-           ioc.RegisterInstance<IIdentityGenerator>(
-                new IdentityGenerator(new NoSqlTableInMemory<IdentityEntity>()));
-            
+           
            ioc.RegisterInstance<IBrowserSessionsRepository>(
                 new BrowserSessionsRepository(new NoSqlTableInMemory<BrowserSessionEntity>()));
 

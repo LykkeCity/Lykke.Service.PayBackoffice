@@ -1,10 +1,7 @@
 ﻿using Autofac;
 using AutoMapper;
 using AzureRepositories.BackOffice;
-using AzureRepositories.Settings;
 using AzureRepositories.Users;
-using AzureStorage.Blob;
-using AzureStorage.Queue;
 using AzureStorage.Tables;
 using Common.Cache;
 using Common.Log;
@@ -32,20 +29,8 @@ namespace AzureRepositories
         {
             MapEntities();
 
-            container.RegisterInstance<IIdentityGenerator>(
-                AzureRepoFactories.CreateIdentityGenerator(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), log));
-
             container.RegisterInstance<IBrowserSessionsRepository>(
                 AzureRepoFactories.CreateBrowserSessionsRepository(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), log));
-
-            container.RegisterInstance<IAppGlobalSettingsRepositry>(
-                new AppGlobalSettingsRepository(
-                    AzureTableStorage<AppGlobalSettingsEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString), "Setup", log)));
-
-            container.RegisterInstance<ILkkSourceWalletsRepository>(
-                new LkkSourceWalletRepository(
-                    AzureTableStorage<LkkSourceWalletEntity>.Create(dbSettings.ConnectionString(x => x.ClientPersonalInfoConnString),
-                        "IcoLkkSourceWallets", log)));
         }
 
 

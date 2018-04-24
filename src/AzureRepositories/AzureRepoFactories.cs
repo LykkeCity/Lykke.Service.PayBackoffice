@@ -7,11 +7,6 @@ namespace AzureRepositories
 {
     public static class AzureRepoFactories
     {
-        public static IdentityGenerator CreateIdentityGenerator(IReloadingManager<string> connstring, ILog log)
-        {
-            return new IdentityGenerator(AzureTableStorage<IdentityEntity>.Create(connstring, "Setup", log));
-        }
-
         public static BrowserSessionsRepository CreateBrowserSessionsRepository(IReloadingManager<string> connString, ILog log)
         {
             return
