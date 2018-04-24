@@ -26,9 +26,6 @@ namespace AzureRepositories
 
            ioc.RegisterInstance<IBackofficeUserRolesRepository>(
                 new BackOfficeUserRolesRepository(new NoSqlTableInMemory<BackofficeUserRoleEntity>()));
-
-           ioc.RegisterInstance<IUserSettingsRepository>(
-                new UserSettingsRepository(new AzureTableStorageLocal<UserSettingsEntity>(localHost, "UserSettings")));
         }
 
         public static void BindAzureReposInMemForTests(this ContainerBuilder ioc)

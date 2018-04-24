@@ -53,18 +53,6 @@ namespace BackOffice.Controllers
         {
             var badges = (await _menuBadgesRepository.GetBadesAsync()).ToList();
 
-            try
-            {
-                var sessionsCount = 0;
-
-                if (sessionsCount > 0)
-                    badges.Add(new MenuBadge {Id = MenuBadges.ActiveSessionCount, Value = sessionsCount.ToString()});
-            }
-            catch (Exception ex)
-            {
-                await _log.WriteErrorAsync(nameof(BackOfficeController), nameof(GetBadges), string.Empty, ex);
-            }
-
             return Json(badges.Select(itm => new { id = itm.Id, value = itm.Value }));
         }
     }
