@@ -12,6 +12,8 @@ using BackOffice.Controllers;
 using BackOffice.Areas.LykkePay.Models;
 using BackOffice.Translates;
 using AutoMapper;
+using Lykke.Service.PayInternal.Client.Exceptions;
+using Lykke.Common.Api.Contract.Responses;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -21,6 +23,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
     public class AssetsController : Controller
     {
         private readonly IPayInternalClient _payInternalClient;
+        private const string ErrorMessageAnchor = "#errorMessage";
         public AssetsController(
             IPayInternalClient payInternalClient)
         {
@@ -152,7 +155,20 @@ namespace BackOffice.Areas.LykkePay.Controllers
             request.AssetId = model.Id;
             request.Value = true;
             request.AvailabilityType = AssetAvailabilityType.Payment;
-            await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
+            try
+            {
+                await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
+            }
+            catch(DefaultErrorResponseException ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    var content = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(((Refit.ApiException)ex.InnerException).Content);
+                    return this.JsonFailResult(content.ErrorMessage, ErrorMessageAnchor);
+                }
+                else
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
+            }
             return this.JsonRequestResult("#assetPaymentList", Url.Action("AssetPaymentList"));
         }
         [HttpPost]
@@ -192,7 +208,20 @@ namespace BackOffice.Areas.LykkePay.Controllers
             request.AssetId = model.Id;
             request.Value = true;
             request.AvailabilityType = AssetAvailabilityType.Settlement;
-            await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
+            try
+            {
+                await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
+            }
+            catch (DefaultErrorResponseException ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    var content = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(((Refit.ApiException)ex.InnerException).Content);
+                    return this.JsonFailResult(content.ErrorMessage, ErrorMessageAnchor);
+                }
+                else
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
+            }
             return this.JsonRequestResult("#assetSettlementList", Url.Action("AssetSettlementList"));
         }
         [HttpPost]
