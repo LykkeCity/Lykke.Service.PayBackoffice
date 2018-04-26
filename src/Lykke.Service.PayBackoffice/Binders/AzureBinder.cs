@@ -10,6 +10,7 @@ using Lykke.Service.PayInternal.Client;
 using Lykke.Service.PayInvoice.Client;
 using Lykke.Service.PayAuth.Client;
 using QBitNinja.Client;
+using Lykke.Service.EmailPartnerRouter.Client;
 
 namespace BackOffice.Binders
 {
@@ -39,8 +40,8 @@ namespace BackOffice.Binders
             ioc.RegisterInstance<ICacheManager>(cacheManager);
             ioc.BindAzureRepositories(settings.Nested(x => x.PayBackOffice.Db), cacheManager, Log);
             ioc.BindBackOfficeRepositories(settings.Nested(x => x.PayBackOffice.Db), Log);
-            
 
+            ioc.RegisterInstance<IEmailPartnerRouterClient>(new EmailPartnerRouterClient(settings.CurrentValue.EmailPartnerRouterServiceClient.ServiceUrl));
             ioc.RegisterInstance<IPayInternalClient>(new PayInternalClient(new PayInternalServiceClientSettings() { ServiceUrl = settings.CurrentValue.PayInternalServiceClient.ServiceUrl }));
             ioc.RegisterInstance<IPayInvoiceClient>(new PayInvoiceClient(new PayInvoiceServiceClientSettings() { ServiceUrl = settings.CurrentValue.PayInvoiceServiceClient.ServiceUrl }));
             ioc.RegisterInstance<IPayAuthClient>(new PayAuthClient(new PayAuthServiceClientSettings() { ServiceUrl = settings.CurrentValue.PayAuthServiceClient.ServiceUrl }, Log));
