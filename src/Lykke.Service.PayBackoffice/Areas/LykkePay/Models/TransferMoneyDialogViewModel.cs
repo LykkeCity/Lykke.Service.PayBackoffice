@@ -14,6 +14,7 @@ namespace BackOffice.Areas.LykkePay.Models
         public LykkePayWalletListSettings Wallets { get; set; }
         public string SelectedWallet { get; set; }
         public string SelectedMerchant { get; set; }
+        public string ManualWalletAddress { get; set; }
         public List<RequestTransferModel> SelectedPaymentRequests { get; set; }
     }
     public class TransferModel
