@@ -91,7 +91,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 var paymentrequests = await _payInternalClient.GetPaymentRequestsAsync(vm.SelectedMerchant);
                 var addresses = paymentrequests.Where(p => (p.Status == PaymentRequestStatus.Confirmed || p.Status == PaymentRequestStatus.Error)
-                && p.Amount > 0).Select(p => p.WalletAddress).ToList();
+                && p.Amount > 0).ToList();
                 var transactions = (await GetTransactions(addresses)).ToList();
                 var filtered = transactions.Where(t => t.Amount > 0).ToList();
                 assetsList.Add("None");
@@ -201,78 +201,42 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     return this.JsonFailResult("Error: " + ex.Message, ErrorMessageAnchor);
             }
         }
-        private async Task<IEnumerable<BlockchainTransaction>> GetTransactions(IEnumerable<string> addresses)
+        private async Task<IEnumerable<BlockchainTransaction>> GetTransactions(IEnumerable<PaymentRequestModel> addresses)
         {
             var balances = new List<WalletBalanceModel>();
 
             foreach (var batch in addresses.Batch(BatchPieceSize))
             {
-                await Task.WhenAll(batch.Select(address => _qBitNinjaClient.GetBalance(BitcoinAddress.Create(address))
+                await Task.WhenAll(batch.Select(address => _qBitNinjaClient.GetBalance(BitcoinAddress.Create(address.WalletAddress))
                     .ContinueWith(t =>
                     {
                         lock (balances)
                         {
                             balances.Add(new WalletBalanceModel
                             {
-                                WalletAddress = address,
-                                Balance = t.Result
+                                WalletAddress = address.WalletAddress,
+                                Balance = t.Result,
+                                PaymentAssetId = address.PaymentAssetId
                             });
                         }
                     })));
             }
             return balances.SelectMany(x => x.GetTransactions());
         }
-        private async Task<IEnumerable<WalletBalanceModel>> GetBalances(IEnumerable<string> addresses)
-        {
-            var balances = new List<WalletBalanceModel>();
-
-            foreach (var batch in addresses.Batch(BatchPieceSize))
-            {
-                await Task.WhenAll(batch.Select(address => _qBitNinjaClient.GetBalance(BitcoinAddress.Create(address))
-                    .ContinueWith(t =>
-                    {
-                        lock (balances)
-                        {
-                            balances.Add(new WalletBalanceModel
-                            {
-                                WalletAddress = address,
-                                Balance = t.Result
-                            });
-                        }
-                    })));
-            }
-            return balances;
-        }
-        private async Task<IEnumerable<BalanceSummary>> GetBalanceSummary(IEnumerable<string> addresses)
-        {
-            var balances = new List<BalanceSummary>();
-
-            foreach (var batch in addresses.Batch(BatchPieceSize))
-            {
-                await Task.WhenAll(batch.Select(address => _qBitNinjaClient.GetBalanceSummary(BitcoinAddress.Create(address))
-                    .ContinueWith(t =>
-                    {
-                        lock (balances)
-                        {
-                            balances.Add(t.Result);
-                        }
-                    })));
-            }
-            return balances;
-        }
 
         private class WalletBalanceModel
         {
             public string WalletAddress { get; set; }
             public BalanceModel Balance { get; set; }
+            public string PaymentAssetId { get; set; }
 
             public IEnumerable<BlockchainTransaction> GetTransactions()
             {
                 return Balance?.Operations?.Select(x => new BlockchainTransaction
                 {
                     WalletAddress = WalletAddress,
-                    Amount = (double)x.Amount.ToDecimal(MoneyUnit.Satoshi),
-                    AssetId = nameof(MoneyUnit.Satoshi),
+                    Amount = (double)x.Amount.ToDecimal((MoneyUnit)Enum.Parse(typeof(MoneyUnit), PaymentAssetId)),
+                    AssetId = PaymentAssetId,
                     Blockchain = "Bitcoin",
                     Id = x.TransactionId.ToString(),
                     BlockId = x.BlockId?.ToString(),
