@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using Lykke.Service.PayInternal.Client.Models.Transactions;
 using BackOffice.Helpers;
 using Lykke.Service.PayInternal.Client.Exceptions;
+using Lykke.Common.Api.Contract.Responses;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -196,9 +197,12 @@ namespace BackOffice.Areas.LykkePay.Controllers
             catch (RefundErrorResponseException ex)
             {
                 if (ex.InnerException != null)
-                    return this.JsonFailResult("Error: " + ex.InnerException.Message, ErrorMessageAnchor);
+                {
+                    var content = JsonConvert.DeserializeObject<PayInternalException>(((Refit.ApiException)ex.InnerException).Content);
+                    return this.JsonFailResult("Error code: " + content.Code, ErrorMessageAnchor);
+                }
                 else
-                    return this.JsonFailResult("Error: " + ex.Message, ErrorMessageAnchor);
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
             }
         }
         private async Task<IEnumerable<BlockchainTransaction>> GetTransactions(IEnumerable<string> addresses)
