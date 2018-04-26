@@ -112,7 +112,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Employees = filteredstaffs,
                 SelectedMerchant = vm.SelectedMerchant,
                 IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsFull),
-                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsEdit)
+                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsEdit),
+                IsSearchMode = !string.IsNullOrEmpty(vm.SearchValue)
             };
 
             return View(viewModel);
@@ -135,7 +136,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Email = employee.Email,
                 Id = employee.Id,
                 IsNewStaff = id == null,
-                //IsBlocked = employee.IsBlocked //TODO: update payauth
+                //IsBlocked = employee.IsBlocked //TODO: update payinvoice
             };
             return View(viewmodel);
         }
@@ -200,7 +201,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                             EmployeeId = vm.Id,
                             MerchantId = vm.SelectedMerchant,
                             Password = vm.Password,
-                            //IsBlocked = vm.IsBlocked //TODO: update payauth
+                            //IsBlocked = vm.IsBlocked //TODO: update payinvoice
                         };
                         await _payAuthClient.UpdateAsync(updatemodel);
                     }
