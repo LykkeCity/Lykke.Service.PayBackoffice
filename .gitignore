@@ -69,6 +69,7 @@ node_modules
 **/appsettings.Test.json
 **/docker-compose.dev.yml
 
+/src/BackOffice/wwwroot/output
 /src/BackOffice/Scripts/*.js
 /src/BackOffice/Scripts/.js
 /src/BackOffice/Scripts/*.js.map

@@ -12,6 +12,8 @@ using BackOffice.Controllers;
 using BackOffice.Areas.LykkePay.Models;
 using BackOffice.Translates;
 using AutoMapper;
+using Lykke.Service.PayInternal.Client.Exceptions;
+using Lykke.Common.Api.Contract.Responses;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -20,6 +22,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
     [FilterFeaturesAccess(UserFeatureAccess.MenuAssets)]
     public class AssetsController : Controller
     {
+        private const string ErrorMessageAnchor = "#errorMessage";
         private readonly IPayInternalClient _payInternalClient;
         public AssetsController(
             IPayInternalClient payInternalClient)
@@ -117,6 +120,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddAssetByMerchant(AddAssetsByMerchantDialogViewModel vm)
         {
+            if (string.IsNullOrEmpty(vm.PaymentAssets))
+                return this.JsonFailResult("PaymentAssets required", ErrorMessageAnchor);
+            if (string.IsNullOrEmpty(vm.SettlementAssets))
+                return this.JsonFailResult("SettlementAssets required", ErrorMessageAnchor);
+            vm.SettlementAssets = vm.SettlementAssets.Replace(' ', ';').Replace(',', ';');
+            vm.PaymentAssets = vm.PaymentAssets.Replace(' ', ';').Replace(',', ';');
+            vm.SettlementAssets = String.Join(";", vm.SettlementAssets.Split(';').Where(x => !string.IsNullOrEmpty(x)).ToArray());
+            vm.PaymentAssets = String.Join(";", vm.PaymentAssets.Split(';').Where(x => !string.IsNullOrEmpty(x)).ToArray());
             await _payInternalClient.SetPersonalAvailableAssetsAsync(new UpdateAssetAvailabilityByMerchantRequest()
             {
                 MerchantId = vm.MerchantId,
@@ -152,7 +163,20 @@ namespace BackOffice.Areas.LykkePay.Controllers
             request.AssetId = model.Id;
             request.Value = true;
             request.AvailabilityType = AssetAvailabilityType.Payment;
-            await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
+            try
+            {
+                await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
+            }
+            catch(DefaultErrorResponseException ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    var content = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(((Refit.ApiException)ex.InnerException).Content);
+                    return this.JsonFailResult(content.ErrorMessage, ErrorMessageAnchor);
+                }
+                else
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
+            }
             return this.JsonRequestResult("#assetPaymentList", Url.Action("AssetPaymentList"));
         }
         [HttpPost]
@@ -192,7 +216,20 @@ namespace BackOffice.Areas.LykkePay.Controllers
             request.AssetId = model.Id;
             request.Value = true;
             request.AvailabilityType = AssetAvailabilityType.Settlement;
-            await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
+            try
+            {
+                await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
+            }
+            catch (DefaultErrorResponseException ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    var content = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(((Refit.ApiException)ex.InnerException).Content);
+                    return this.JsonFailResult(content.ErrorMessage, ErrorMessageAnchor);
+                }
+                else
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
+            }
             return this.JsonRequestResult("#assetSettlementList", Url.Action("AssetSettlementList"));
         }
         [HttpPost]

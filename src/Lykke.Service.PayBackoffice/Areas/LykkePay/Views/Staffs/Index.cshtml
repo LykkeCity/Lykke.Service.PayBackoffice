@@ -2,10 +2,10 @@
 @using BackOffice.Translates
 
 <ul id="tabs" class="nav nav-tabs">
-    <li id="staffs"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("StaffsPage")')">Staffs</a></li>
+    <li id="staffs"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("StaffsPage")')">Portal Access</a></li>
 </ul>
 
-<div id="StaffsPage"></div>
+<div id="StaffsPage" style="margin: 10px"></div>
 
 <script>
     function selectTab(tabId, url) {

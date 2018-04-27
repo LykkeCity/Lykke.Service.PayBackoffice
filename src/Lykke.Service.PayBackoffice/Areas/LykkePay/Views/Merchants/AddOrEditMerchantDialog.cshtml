@@ -8,8 +8,18 @@
 <form id="frmMerchant" autocomplete="off" style="max-height: 700px;overflow: auto;">
     @Html.HiddenFor(x => x.IsNewMerchant)
     @Html.HiddenFor(x => x.Id)
-    @Html.HiddenFor(x => x.Name)
+
     <div id="errorMessage"></div>
+    @if (Model.IsNewMerchant)
+    {
+        <div class="form-group">
+            @Html.RenderInputWithLabelOnTop("Name", "Name", Model.Name, focused: true)
+        </div>
+    }
+    else
+    {
+        @Html.HiddenFor(x => x.Name)
+    }
     <div class="form-group">
         @Html.RenderInputWithLabelOnTop("DisplayName", "DisplayName", Model.DisplayName, focused: true)
     </div>
