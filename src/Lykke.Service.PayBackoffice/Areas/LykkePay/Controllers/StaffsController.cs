@@ -78,22 +78,16 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (!string.IsNullOrEmpty(vm.SearchValue))
             {
                 var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
-                var merchantsId = await _payInvoiceClient.GetMerchantsIdByEmployeeEmail(vm.SearchValue);
-                foreach (var merchantId in merchantsId)
+                var allstaffs = await _payInvoiceClient.GetEmployeesAsync();
+                filteredstaffs = allstaffs.Where(s => !string.IsNullOrEmpty(s.Email) && s.Email.Contains(vm.SearchValue)).Select(x => new StaffViewModel()
                 {
-                    var merchantstaffs = await _payInvoiceClient.GetEmployeesAsync(merchantId);
-                    var merchant = merchants.FirstOrDefault(x => x.Id == merchantId);
-                    var list = merchantstaffs.Select(x => new StaffViewModel()
-                    {
-                        Id = x.Id,
-                        Email = x.Email,
-                        FirstName = x.FirstName,
-                        LastName = x.LastName,
-                        MerchantId = merchantId,
-                        MerchantName = merchant.Name
-                    });
-                    filteredstaffs.AddRange(list);
-                }
+                    Id = x.Id,
+                    Email = x.Email,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    MerchantId = x.MerchantId,
+                    MerchantName = merchants.FirstOrDefault(w=>w.Id == x.MerchantId)?.DisplayName
+                }).ToList();
             }
             else
             {
@@ -124,7 +118,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             var employee = new EmployeeModel();
             if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(merchant))
             {
-                employee = await _payInvoiceClient.GetEmployeeAsync(merchant, id);
+                employee = await _payInvoiceClient.GetEmployeeAsync(id);
             }
             var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
             var viewmodel = new AddStaffDialogViewModel()
@@ -136,7 +130,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Email = employee.Email,
                 Id = employee.Id,
                 IsNewStaff = id == null,
-                //IsBlocked = employee.IsBlocked //TODO: update payinvoice
+                IsBlocked = employee.IsBlocked
             };
             return View(viewmodel);
         }
@@ -168,7 +162,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     if (string.IsNullOrEmpty(vm.Password))
                         return this.JsonFailResult("Password required", ErrorMessageAnchor);
 
-                    employee = await _payInvoiceClient.AddEmployeeAsync(vm.SelectedMerchant, new CreateEmployeeModel()
+                    employee = await _payInvoiceClient.AddEmployeeAsync(new CreateEmployeeModel()
                     {
                         Email = vm.Email,
                         LastName = vm.LastName,
@@ -177,11 +171,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 }
                 else
                 {
-                    await _payInvoiceClient.UpdateEmployeeAsync(vm.SelectedMerchant, vm.Id, new CreateEmployeeModel()
+                    await _payInvoiceClient.UpdateEmployeeAsync(new UpdateEmployeeModel()
                     {
                         Email = vm.Email,
                         FirstName = vm.FirstName,
-                        LastName = vm.LastName
+                        LastName = vm.LastName,
+                        Id = vm.Id,
+                        MerchantId = vm.SelectedMerchant,
+                        IsBlocked = vm.IsBlocked
                     });
                 }
                 if (!string.IsNullOrEmpty(vm.Password))
@@ -200,8 +197,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                             Email = vm.Email,
                             EmployeeId = vm.Id,
                             MerchantId = vm.SelectedMerchant,
-                            Password = vm.Password,
-                            //IsBlocked = vm.IsBlocked //TODO: update payinvoice
+                            Password = vm.Password
                         };
                         await _payAuthClient.UpdateAsync(updatemodel);
                     }
@@ -233,7 +229,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> DeleteStaffDialog(string merchant, string id)
         {
-            var employee = await _payInvoiceClient.GetEmployeeAsync(merchant, id);
+            var employee = await _payInvoiceClient.GetEmployeeAsync(id);
             var viewModel = new DeleteStaffDialogViewModel
             {
                 Caption = "Delete employee",
@@ -252,7 +248,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, "#frmDeleteStaff");
             }
-            await _payInvoiceClient.DeleteEmployeeAsync(vm.MerchantId, vm.Id);
+            await _payInvoiceClient.DeleteEmployeeAsync(vm.Id);
 
             return this.JsonRequestResult("#StaffsPage", Url.Action("StaffsPage"), vm.MerchantId);
         }
