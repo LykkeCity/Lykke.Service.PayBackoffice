@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using Lykke.Service.PayInternal.Client.Models.Transactions;
 using BackOffice.Helpers;
 using Lykke.Service.PayInternal.Client.Exceptions;
+using Lykke.Common.Api.Contract.Responses;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -158,9 +159,15 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 await _payInternalClient.BtcFreeTransferAsync(request);
                 return this.JsonRequestResult("#transfersList", Url.Action("TransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant, SelectedAsset = "None" });
             }
-            catch (Exception ex)
+            catch (DefaultErrorResponseException ex)
             {
-                return this.JsonFailResult("Error: " + ex.InnerException.Message, ErrorMessageAnchor);
+                if (ex.InnerException != null)
+                {
+                    var content = JsonConvert.DeserializeObject<ErrorResponse>(((Refit.ApiException)ex.InnerException).Content);
+                    return this.JsonFailResult(content.ErrorMessage, ErrorMessageAnchor);
+                }
+                else
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
             }
         }
         [HttpPost]
