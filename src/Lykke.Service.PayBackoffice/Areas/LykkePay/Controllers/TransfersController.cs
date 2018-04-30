@@ -107,6 +107,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                         tm.Amount = transaction.Amount;
                         tm.AssetId = transaction.AssetId;
                         tm.PaymentRequest = request;
+                        tm.SourceWallet = await _payInternalClient.GetTransactionsSourceWalletsAsync(request.Id);
                         if (vm.SelectedAsset == "None" || tm.AssetId == vm.SelectedAsset)
                             list.Add(tm);
 

@@ -13,7 +13,10 @@
                 Amount
             </th>
             <th>
-                WalletAddress
+                Destination Address
+            </th>
+            <th>
+                Source Address
             </th>
             <th>
                 Transactions amount
@@ -38,6 +41,9 @@
                 </td>
                 <td>
                     @item.PaymentRequest.WalletAddress
+                </td>
+                <td>
+                    @String.Join("; ", item.SourceWallet.ToArray())
                 </td>
                 <td>
                     <input type="hidden" id="walletamount_@item.PaymentRequest.WalletAddress" value="@item.Amount"/>

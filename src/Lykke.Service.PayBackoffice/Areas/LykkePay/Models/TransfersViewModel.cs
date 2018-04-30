@@ -26,6 +26,7 @@ namespace BackOffice.Areas.LykkePay.Models
     public class RequestTransferModel
     {
         public PaymentRequestModel PaymentRequest { get; set; }
+        public IReadOnlyList<string> SourceWallet { get; set; }
         public double Amount { get; set; }
         public string AssetId { get; set; }
     }
