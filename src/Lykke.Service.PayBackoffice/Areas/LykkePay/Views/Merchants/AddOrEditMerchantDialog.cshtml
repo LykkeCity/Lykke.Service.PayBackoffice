@@ -10,6 +10,12 @@
     @Html.HiddenFor(x => x.Id)
 
     <div id="errorMessage"></div>
+    @if (!Model.IsNewMerchant)
+    {
+        <div class="form-group">
+            @Html.CheckBoxFor(x => x.IsBlocked) Blocked
+        </div>
+    }
     @if (Model.IsNewMerchant)
     {
         <div class="form-group">

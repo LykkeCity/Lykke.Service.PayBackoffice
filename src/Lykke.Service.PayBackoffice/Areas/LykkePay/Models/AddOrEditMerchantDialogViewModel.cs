@@ -24,6 +24,7 @@ namespace BackOffice.Areas.LykkePay.Models
         public string LwId { get; set; }
         public string Certificate { get; set; }
         public string SystemId { get; set; }
+        public bool IsBlocked { get; set; }
     }
     public class DeleteMerchantDialogViewModel : IPersonalAreaDialog
     {

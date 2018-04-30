@@ -116,7 +116,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 TimeCacheRates = merchant.TimeCacheRates,
                 Certificate = merchant.PublicKey,
                 SystemId = string.Empty,
-                DisplayName = merchant.DisplayName
+                DisplayName = merchant.DisplayName,
+                IsBlocked = true //TODO: update payinternal
             };
 
             return View(viewModel);
@@ -183,7 +184,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     MarkupFixedFee = vm.MarkupFixedFee,
                     TimeCacheRates = vm.TimeCacheRates,
                     Name = vm.Name,
-                    DisplayName = vm.DisplayName
+                    DisplayName = vm.DisplayName,
+                    //IsBlocked = vm.IsBlocked //TODO: update payinternal
                 };
 
                 await _payInternalClient.UpdateMerchantAsync(updatereq);
