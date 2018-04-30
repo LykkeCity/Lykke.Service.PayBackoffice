@@ -214,7 +214,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             }
             await _payInternalClient.DeleteMerchantAsync(vm.Id);
 
-            return this.JsonRequestResult("#MerchantsPage", Url.Action("MerchantsList"));
+            return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
         }
     }
 }
