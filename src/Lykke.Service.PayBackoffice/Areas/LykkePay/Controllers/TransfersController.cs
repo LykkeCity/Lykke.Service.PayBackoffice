@@ -186,7 +186,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     return this.JsonFailResult("Error: needs to select source wallet", ErrorMessageAnchor);
                 var refund = new RefundRequestModel()
                 {
-                    DestinationAddress = !string.IsNullOrEmpty(vm.ManualWalletAddress) ? vm.ManualWalletAddress : vm.SelectedWallet,
+                    DestinationAddress = vm.ManualWalletAddress ?? vm.SelectedWallet,
                     PaymentRequestId = vm.SelectedPaymentRequest,
                     MerchantId = vm.SelectedMerchant
                 };
