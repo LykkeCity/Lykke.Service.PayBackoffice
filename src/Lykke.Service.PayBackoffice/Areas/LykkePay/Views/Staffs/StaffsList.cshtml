@@ -5,9 +5,12 @@
 {
     <table class="table table-striped">
         <tr>
-            <th>
-                Merchant
-            </th>
+            @if (Model.IsSearchMode)
+            {
+                <th>
+                    Merchant
+                </th>
+            }
             <th>
                 Email
             </th>
@@ -23,9 +26,12 @@
         @foreach (var item in Model.Employees)
         {
             <tr>
-                <td>
-                    @item.MerchantName
-                </td>
+                @if (Model.IsSearchMode)
+                {
+                    <td>
+                        @item.MerchantName
+                    </td>
+                }
                 <td>
                     @item.Email
                 </td>

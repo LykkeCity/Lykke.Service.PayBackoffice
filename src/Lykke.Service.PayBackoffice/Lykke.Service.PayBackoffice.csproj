@@ -161,7 +161,7 @@
     <PackageReference Include="Lykke.Service.EmailPartnerRouter.Client" Version="2.0.4" />
     <PackageReference Include="Lykke.Service.PayAuth.Client" Version="1.0.14" />
     <PackageReference Include="Lykke.Service.PayInternal.Client" Version="1.1.11" />
-    <PackageReference Include="Lykke.Service.PayInvoice.Client" Version="3.1.0" />
+    <PackageReference Include="Lykke.Service.PayInvoice.Client" Version="4.0.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />

@@ -23,6 +23,7 @@ namespace BackOffice.Areas.LykkePay.Models
         public IReadOnlyList<StaffViewModel> Employees { get; set; }
         public bool IsFullAccess { get; set; }
         public bool IsEditAccess { get; set; }
+        public bool IsSearchMode { get; set; }
     }
     public class AddStaffDialogViewModel : IPersonalAreaDialog
     {
