@@ -100,11 +100,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     var request = paymentrequests.FirstOrDefault(p => p.WalletAddress == transaction.WalletAddress);
                     var tm = list.FirstOrDefault(r => r.PaymentRequest.WalletAddress == transaction.WalletAddress);
                     if (tm != null)
-                        tm.Amount += transaction.Amount;
+                    {
+                        var amount = (Money)(tm.Amount) + transaction.Amount;
+                        tm.Amount = amount.ToString();
+                    }
                     else
                     {
                         tm = new RequestTransferModel();
-                        tm.Amount = transaction.Amount;
+                        tm.Amount = transaction.Amount.ToString();
                         tm.AssetId = transaction.AssetId;
                         tm.PaymentRequest = request;
                         tm.SourceWallet = await _payInternalClient.GetTransactionsSourceWalletsAsync(request.Id);
@@ -151,7 +154,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 {
                     var sourceinfo = new BtcTransferSourceInfo();
                     sourceinfo.Address = item.PaymentRequest.WalletAddress;
-                    sourceinfo.Amount = Convert.ToDecimal(item.Amount / 100000000);
+                    sourceinfo.Amount = Convert.ToDecimal(item.Amount);
                     sources.Add(sourceinfo);
                 }
                 request.Sources = sources;
@@ -236,7 +239,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 return Balance?.Operations?.Select(x => new BlockchainTransaction
                 {
                     WalletAddress = WalletAddress,
-                    Amount = (double)x.Amount.ToDecimal((MoneyUnit)Enum.Parse(typeof(MoneyUnit), PaymentAssetId)),
+                    Amount = x.Amount,
                     AssetId = PaymentAssetId,
                     Blockchain = "Bitcoin",
                     Id = x.TransactionId.ToString(),
