@@ -144,6 +144,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
         public async Task<ActionResult> TransferMoney(TransferMoneyDialogViewModel vm)
         {
             var destinationaddress = _walletlist.Wallets.FirstOrDefault(w => w.Address == vm.SelectedWallet);
+            if (!string.IsNullOrEmpty(vm.ManualWalletAddress))
+                destinationaddress = new LykkePayWalletSettings() { Address = vm.ManualWalletAddress };
             try
             {
                 if (vm.SelectedPaymentRequests.Count == 0)
@@ -193,10 +195,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 if (string.IsNullOrEmpty(vm.SelectedWallet))
                     return this.JsonFailResult("Error: needs to select source wallet", ErrorMessageAnchor);
-
                 var refund = new RefundRequestModel()
                 {
-                    DestinationAddress = vm.SelectedWallet,
+                    DestinationAddress = vm.ManualWalletAddress ?? vm.SelectedWallet,
                     PaymentRequestId = vm.SelectedPaymentRequest,
                     MerchantId = vm.SelectedMerchant
                 };
