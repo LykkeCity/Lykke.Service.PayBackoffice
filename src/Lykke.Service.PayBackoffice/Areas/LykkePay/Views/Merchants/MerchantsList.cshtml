@@ -72,10 +72,10 @@
                     @item.LwId
                 </td>
                 <td>
-                    <a href="#">staffs</a>
+                    <a href="javascript:void(0);" class="staffs" merchantId="@item.Id">staffs</a>
                 </td>
                 <td>
-                    <a href="#">requests</a>
+                    <a class="requests" href="javascript:void(0);" merchantId="@item.Id">requests</a>
                 </td>
                 <td style="text-align: right">
 
@@ -97,6 +97,66 @@
             </tr>
         }
     </table>
+    <script>
+        $(".requests").click(function (e) {
+            var merchantId = e.currentTarget.getAttribute("merchantId");
+            var options = {
+                url: '@Url.Action("Index", "PaymentRequests", new { area = "LykkePay" })', type: 'POST', headers: { 'RequestVerificationToken': getAntiForgeryCookie() }, data: {
+                    'merchantId': merchantId
+                } };
+            $.ajax(options)
+                .then(function(result) {
+
+                    var historyItem = {
+                        url: '@Url.Action("Index", "PaymentRequests", new { area = "LykkePay" })',
+                        div: '#pamain',
+                        type: 'menu'
+                    };
+
+                    historyManager.put(historyItem);
+
+                    $('#pamain').html(result);
+                    layout.ressize();
+                }).fail(function(fr) {
+                    if (xhr && (xhr.status === 403 || xhr.status === 401)) {
+                        console.log("Forbidden redirecting to index...");
+                        window.location = '@Url.Action("Index", "Home")';
+                    } else {
+                        activeItem.addClass('smiSel');
+                        $('#pamain').html(fr.responseText);
+                    }
+                });
+        });
+        $(".staffs").click(function (e) {
+            var merchantId = e.currentTarget.getAttribute("merchantId");
+            var options = {
+                url: '@Url.Action("Index", "Staffs", new { area = "LykkePay" })', type: 'POST', headers: { 'RequestVerificationToken': getAntiForgeryCookie() }, data: {
+                    'merchantId': merchantId
+                } };
+            $.ajax(options)
+                .then(function(result) {
+
+                    var historyItem = {
+                        url: '@Url.Action("Index", "Staffs", new { area = "LykkePay" })',
+                        div: '#pamain',
+                        type: 'menu'
+                    };
+
+                    historyManager.put(historyItem);
+
+                    $('#pamain').html(result);
+                    layout.ressize();
+                }).fail(function(fr) {
+                    if (xhr && (xhr.status === 403 || xhr.status === 401)) {
+                        console.log("Forbidden redirecting to index...");
+                        window.location = '@Url.Action("Index", "Home")';
+                    } else {
+                        activeItem.addClass('smiSel');
+                        $('#pamain').html(fr.responseText);
+                    }
+                });
+        });
+    </script>
 }
 else
 {

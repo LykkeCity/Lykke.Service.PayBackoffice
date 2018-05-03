@@ -5,6 +5,7 @@
 @{
     IEnumerable<ItemViewModel> merchantList = Model.Merchants.
         Select(m => new ItemViewModel { Id = m.Id, Title = m.Name }).ToArray();
+    merchantList.FirstOrDefault(x => x.Id == Model.SelectedMerchant).Selected = true;
     IEnumerable<ItemViewModel> statusesList = Model.Statuses.
         Select(m => new ItemViewModel { Id = m.ToString(), Title = m.ToString() }).ToArray();
 }

@@ -24,4 +24,8 @@ namespace BackOffice.Areas.LykkePay.Models
         public IEnumerable<PaymentRequestModel> Requests { get; set; }
         public string BlockchainExplorerUrl { get; set; }
     }
+    public class PaymentRequestIndex
+    {
+        public string MerchantId { get; set; }
+    }
 }

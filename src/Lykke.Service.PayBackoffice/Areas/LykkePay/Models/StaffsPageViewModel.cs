@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace BackOffice.Areas.LykkePay.Models
 {
+    public class StaffsIndexViewModel
+    {
+        public string MerchantId { get; set; }
+    }
     public class StaffsPageViewModel
     {
         public string SelectedMerchant { get; set; }
@@ -23,6 +27,7 @@ namespace BackOffice.Areas.LykkePay.Models
         public IReadOnlyList<StaffViewModel> Employees { get; set; }
         public bool IsFullAccess { get; set; }
         public bool IsEditAccess { get; set; }
+        public bool IsSearchMode { get; set; }
     }
     public class AddStaffDialogViewModel : IPersonalAreaDialog
     {

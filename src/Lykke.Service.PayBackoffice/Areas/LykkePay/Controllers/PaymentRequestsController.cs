@@ -31,9 +31,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
         {
             _payInternalClient = payInternalClient;
         }
-        public IActionResult Index()
+        public IActionResult Index(PaymentRequestIndex model)
         {
-            return View();
+            return View(model);
         }
         [HttpPost]
         public async Task<ActionResult> PaymentRequestsPage(string merchant = "")

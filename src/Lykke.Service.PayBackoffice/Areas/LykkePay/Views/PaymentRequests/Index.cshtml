@@ -1,5 +1,6 @@
 ﻿
 @using BackOffice.Translates
+@model BackOffice.Areas.LykkePay.Models.PaymentRequestIndex
 
 <ul id="tabs" class="nav nav-tabs">
     <li id="paymentrequests"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("PaymentRequestsPage")')">Payment requests</a></li>
@@ -14,7 +15,7 @@
         $('#tabs').children('li').each(function() {
             (this.id === tabId) && $('#' + this.id).addClass('active') || $('#' + this.id).removeClass('active');
         });
-        requests.doRequest({ url: url, divResult: '#PaymentRequestsPage' });
+        requests.doRequest({ url: url, divResult: '#PaymentRequestsPage', params: { merchant: '@Model.MerchantId'} });
     }
     selectTab('paymentrequests', '@Url.Action("PaymentRequestsPage")');
 </script>
