@@ -1,5 +1,6 @@
 ﻿using Lykke.Service.PayInternal.Client.Models.Merchant;
 using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
+using NBitcoin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace BackOffice.Areas.LykkePay.Models
     {
         public PaymentRequestModel PaymentRequest { get; set; }
         public IReadOnlyList<string> SourceWallet { get; set; }
-        public double Amount { get; set; }
+        public string Amount { get; set; }
         public string AssetId { get; set; }
     }
 }
