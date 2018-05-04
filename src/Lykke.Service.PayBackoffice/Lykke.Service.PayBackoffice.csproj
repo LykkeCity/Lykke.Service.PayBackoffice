@@ -160,6 +160,7 @@
     <PackageReference Include="Lykke.GoogleAuthenticator" Version="1.0.8" />
     <PackageReference Include="Lykke.Service.EmailPartnerRouter.Client" Version="2.0.4" />
     <PackageReference Include="Lykke.Service.PayAuth.Client" Version="1.0.14" />
+    <PackageReference Include="Lykke.Service.PayInternal.Client" Version="1.1.13" />
     <PackageReference Include="Lykke.Service.PayInvoice.Client" Version="4.0.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0" />
@@ -208,11 +209,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\output\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Lykke.Service.PayInternal.Client">
-      <HintPath>..\..\..\..\Lykke.Service.PayInternal\client\Lykke.Service.PayInternal.Client\bin\Debug\netstandard2.0\Lykke.Service.PayInternal.Client.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Translates\Phrases.Designer.cs">
