@@ -19,10 +19,10 @@
                 Source Address
             </th>
             <th>
-                Asset
+                Transactions amount
             </th>
             <th>
-                Transactions amount
+                Asset
             </th>
             <th></th>
         </tr>
@@ -46,11 +46,11 @@
                     @String.Join("; ", item.SourceWallet.ToArray())
                 </td>
                 <td>
-                    @item.AssetId
-                </td>
-                <td>
                     <input type="hidden" id="walletamount_@item.PaymentRequest.WalletAddress" value="@item.Amount"/>
                     @item.Amount
+                </td>
+                <td>
+                    @item.AssetId
                 </td>
                 <td style="text-align: right">
                     <a class="btn btn btn-success"

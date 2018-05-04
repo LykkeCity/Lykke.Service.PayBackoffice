@@ -92,7 +92,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 var paymentrequests = await _payInternalClient.GetPaymentRequestsAsync(vm.SelectedMerchant);
                 var addresses = paymentrequests.Where(p => (p.Status == PaymentRequestStatus.Confirmed || p.Status == PaymentRequestStatus.Error)
-                && p.Amount > 0).Select(p => p.WalletAddress).ToList();
+                && p.Amount > 0).ToList();
                 var transactions = (await GetTransactions(addresses)).ToList();
                 var filtered = transactions.Where(t => t.Amount > 0).ToList();
                 assetsList.Add("None");
@@ -101,11 +101,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     var request = paymentrequests.FirstOrDefault(p => p.WalletAddress == transaction.WalletAddress);
                     var tm = list.FirstOrDefault(r => r.PaymentRequest.WalletAddress == transaction.WalletAddress);
                     if (tm != null)
-                        tm.Amount += transaction.Amount;
+                    {
+                        var amount = (Money)(tm.Amount) + transaction.Amount;
+                        tm.Amount = amount.ToString();
+                    }
                     else
                     {
                         tm = new RequestTransferModel();
-                        tm.Amount = transaction.Amount;
+                        tm.Amount = transaction.Amount.ToString();
                         tm.AssetId = transaction.AssetId;
                         tm.PaymentRequest = request;
                         tm.SourceWallet = await _payInternalClient.GetTransactionsSourceWalletsAsync(request.Id);
@@ -141,6 +144,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
         public async Task<ActionResult> TransferMoney(TransferMoneyDialogViewModel vm)
         {
             var destinationaddress = _walletlist.Wallets.FirstOrDefault(w => w.Address == vm.SelectedWallet);
+            if (!string.IsNullOrEmpty(vm.ManualWalletAddress))
+                destinationaddress = new LykkePayWalletSettings() { Address = vm.ManualWalletAddress };
             try
             {
                 if (vm.SelectedPaymentRequests.Count == 0)
@@ -152,7 +157,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 {
                     var sourceinfo = new BtcTransferSourceInfo();
                     sourceinfo.Address = item.PaymentRequest.WalletAddress;
-                    sourceinfo.Amount = Convert.ToDecimal(item.Amount / 100000000);
+                    sourceinfo.Amount = Convert.ToDecimal(item.Amount);
                     sources.Add(sourceinfo);
                 }
                 request.Sources = sources;
@@ -190,10 +195,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 if (string.IsNullOrEmpty(vm.SelectedWallet))
                     return this.JsonFailResult("Error: needs to select source wallet", ErrorMessageAnchor);
-
                 var refund = new RefundRequestModel()
                 {
-                    DestinationAddress = vm.SelectedWallet,
+                    DestinationAddress = vm.ManualWalletAddress ?? vm.SelectedWallet,
                     PaymentRequestId = vm.SelectedPaymentRequest,
                     MerchantId = vm.SelectedMerchant
                 };
@@ -209,78 +213,42 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     return this.JsonFailResult("Error: " + ex.Message, ErrorMessageAnchor);
             }
         }
-        private async Task<IEnumerable<BlockchainTransaction>> GetTransactions(IEnumerable<string> addresses)
+        private async Task<IEnumerable<BlockchainTransaction>> GetTransactions(IEnumerable<PaymentRequestModel> addresses)
         {
             var balances = new List<WalletBalanceModel>();
 
             foreach (var batch in addresses.Batch(BatchPieceSize))
             {
-                await Task.WhenAll(batch.Select(address => _qBitNinjaClient.GetBalance(BitcoinAddress.Create(address))
+                await Task.WhenAll(batch.Select(address => _qBitNinjaClient.GetBalance(BitcoinAddress.Create(address.WalletAddress))
                     .ContinueWith(t =>
                     {
                         lock (balances)
                         {
                             balances.Add(new WalletBalanceModel
                             {
-                                WalletAddress = address,
-                                Balance = t.Result
+                                WalletAddress = address.WalletAddress,
+                                Balance = t.Result,
+                                PaymentAssetId = address.PaymentAssetId
                             });
                         }
                     })));
             }
             return balances.SelectMany(x => x.GetTransactions());
         }
-        private async Task<IEnumerable<WalletBalanceModel>> GetBalances(IEnumerable<string> addresses)
-        {
-            var balances = new List<WalletBalanceModel>();
-
-            foreach (var batch in addresses.Batch(BatchPieceSize))
-            {
-                await Task.WhenAll(batch.Select(address => _qBitNinjaClient.GetBalance(BitcoinAddress.Create(address))
-                    .ContinueWith(t =>
-                    {
-                        lock (balances)
-                        {
-                            balances.Add(new WalletBalanceModel
-                            {
-                                WalletAddress = address,
-                                Balance = t.Result
-                            });
-                        }
-                    })));
-            }
-            return balances;
-        }
-        private async Task<IEnumerable<BalanceSummary>> GetBalanceSummary(IEnumerable<string> addresses)
-        {
-            var balances = new List<BalanceSummary>();
-
-            foreach (var batch in addresses.Batch(BatchPieceSize))
-            {
-                await Task.WhenAll(batch.Select(address => _qBitNinjaClient.GetBalanceSummary(BitcoinAddress.Create(address))
-                    .ContinueWith(t =>
-                    {
-                        lock (balances)
-                        {
-                            balances.Add(t.Result);
-                        }
-                    })));
-            }
-            return balances;
-        }
 
         private class WalletBalanceModel
         {
             public string WalletAddress { get; set; }
             public BalanceModel Balance { get; set; }
+            public string PaymentAssetId { get; set; }
 
             public IEnumerable<BlockchainTransaction> GetTransactions()
             {
                 return Balance?.Operations?.Select(x => new BlockchainTransaction
                 {
                     WalletAddress = WalletAddress,
-                    Amount = (double)x.Amount.ToDecimal(MoneyUnit.Satoshi),
-                    AssetId = nameof(MoneyUnit.Satoshi),
+                    Amount = x.Amount,
+                    AssetId = PaymentAssetId,
                     Blockchain = "Bitcoin",
                     Id = x.TransactionId.ToString(),
                     BlockId = x.BlockId?.ToString(),
