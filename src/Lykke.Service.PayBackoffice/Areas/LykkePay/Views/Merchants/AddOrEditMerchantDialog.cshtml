@@ -8,9 +8,20 @@
 <form id="frmMerchant" autocomplete="off" style="max-height: 700px;overflow: auto;">
     @Html.HiddenFor(x => x.IsNewMerchant)
     @Html.HiddenFor(x => x.Id)
+
     <div id="errorMessage"></div>
+    @if (Model.IsNewMerchant)
+    {
+        <div class="form-group">
+            @Html.RenderInputWithLabelOnTop("Name", "Name", Model.Name, focused: true)
+        </div>
+    }
+    else
+    {
+        @Html.HiddenFor(x => x.Name)
+    }
     <div class="form-group">
-        @Html.RenderInputWithLabelOnTop("Name", "Name", Model.Name, focused: true)
+        @Html.RenderInputWithLabelOnTop("DisplayName", "DisplayName", Model.DisplayName, focused: true)
     </div>
     <div class="form-group">
         @Html.RenderInputWithLabelOnTop("LpMarkupPercent", "LpMarkupPercent", Model.LpMarkupPercent.ToString(), null, "number")
@@ -50,15 +61,18 @@
 @Html.RenderSaveCancelButtonPair(Url.Action("AddOrEditMerchant"), "#frmMerchant")
 <script>
     $('input[type=number]').keypress(function (event) {
+        if ($(this).val() == "0")
+            $(this).val("");
         if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
             event.preventDefault();
         }
-        debugger;
         if ((event.which != 46 || $(this).val().indexOf('.') == -1) && (event.which < 48 || event.which > 57) && ($(this).attr("name") == "TimeCacheRates" || $(this).attr("name") == "LpMarkupPips")) {
             event.preventDefault();
         }
     });
     $('input[type=number]').on('paste', function () {
+        if ($(this).val() == "0")
+            $(this).val("");
         var element = this;
         setTimeout(function () {
             var text = $(element).val();

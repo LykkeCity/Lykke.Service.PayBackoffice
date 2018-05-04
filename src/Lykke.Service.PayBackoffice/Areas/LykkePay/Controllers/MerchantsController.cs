@@ -19,7 +19,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
 {
     [Authorize]
     [Area("LykkePay")]
-    [FilterFeaturesAccess(UserFeatureAccess.MenuAssets)]
+    [FilterFeaturesAccess(UserFeatureAccess.LykkePayMerchantsView)]
     public class MerchantsController : Controller
     {
         private readonly IPayInternalClient _payInternalClient;
@@ -43,6 +43,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         {
             var model = new MerchantsListViewModel();
             model.CurrentPage = 1;
+            model.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
             return View(model);
         }
         [HttpPost]
@@ -60,17 +61,18 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 try
                 {
-                    var merchantsId = await _payInvoiceClient.GetMerchantsIdByEmployeeEmail(vm.SearchValue);
+                    var allstaffs = await _payInvoiceClient.GetEmployeesAsync();
+                    var filteredstaffs = allstaffs.Where(s => !string.IsNullOrEmpty(s.Email) && s.Email.Contains(vm.SearchValue)).GroupBy(x => x.MerchantId).ToList();
                     var filtered = new List<MerchantModel>();
-                    foreach (var merchantId in merchantsId)
+                    foreach (var merchant in filteredstaffs)
                     {
-                        var merchant = list.FirstOrDefault(x => x.Id == merchantId);
-                        if (merchant != null)
-                            filtered.Add(merchant);
+                        var model = merchants.FirstOrDefault(m => m.Id == merchant.Key);
+                        if (model != null)
+                            filtered.Add(model);
                     }
                     list = filtered.AsQueryable();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     list = new List<MerchantModel>().AsQueryable();
                 }
@@ -80,13 +82,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
             var currentPage = vm.CurrentPage == 0 ? 1 : vm.CurrentPage;
             if (list.Count() != 0)
                 pagedlist = list.ToPagedList(currentPage, vm.PageSize).ToList();
-
             var viewmodel = new MerchantsListViewModel()
             {
                 Merchants = pagedlist,
                 PageSize = vm.PageSize,
                 Count = pageCount,
-                CurrentPage = currentPage
+                CurrentPage = currentPage,
+                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsEdit),
+                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
             };
             return View(viewmodel);
         }
@@ -113,7 +116,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 PublicKey = merchant.PublicKey,
                 TimeCacheRates = merchant.TimeCacheRates,
                 Certificate = merchant.PublicKey,
-                SystemId = string.Empty
+                SystemId = string.Empty,
+                DisplayName = merchant.DisplayName
             };
 
             return View(viewModel);
@@ -126,6 +130,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 return this.JsonFailResult("ApiKey id required", ErrorMessageAnchor);
             if (string.IsNullOrEmpty(vm.Name))
                 return this.JsonFailResult("Name required", ErrorMessageAnchor);
+            if (string.IsNullOrEmpty(vm.DisplayName))
+                return this.JsonFailResult("DisplayName required", ErrorMessageAnchor);
 
             if (vm.IsNewMerchant)
             {
@@ -160,7 +166,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                         SystemId = vm.SystemId
                     });
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
                 }
@@ -177,13 +183,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     LwId = vm.LwId,
                     MarkupFixedFee = vm.MarkupFixedFee,
                     TimeCacheRates = vm.TimeCacheRates,
-                    Name = vm.Name
+                    Name = vm.Name,
+                    DisplayName = vm.DisplayName
                 };
 
                 await _payInternalClient.UpdateMerchantAsync(updatereq);
             }
 
-            return this.JsonRequestResult("#MerchantsPage", Url.Action("MerchantsList"));
+            return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
         }
         [HttpPost]
         public ActionResult DeleteMerchantDialog(string merchant, string id)
@@ -207,7 +214,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             }
             await _payInternalClient.DeleteMerchantAsync(vm.Id);
 
-            return this.JsonRequestResult("#MerchantsPage", Url.Action("MerchantsList"));
+            return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
         }
     }
 }

@@ -1,25 +1,26 @@
 ﻿@using BackOffice.Translates
-@using Core.BackOffice
 @using Core.Users
-
-@using Lykke.Service.Kyc.Abstractions.Domain.Verification
 
 @model BackOffice.Models.MainMenuViewModel
 @{
     Layout = null;
 }
 <ul class="sidemenu" style="width: 201px;">
-    @*@if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.MenuUsers))
+    @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.MenuUsers))
+
     {
         <li class="smi" data-url="@Url.Action("Index", "Menu", new {area = "Users"})" data-text="@Phrases.Users"></li>
-    }*@
+    }
     @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.MenuLykkePay))
     {
         <li class="smi" data-url="@Url.Action("Index", "Merchants", new {area = "LykkePay"})" data-text="Lykke Pay"></li>
         <li class="smi smiSub" data-url="@Url.Action("Index", "Merchants", new {area = "LykkePay"})" data-text="Merchants"></li>
-        <li class="smi smiSub" data-url="@Url.Action("Index", "Staffs", new {area = "LykkePay"})" data-text="Staffs"></li>
-        <li class="smi smiSub" data-url="@Url.Action("Index", "PaymentRequests", new {area = "LykkePay"})" data-text="Payment requests"></li>
-        <li class="smi smiSub" data-url="@Url.Action("Index", "BtcTransfers", new {area = "LykkePay"})" data-text="BTC transfers"></li>
+        <li class="smi smiSub2" data-url="@Url.Action("Index", "Staffs", new {area = "LykkePay"})" data-text="Portal Access"></li>
+        <li class="smi smiSub" data-url="@Url.Action("Index", "Transfers", new {area = "LykkePay"})" data-text="Transfers"></li>
+        @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.LykkePayPaymentRequests))
+        {
+            <li class="smi smiSub" data-url="@Url.Action("Index", "PaymentRequests", new { area = "LykkePay" })" data-text="Payment requests"></li>
+        }
         <li class="smi smiSub" data-url="@Url.Action("Index", "Assets", new {area = "LykkePay"})" data-text="Assets"></li>
     }
     <li class="smi"><a href="@Url.Action("GoogleSignout","Home")">@Phrases.Logout</a></li>

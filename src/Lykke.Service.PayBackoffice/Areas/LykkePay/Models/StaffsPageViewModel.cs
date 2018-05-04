@@ -11,12 +11,19 @@ namespace BackOffice.Areas.LykkePay.Models
     public class StaffsPageViewModel
     {
         public string SelectedMerchant { get; set; }
+        public string SearchValue { get; set; }
         public IReadOnlyList<MerchantModel> Merchants { get; set; }
+        public bool IsFullAccess { get; set; }
+        public bool IsEditAccess { get; set; }
     }
     public class StaffsListViewModel
     {
         public string SelectedMerchant { get; set; }
         public IReadOnlyList<EmployeeModel> Staffs { get; set; }
+        public IReadOnlyList<StaffViewModel> Employees { get; set; }
+        public bool IsFullAccess { get; set; }
+        public bool IsEditAccess { get; set; }
+        public bool IsSearchMode { get; set; }
     }
     public class AddStaffDialogViewModel : IPersonalAreaDialog
     {
@@ -30,6 +37,7 @@ namespace BackOffice.Areas.LykkePay.Models
         public string Password { get; set; }
         public string Id { get; set; }
         public bool IsNewStaff { get; set; }
+        public bool IsBlocked { get; set; }
     }
     public class DeleteStaffDialogViewModel : IPersonalAreaDialog
     {

@@ -1,0 +1,79 @@
+﻿@using BackOffice.Translates
+@model BackOffice.Areas.LykkePay.Models.TransfersListViewModel
+
+@if (Model.List != null && Model.List.Any())
+{
+    <table class="table table-striped">
+        <tr>
+            <th></th>
+            <th>
+                DueDate
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                Destination Address
+            </th>
+            <th>
+                Source Address
+            </th>
+            <th>
+                Transactions amount
+            </th>
+            <th>
+                Asset
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.List)
+        {
+            <tr>
+                <td>
+                    @Html.RenderCheckbox(@item.PaymentRequest.WalletAddress, "", false)
+                </td>
+                <td>
+                    @item.PaymentRequest.DueDate
+                </td>
+                <td>
+                    @item.PaymentRequest.Amount
+                </td>
+                <td>
+                    @item.PaymentRequest.WalletAddress
+                </td>
+                <td>
+                    @String.Join("; ", item.SourceWallet.ToArray())
+                </td>
+                <td>
+                    <input type="hidden" id="walletamount_@item.PaymentRequest.WalletAddress" value="@item.Amount"/>
+                    @item.Amount
+                </td>
+                <td>
+                    @item.AssetId
+                </td>
+                <td style="text-align: right">
+                    <a class="btn btn btn-success"
+                       onclick="ui.showDialog('@Url.Action("RefundMoneyDialog")', { selectedMerchant: $('#selectedMerchant').val(), selectedPaymentRequest: '@item.PaymentRequest.Id', selectedWalletAddress: '@item.PaymentRequest.WalletAddress' });">
+                        Refund
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+
+    <script>
+        $(function () {
+            $('#selectedMerchant').val('@Model.SelectedMerchant');
+            debugger;
+            $('#selectedAsset').select2({
+                data: @Html.Raw(Model.Assets)
+            });
+            $('.select2-container--default').width(200);
+        });
+    </script>
+}
+else
+{
+    <p>@Phrases.NoRecordsFound</p>
+}

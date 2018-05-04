@@ -21,6 +21,7 @@ namespace BackOffice
                 .UseIISIntegration()
                 .ConfigureServices(collection => collection.AddSingleton<IDependencyBinder>(new AzureBinder()))
                 .UseStartup<Startup>()
+                //.UseUrls("http://localhost:55560/")
                 .Build();
 
             host.Run();

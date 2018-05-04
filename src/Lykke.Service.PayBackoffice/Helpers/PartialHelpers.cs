@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BackOffice.Models;
-using Core.Clients;
-using Core.PaymentSystems;
-using Lykke.Service.PersonalData.Client.Models;
-using Lykke.Service.PersonalData.Contract.Models;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -135,28 +130,6 @@ namespace BackOffice.Helpers
             return helper.Partial("~/Views/Helpers/BtnEditByValue.cshtml", new EditByValueModel { Url = url, Value = value, ValueFieldName = valueFieldName } );
         }
 
-        public static IHtmlContent RenderPaymentStatusIcon(this IHtmlHelper helper, PaymentStatus ps)
-        {
-            return helper.Partial("~/Views/Helpers/RenderPaymentStatusIcon.cshtml", ps);
-        }
-
-        public static IHtmlContent RenderCashInPaymentSystemIcon(this IHtmlHelper helper, CashInPaymentSystem ps)
-        {
-            return helper.Partial("~/Views/Helpers/RenderCashInPaymentSystemIcon.cshtml", ps);
-        }
-
-        public static IHtmlContent RenderFoundOtherClients(this IHtmlHelper helper, IPersonalData pd)
-        {
-            var searchData = pd as SearchPersonalDataModel;
-
-            if (searchData?.OtherClients == null || !searchData.OtherClients.Any())
-                return HtmlString.Empty;
-
-            return helper.Partial("PartialFoundOtherClients", new FoundOtherClientViewModel
-            {
-                PersonalData = searchData
-            });
-        }
         public static IHtmlContent RenderPagination(this IHtmlHelper helper, int pageSize, int count, int currentPage, string action, string formId, string divResult)
         {
             return helper.Partial("~/Views/Helpers/PaginationControl.cshtml", new PagedListModel() { Count = count, CurrentPage = currentPage, PageSize = pageSize , Action = action, FormId = formId, DivResult = divResult});

@@ -15,24 +15,28 @@ using Lykke.Service.PayInvoice.Client.Models.Employee;
 using Lykke.Service.PayAuth.Client;
 using Lykke.Service.PayAuth.Client.Models.Employees;
 using System.Text.RegularExpressions;
+using Lykke.Service.EmailPartnerRouter.Client;
+using Lykke.Service.EmailPartnerRouter.Contracts;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
     [Authorize]
     [Area("LykkePay")]
-    [FilterFeaturesAccess(UserFeatureAccess.MenuAssets)]
+    [FilterFeaturesAccess(UserFeatureAccess.LykkePayStaffsView)]
     public class StaffsController : Controller
     {
         private readonly IPayInternalClient _payInternalClient;
         private readonly IPayInvoiceClient _payInvoiceClient;
         private readonly IPayAuthClient _payAuthClient;
         private const string ErrorMessageAnchor = "#errorMessage";
+        private readonly IEmailPartnerRouterClient _emailPartnerRouterClient;
         public StaffsController(
-            IPayInternalClient payInternalClient, IPayInvoiceClient payInvoiceClient, IPayAuthClient payAuthClient)
+            IPayInternalClient payInternalClient, IPayInvoiceClient payInvoiceClient, IPayAuthClient payAuthClient, IEmailPartnerRouterClient emailPartnerRouterClient)
         {
             _payInternalClient = payInternalClient;
             _payInvoiceClient = payInvoiceClient;
             _payAuthClient = payAuthClient;
+            _emailPartnerRouterClient = emailPartnerRouterClient;
         }
         public async Task<IActionResult> Index()
         {
@@ -59,7 +63,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
             return View(new StaffsPageViewModel
             {
                 SelectedMerchant = merchant,
-                Merchants = merchants
+                Merchants = merchants,
+                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsFull),
+                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsEdit)
             });
         }
         [HttpPost]
@@ -68,11 +74,40 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (string.IsNullOrEmpty(vm.SelectedMerchant))
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, "#selectedMerchant");
 
-            var staffs = await _payInvoiceClient.GetEmployeesAsync(vm.SelectedMerchant);
+            var filteredstaffs = new List<StaffViewModel>();
+            if (!string.IsNullOrEmpty(vm.SearchValue))
+            {
+                var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+                var allstaffs = await _payInvoiceClient.GetEmployeesAsync();
+                filteredstaffs = allstaffs.Where(s => !string.IsNullOrEmpty(s.Email) && s.Email.Contains(vm.SearchValue)).Select(x => new StaffViewModel()
+                {
+                    Id = x.Id,
+                    Email = x.Email,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    MerchantId = x.MerchantId,
+                    MerchantName = merchants.FirstOrDefault(w=>w.Id == x.MerchantId)?.DisplayName
+                }).ToList();
+            }
+            else
+            {
+                var staffs = await _payInvoiceClient.GetEmployeesAsync(vm.SelectedMerchant);
+                filteredstaffs = staffs.Select(x => new StaffViewModel()
+                {
+                    Id = x.Id,
+                    Email = x.Email,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    MerchantId = vm.SelectedMerchant
+                }).ToList();
+            }
             var viewModel = new StaffsListViewModel
             {
-                Staffs = staffs,
-                SelectedMerchant = vm.SelectedMerchant
+                Employees = filteredstaffs,
+                SelectedMerchant = vm.SelectedMerchant,
+                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsFull),
+                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsEdit),
+                IsSearchMode = !string.IsNullOrEmpty(vm.SearchValue)
             };
 
             return View(viewModel);
@@ -83,7 +118,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             var employee = new EmployeeModel();
             if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(merchant))
             {
-                employee = await _payInvoiceClient.GetEmployeeAsync(merchant, id);
+                employee = await _payInvoiceClient.GetEmployeeAsync(id);
             }
             var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
             var viewmodel = new AddStaffDialogViewModel()
@@ -95,6 +130,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Email = employee.Email,
                 Id = employee.Id,
                 IsNewStaff = id == null,
+                IsBlocked = employee.IsBlocked
             };
             return View(viewmodel);
         }
@@ -126,7 +162,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     if (string.IsNullOrEmpty(vm.Password))
                         return this.JsonFailResult("Password required", ErrorMessageAnchor);
 
-                    employee = await _payInvoiceClient.AddEmployeeAsync(vm.SelectedMerchant, new CreateEmployeeModel()
+                    employee = await _payInvoiceClient.AddEmployeeAsync(new CreateEmployeeModel()
                     {
                         Email = vm.Email,
                         LastName = vm.LastName,
@@ -135,11 +171,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 }
                 else
                 {
-                    await _payInvoiceClient.UpdateEmployeeAsync(vm.SelectedMerchant, vm.Id, new CreateEmployeeModel()
+                    await _payInvoiceClient.UpdateEmployeeAsync(new UpdateEmployeeModel()
                     {
                         Email = vm.Email,
                         FirstName = vm.FirstName,
-                        LastName = vm.LastName
+                        LastName = vm.LastName,
+                        Id = vm.Id,
+                        MerchantId = vm.SelectedMerchant,
+                        IsBlocked = vm.IsBlocked
                     });
                 }
                 if (!string.IsNullOrEmpty(vm.Password))
@@ -152,11 +191,35 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     if (vm.IsNewStaff)
                         await _payAuthClient.RegisterAsync(rm);
                     else
-                        await _payAuthClient.UpdateAsync(rm);
+                    {
+                        var updatemodel = new UpdateCredentialsModel()
+                        {
+                            Email = vm.Email,
+                            EmployeeId = vm.Id,
+                            MerchantId = vm.SelectedMerchant,
+                            Password = vm.Password
+                        };
+                        await _payAuthClient.UpdateAsync(updatemodel);
+                    }
+                    var payload = new Dictionary<string, string>
+                        {
+                            {"UserEmail", vm.Email},
+                            {"ClientFullName", vm.FirstName},
+                            {"ClientPassword", vm.Password},
+                            {"Year", DateTime.Today.Year.ToString()}
+                        };
+                    var emails = new List<string>();
+                    emails.Add(vm.Email);
+                    await _emailPartnerRouterClient.Send(new SendEmailCommand
+                    {
+                        EmailAddresses = emails.ToArray(),
+                        Template = "PasswordResetTemplate",
+                        Payload = payload
+                    });
                 }
                 return this.JsonRequestResult("#staffList", Url.Action("StaffsList"), new StaffsPageViewModel() { SelectedMerchant = vm.SelectedMerchant });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (ex.InnerException != null)
                     return this.JsonFailResult("Error: " + ex.InnerException.Message, ErrorMessageAnchor);
@@ -166,7 +229,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> DeleteStaffDialog(string merchant, string id)
         {
-            var employee = await _payInvoiceClient.GetEmployeeAsync(merchant, id);
+            var employee = await _payInvoiceClient.GetEmployeeAsync(id);
             var viewModel = new DeleteStaffDialogViewModel
             {
                 Caption = "Delete employee",
@@ -185,7 +248,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, "#frmDeleteStaff");
             }
-            await _payInvoiceClient.DeleteEmployeeAsync(vm.MerchantId, vm.Id);
+            await _payInvoiceClient.DeleteEmployeeAsync(vm.Id);
 
             return this.JsonRequestResult("#StaffsPage", Url.Action("StaffsPage"), vm.MerchantId);
         }

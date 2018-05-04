@@ -19,7 +19,6 @@
     <ProjectReference Include="..\..\src\LkeServices\LkeServices.csproj" />
     <ProjectReference Include="..\..\src\Core\Core.csproj" />
     <ProjectReference Include="..\..\src\AzureRepositories\AzureRepositories.csproj" />
-    <ProjectReference Include="..\..\src\LkeDomain\LkeDomain.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.1.1" />
