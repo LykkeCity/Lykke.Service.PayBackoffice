@@ -13,10 +13,19 @@
     }
     @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.MenuLykkePay))
     {
-        <li class="smi" data-url="@Url.Action("Index", "Merchants", new {area = "LykkePay"})" data-text="Lykke Pay"></li>
-        <li class="smi smiSub" data-url="@Url.Action("Index", "Merchants", new {area = "LykkePay"})" data-text="Merchants"></li>
-        <li class="smi smiSub2" data-url="@Url.Action("Index", "Staffs", new {area = "LykkePay"})" data-text="Portal Access"></li>
-        <li class="smi smiSub" data-url="@Url.Action("Index", "Transfers", new {area = "LykkePay"})" data-text="Transfers"></li>
+        <li class="smi" data-url="@Url.Action("Index", "Merchants", new { area = "LykkePay" })" data-text="Lykke Pay"></li>
+        @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsView))
+        {
+            <li class="smi smiSub" data-url="@Url.Action("Index", "Merchants", new { area = "LykkePay" })" data-text="Merchants"></li>
+        }
+        @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.LykkePayStaffsView))
+        {
+            <li class="smi smiSub2" data-url="@Url.Action("Index", "Staffs", new { area = "LykkePay" })" data-text="Portal Access"></li>
+        }
+        @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.LykkePayTransfersView))
+        {
+            <li class="smi smiSub" data-url="@Url.Action("Index", "Transfers", new { area = "LykkePay" })" data-text="Transfers"></li>
+        }
         @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.LykkePayPaymentRequests))
         {
             <li class="smi smiSub" data-url="@Url.Action("Index", "PaymentRequests", new { area = "LykkePay" })" data-text="Payment requests"></li>

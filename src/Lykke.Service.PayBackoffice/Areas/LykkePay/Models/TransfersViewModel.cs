@@ -23,6 +23,7 @@ namespace BackOffice.Areas.LykkePay.Models
         public List<RequestTransferModel> List { get; set; }
         public string Assets { get; set; }
         public string Error { get; set; }
+        public bool IsFullAccess { get; set; }
     }
     public class RequestTransferModel
     {
