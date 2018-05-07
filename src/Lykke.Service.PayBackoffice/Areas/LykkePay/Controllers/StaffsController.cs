@@ -166,7 +166,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     {
                         Email = vm.Email,
                         LastName = vm.LastName,
-                        FirstName = vm.FirstName
+                        FirstName = vm.FirstName,
+                        MerchantId = vm.SelectedMerchant
                     });
                 }
                 else
@@ -245,11 +246,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
         public async Task<ActionResult> DeleteStaff(DeleteStaffDialogViewModel vm)
         {
             if (string.IsNullOrEmpty(vm.Id))
-            {
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, "#frmDeleteStaff");
-            }
             await _payInvoiceClient.DeleteEmployeeAsync(vm.Id);
-
             return this.JsonRequestResult("#StaffsPage", Url.Action("StaffsPage"), vm.MerchantId);
         }
     }
