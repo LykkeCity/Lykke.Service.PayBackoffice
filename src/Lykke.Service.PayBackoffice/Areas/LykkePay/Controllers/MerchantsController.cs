@@ -106,12 +106,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Caption = "Add merchant",
                 IsNewMerchant = id == null,
                 ApiKey = merchant.ApiKey,
-                DeltaSpread = merchant.DeltaSpread,
                 Id = id,
-                LpMarkupPercent = merchant.LpMarkupPercent,
-                LpMarkupPips = merchant.LpMarkupPips,
                 LwId = merchant.LwId,
-                MarkupFixedFee = merchant.MarkupFixedFee,
                 Name = merchant.Name,
                 PublicKey = merchant.PublicKey,
                 TimeCacheRates = merchant.TimeCacheRates,
@@ -149,11 +145,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     {
                         Name = vm.Name,
                         ApiKey = vm.ApiKey,
-                        DeltaSpread = vm.DeltaSpread,
-                        LpMarkupPercent = vm.LpMarkupPercent,
-                        LpMarkupPips = vm.LpMarkupPips,
                         LwId = vm.LwId,
-                        MarkupFixedFee = vm.MarkupFixedFee,
                         TimeCacheRates = vm.TimeCacheRates,
                         DisplayName = vm.Name
                     });
@@ -177,11 +169,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 {
                     Id = vm.Id,
                     ApiKey = vm.ApiKey,
-                    DeltaSpread = vm.DeltaSpread,
-                    LpMarkupPercent = vm.LpMarkupPercent,
-                    LpMarkupPips = vm.LpMarkupPips,
                     LwId = vm.LwId,
-                    MarkupFixedFee = vm.MarkupFixedFee,
                     TimeCacheRates = vm.TimeCacheRates,
                     Name = vm.Name,
                     DisplayName = vm.DisplayName
