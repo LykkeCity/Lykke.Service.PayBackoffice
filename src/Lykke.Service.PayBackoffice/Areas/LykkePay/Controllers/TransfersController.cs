@@ -199,6 +199,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 if (ex.InnerException != null)
                 {
                     var content = JsonConvert.DeserializeObject<PayInternalException>(((Refit.ApiException)ex.InnerException).Content);
+                    if (content.Code == Helpers.RefundErrorType.Unknown)
+                        return this.JsonFailResult("Error code: Internal Error", ErrorMessageAnchor);
                     return this.JsonFailResult("Error code: " + content.Code, ErrorMessageAnchor);
                 }
                 else
