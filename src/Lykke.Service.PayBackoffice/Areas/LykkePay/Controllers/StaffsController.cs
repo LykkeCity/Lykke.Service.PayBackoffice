@@ -209,6 +209,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                             {"UserEmail", vm.Email},
                             {"ClientFullName", vm.FirstName},
                             {"ResetLink", PayInvoicePortalResetPasswordLink},
+                            {"DateTime", DateTime.Now.ToString()},
                             {"Year", DateTime.Today.Year.ToString()}
                         };
                     var emails = new List<string>();
