@@ -61,17 +61,18 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 try
                 {
-                    var merchantsId = await _payInvoiceClient.GetMerchantsIdByEmployeeEmail(vm.SearchValue);
+                    var allstaffs = await _payInvoiceClient.GetEmployeesAsync();
+                    var filteredstaffs = allstaffs.Where(s => !string.IsNullOrEmpty(s.Email) && s.Email.Contains(vm.SearchValue)).GroupBy(x => x.MerchantId).ToList();
                     var filtered = new List<MerchantModel>();
-                    foreach (var merchantId in merchantsId)
+                    foreach (var merchant in filteredstaffs)
                     {
-                        var merchant = list.FirstOrDefault(x => x.Id == merchantId);
-                        if (merchant != null)
-                            filtered.Add(merchant);
+                        var model = merchants.FirstOrDefault(m => m.Id == merchant.Key);
+                        if (model != null)
+                            filtered.Add(model);
                     }
                     list = filtered.AsQueryable();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     list = new List<MerchantModel>().AsQueryable();
                 }
@@ -157,7 +158,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                         SystemId = vm.SystemId
                     });
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
                 }
@@ -201,7 +202,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             }
             await _payInternalClient.DeleteMerchantAsync(vm.Id);
 
-            return this.JsonRequestResult("#MerchantsPage", Url.Action("MerchantsList"));
+            return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
         }
     }
 }

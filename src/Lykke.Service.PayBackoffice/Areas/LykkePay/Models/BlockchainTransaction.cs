@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NBitcoin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace BackOffice.Areas.LykkePay.Models
     {
         public string Id { get; set; }
         public string WalletAddress { get; set; }
-        public double Amount { get; set; }
+        public Money Amount { get; set; }
         public string AssetId { get; set; }
         public int Confirmations { get; set; }
         public string BlockId { get; set; }
