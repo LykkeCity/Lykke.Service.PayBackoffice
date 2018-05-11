@@ -8,6 +8,7 @@ namespace BackOffice.Areas.LykkePay.Models
 {
     public class AddOrEditMarkupDialogViewModel : IPersonalAreaDialog
     {
+        public bool IsEditMode { get; set; }
         public string Caption { get; set; }
         public string Width { get; set; }
         public string SelectedMerchant { get; set; }

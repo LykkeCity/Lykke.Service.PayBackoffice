@@ -20,6 +20,7 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
     [FilterFeaturesAccess(UserFeatureAccess.LykkePayMerchantsView)]
     public class MarkupsController : Controller
     {
+        private const string ErrorMessageAnchor = "#errorMessage";
         private readonly IPayInternalClient _payInternalClient;
         public MarkupsController(
             IPayInternalClient payInternalClient)
@@ -84,13 +85,24 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
                 DeltaSpread = markup.DeltaSpread,
                 FixedFee = markup.FixedFee,
                 Percent = markup.Percent,
-                Pips = markup.Pips
+                Pips = markup.Pips,
+                IsEditMode = !string.IsNullOrEmpty(vm.AssetPairId)
             };
             return View(viewmodel);
         }
         [HttpPost]
         public async Task<ActionResult> AddOrEditMarkup(AddOrEditMarkupDialogViewModel vm)
         {
+            if (!vm.IsEditMode)
+            {
+                var markup = new MarkupResponse();
+                if (!string.IsNullOrEmpty(vm.AssetPairId) && vm.SelectedMerchant == "Default")
+                    markup = await _payInternalClient.GetDefaultMarkupAsync(vm.AssetPairId);
+                else if (!string.IsNullOrEmpty(vm.AssetPairId))
+                    markup = await _payInternalClient.GetMarkupForMerchantAsync(vm.SelectedMerchant, vm.AssetPairId);
+                if (markup != null)
+                    return this.JsonFailResult("Markup exist: " + markup.AssetPairId, ErrorMessageAnchor);
+            }
             var request = new UpdateMarkupRequest();
             request.DeltaSpread = vm.DeltaSpread;
             request.FixedFee = vm.FixedFee;

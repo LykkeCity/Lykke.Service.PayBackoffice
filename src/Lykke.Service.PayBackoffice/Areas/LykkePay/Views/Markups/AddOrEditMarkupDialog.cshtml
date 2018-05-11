@@ -49,7 +49,7 @@
         if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
             event.preventDefault();
         }
-        if ((event.which != 46 || $(this).val().indexOf('.') == -1) && (event.which < 48 || event.which > 57) && ($(this).attr("name") == "TimeCacheRates" || $(this).attr("name") == "LpMarkupPips")) {
+        if ((event.which != 46 || $(this).val().indexOf('.') == -1) && (event.which < 48 || event.which > 57) && $(this).attr("name") == "Pips") {
             event.preventDefault();
         }
     });
@@ -59,7 +59,7 @@
         var element = this;
         setTimeout(function () {
             var text = $(element).val();
-            if ($(element).attr("name") == "TimeCacheRates" || $(element).attr("name") == "LpMarkupPips")
+            if ($(element).attr("name") == "Pips")
                 $(element).val(parseInt(text));
             else
                 $(element).val(parseFloat(text));
