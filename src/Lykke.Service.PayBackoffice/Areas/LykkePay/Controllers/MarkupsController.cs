@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PagedList.Core;
 using BackOffice.Translates;
+using Lykke.Service.PayInternal.Client.Exceptions;
 
 namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
 {
@@ -86,20 +87,32 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
                 FixedFee = markup.FixedFee,
                 Percent = markup.Percent,
                 Pips = markup.Pips,
-                IsEditMode = !string.IsNullOrEmpty(vm.AssetPairId)
+                PriceAssetPairId = markup.PriceAssetPairId,
+                PriceMethod = Enum.GetValues(typeof(PriceMethod)).Cast<PriceMethod>().ToList(),
+                SelectedPriceMethod = markup.PriceMethod.ToString(),
+            IsEditMode = !string.IsNullOrEmpty(vm.AssetPairId)
             };
             return View(viewmodel);
         }
         [HttpPost]
         public async Task<ActionResult> AddOrEditMarkup(AddOrEditMarkupDialogViewModel vm)
         {
+            if (string.IsNullOrEmpty(vm.PriceAssetPairId))
+                return this.JsonFailResult("PriceAssetPairId required", ErrorMessageAnchor);
             if (!vm.IsEditMode)
             {
                 var markup = new MarkupResponse();
-                if (!string.IsNullOrEmpty(vm.AssetPairId) && vm.SelectedMerchant == "Default")
-                    markup = await _payInternalClient.GetDefaultMarkupAsync(vm.AssetPairId);
-                else if (!string.IsNullOrEmpty(vm.AssetPairId))
-                    markup = await _payInternalClient.GetMarkupForMerchantAsync(vm.SelectedMerchant, vm.AssetPairId);
+                try
+                {
+                    if (!string.IsNullOrEmpty(vm.AssetPairId) && vm.SelectedMerchant == "Default")
+                        markup = await _payInternalClient.GetDefaultMarkupAsync(vm.AssetPairId);
+                    else if (!string.IsNullOrEmpty(vm.AssetPairId))
+                        markup = await _payInternalClient.GetMarkupForMerchantAsync(vm.SelectedMerchant, vm.AssetPairId);
+                }
+                catch(DefaultErrorResponseException ex)
+                {
+                    markup = null;
+                }
                 if (markup != null)
                     return this.JsonFailResult("Markup exist: " + markup.AssetPairId, ErrorMessageAnchor);
             }
@@ -108,11 +121,22 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
             request.FixedFee = vm.FixedFee;
             request.Percent = vm.Percent;
             request.Pips = vm.Pips;
-            if (string.IsNullOrEmpty(vm.SelectedMerchant) || vm.SelectedMerchant == "Default")
-                await _payInternalClient.SetDefaultMarkupAsync(vm.AssetPairId, request);
-            else
-                await _payInternalClient.SetMarkupForMerchantAsync(vm.SelectedMerchant, vm.AssetPairId, request);
-            return this.JsonRequestResult("#markupsList", Url.Action("MarkupsList"), new StaffsPageViewModel() { SelectedMerchant = vm.SelectedMerchant });
+            request.PriceAssetPairId = vm.PriceAssetPairId;
+            var pricemethod = PriceMethod.None;
+            Enum.TryParse<PriceMethod>(vm.SelectedPriceMethod, out pricemethod);
+            request.PriceMethod = pricemethod;
+            try
+            {
+                if (string.IsNullOrEmpty(vm.SelectedMerchant) || vm.SelectedMerchant == "Default")
+                    await _payInternalClient.SetDefaultMarkupAsync(vm.AssetPairId, request);
+                else
+                    await _payInternalClient.SetMarkupForMerchantAsync(vm.SelectedMerchant, vm.AssetPairId, request);
+                return this.JsonRequestResult("#markupsList", Url.Action("MarkupsList"), new StaffsPageViewModel() { SelectedMerchant = vm.SelectedMerchant });
+            }
+            catch(DefaultErrorResponseException ex)
+            {
+                return this.JsonFailResult("Error: " + ex.Error.ErrorMessage, ErrorMessageAnchor);
+            }
         }
     }
 }

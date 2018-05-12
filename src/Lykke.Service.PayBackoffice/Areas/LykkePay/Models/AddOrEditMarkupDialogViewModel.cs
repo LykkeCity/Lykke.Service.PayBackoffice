@@ -1,4 +1,5 @@
 ﻿using BackOffice.Models;
+using Lykke.Service.PayInternal.Client.Models.Markup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,8 @@ namespace BackOffice.Areas.LykkePay.Models
         public decimal FixedFee { get; set; }
         public decimal Percent { get; set; }
         public int Pips { get; set; }
+        public string PriceAssetPairId { get; set; }
+        public string SelectedPriceMethod { get; set; }
+        public List<PriceMethod> PriceMethod { get; set; }
     }
 }
