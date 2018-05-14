@@ -99,6 +99,8 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
         {
             if (string.IsNullOrEmpty(vm.PriceAssetPairId))
                 return this.JsonFailResult("PriceAssetPairId required", ErrorMessageAnchor);
+            if (string.IsNullOrEmpty(vm.AssetPairId))
+                return this.JsonFailResult("AssetPairId required", ErrorMessageAnchor);
             if (!vm.IsEditMode)
             {
                 var markup = new MarkupResponse();
