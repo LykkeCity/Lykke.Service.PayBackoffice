@@ -33,18 +33,19 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
             _payInternalClient = payInternalClient;
             _payInvoiceClient = payInvoiceClient;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
-        [HttpPost]
-        public async Task<ActionResult> InvoicesPage()
+        public IActionResult Index(string merchantId)
         {
             var model = new InvoicesListViewModel();
-            model.Merchants = await _payInternalClient.GetMerchantsAsync();
-            model.CurrentPage = 1;
-            model.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
+            model.SelectedMerchant = merchantId;
             return View(model);
+        }
+        [HttpPost]
+        public async Task<ActionResult> InvoicesPage(InvoicesListViewModel vm)
+        {
+            vm.Merchants = await _payInternalClient.GetMerchantsAsync();
+            vm.CurrentPage = 1;
+            vm.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
+            return View(vm);
         }
         [HttpPost]
         public async Task<ActionResult> InvoicesList(InvoicesListViewModel vm)
@@ -72,23 +73,25 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
             };
             return View(viewmodel);
         }
-        public IActionResult PaymentRequests()
+        public IActionResult PaymentRequests(string invoiceId)
         {
-            return View();
+            var model = new InvoicePaymentRequestsViewModel();
+            model.InvoiceId = invoiceId;
+            return View(model);
         }
         [HttpPost]
-        public async Task<ActionResult> PaymentRequestsPage()
+        public async Task<ActionResult> PaymentRequestsPage(InvoicePaymentRequestsViewModel vm)
         {
-            var model = new InvoicesListViewModel();
-            model.CurrentPage = 1;
-            model.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
-            return View(model);
+            var invoice = await _payInvoiceClient.GetInvoiceAsync(vm.InvoiceId);
+            vm.CurrentPage = 1;
+            vm.MerchantId = invoice.MerchantId;
+            vm.PaymentRequestId = invoice.PaymentRequestId;
+            return View(vm);
         }
         [HttpPost]
         public async Task<ActionResult> PaymentRequestsList(InvoicePaymentRequestsViewModel vm)
         {
-            var invoice = await _payInvoiceClient.GetInvoiceAsync(vm.InvoiceId);
-            var request = await _payInternalClient.GetPaymentRequestAsync(invoice.MerchantId, invoice.PaymentRequestId);
+            var request = await _payInternalClient.GetPaymentRequestAsync(vm.MerchantId, vm.PaymentRequestId);
             var list = new List<PaymentRequestModel>();
             list.Add(request);
             vm.PageSize = vm.PageSize == 0 ? 10 : vm.PageSize;

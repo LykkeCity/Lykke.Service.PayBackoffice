@@ -3,6 +3,10 @@
 @{
     IEnumerable<ItemViewModel> merchantList = Model.Merchants.
         Select(m => new ItemViewModel { Id = m.Id, Title = m.Name }).ToArray();
+    if (!string.IsNullOrEmpty(Model.SelectedMerchant))
+    {
+        merchantList.FirstOrDefault(x => x.Id == Model.SelectedMerchant).Selected = true;
+    }
 }
 <div>
     <h1>Invoices</h1>

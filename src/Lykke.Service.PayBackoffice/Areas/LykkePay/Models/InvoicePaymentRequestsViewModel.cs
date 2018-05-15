@@ -10,6 +10,8 @@ namespace BackOffice.Areas.LykkePay.Models
     public class InvoicePaymentRequestsViewModel : PagedListModel
     {
         public string InvoiceId { get; set; }
+        public string MerchantId { get; set; }
+        public string PaymentRequestId { get; set; }
         public List<PaymentRequestModel> Requests { get; set; }
     }
 }

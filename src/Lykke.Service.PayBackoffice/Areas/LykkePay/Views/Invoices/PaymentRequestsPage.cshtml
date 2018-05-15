@@ -1,15 +1,49 @@
-﻿@model BackOffice.Areas.LykkePay.Models.InvoicesListViewModel
+﻿@model BackOffice.Areas.LykkePay.Models.InvoicePaymentRequestsViewModel
 
 <div>
-    <h1>Payment requests for Invoice:</h1>
+    <a href="javascript: void(0);" class="backbtn">Back</a>
+    <h1>Payment requests for Invoice: @Model.InvoiceId</h1>
     <hr />
     <form id="frmInvoicePaymentRequestsPage">
         @Html.HiddenFor(x => x.CurrentPage)
         @Html.HiddenFor(x => x.PageSize)
+        @Html.HiddenFor(x => x.InvoiceId)
+        @Html.HiddenFor(x => x.MerchantId)
+        @Html.HiddenFor(x => x.PaymentRequestId)
     </form>
     <div id="invoicePaymentRequestsList"></div>
 </div>
 
 <script>
-    //requests.doRequest({ url: '@Url.Action("InvoicePaymentRequestsList")', formId: '#frmInvoicePaymentRequestsPage', divResult: '#invoicePaymentRequestsList' });
+    requests.doRequest({ url: '@Url.Action("PaymentRequestsList")', formId: '#frmInvoicePaymentRequestsPage', divResult: '#invoicePaymentRequestsList' });
+
+    $(".backbtn").click(function (e) {
+
+            var options = {
+            url: '@Url.Action("Index", "Invoices", new { area = "LykkePay" })', type: 'POST', headers: { 'RequestVerificationToken': getAntiForgeryCookie() }, data: { 'merchantId': '@Model.MerchantId' }
+        };
+            debugger;
+            $.ajax(options)
+                .then(function(result) {
+
+                    var historyItem = {
+                        url: '@Url.Action("Index", "Invoices", new { area = "LykkePay" })',
+                        div: '#pamain',
+                        type: 'menu'
+                    };
+
+                    historyManager.put(historyItem);
+
+                    $('#pamain').html(result);
+                    layout.ressize();
+                }).fail(function(fr) {
+                    if (xhr && (xhr.status === 403 || xhr.status === 401)) {
+                        console.log("Forbidden redirecting to index...");
+                        window.location = '@Url.Action("Index", "Home")';
+                    } else {
+                        activeItem.addClass('smiSel');
+                        $('#pamain').html(fr.responseText);
+                    }
+                });
+        });
 </script>

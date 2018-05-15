@@ -1,4 +1,4 @@
-﻿@using BackOffice.Translates
+﻿@model BackOffice.Areas.LykkePay.Models.InvoicePaymentRequestsViewModel
 
 <ul id="tabs" class="nav nav-tabs">
     <li id="invoices"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("InvoicesPage")')">Invoices</a></li>
@@ -7,5 +7,5 @@
 <div id="InvoicePaymentRequestsPage" style="margin: 10px"></div>
 
 <script>
-    requests.doRequest({ url: '@Url.Action("PaymentRequestsPage")', divResult: '#InvoicePaymentRequestsPage' });
+    requests.doRequest({ url: '@Url.Action("PaymentRequestsPage")', params: { invoiceId: '@Model.InvoiceId'}, divResult: '#InvoicePaymentRequestsPage' });
 </script>
