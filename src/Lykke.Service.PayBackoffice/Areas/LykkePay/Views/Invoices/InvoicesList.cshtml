@@ -45,136 +45,42 @@
                 {
             <tr>
                 <td>
-                    @item.Invoice.Number
+                    @item.Number
                 </td>
                 <td>
-                    @item.Invoice.Amount
+                    @item.Amount
                 </td>
                 <td>
-                    @item.Invoice.ClientEmail
+                    @item.ClientEmail
                 </td>
                 <td>
-                    @item.Invoice.ClientName
+                    @item.ClientName
                 </td>
                 <td>
-                    @item.Invoice.CreatedDate
+                    @item.CreatedDate
                 </td>
                 <td>
-                    @item.Invoice.DueDate
+                    @item.DueDate
                 </td>
                 <td>
-                    @item.Invoice.Note
+                    @item.Note
                 </td>
                 <td>
-                    @item.Invoice.PaymentAssetId
+                    @item.PaymentAssetId
                 </td>
                 <td>
-                    @item.Invoice.PaymentRequestId
+                    @item.PaymentRequestId
                 </td>
                 <td>
-                    @item.Invoice.SettlementAssetId
+                    @item.SettlementAssetId
                 </td>
                 <td>
-                    @item.Invoice.Status
+                    @item.Status
                 </td>
-                <td style="text-align: right">
+                <td>
+                    <a href="javascript:void(0);" class="requests" invoiceId="@item.Id">requests</a>
                 </td>
-            </tr>
-            <tr>
-                <td colspan="12">
-                    <div style="background-color: lightgray">
-                        <table class="table table-striped">
-                            <tr>
-                                <th>
-                                    Id
-                                </th>
-                                <th>
-                                    Amount
-                                </th>
-                                <th>
-                                    DueDate
-                                </th>
-                                <th>
-                                    MarkupFixedFee
-                                </th>
-                                <th>
-                                    MarkupPercent
-                                </th>
-                                <th>
-                                    MarkupPips
-                                </th>
-                                <th>
-                                    ExternalOrderId
-                                </th>
-                                <th>
-                                    PaidAmount
-                                </th>
-                                <th>
-                                    PaidDate
-                                </th>
-                                <th>
-                                    CreatedOn
-                                </th>
-                                <th>
-                                    PaymentAssetId
-                                </th>
-                                <th>
-                                    SettlementAssetId
-                                </th>
-                                <th>
-                                    Status
-                                </th>
-                                <th>
-                                    Error
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    @item.Request.Id
-                                </td>
-                                <td>
-                                    @item.Request.Amount
-                                </td>
-                                <td>
-                                    @item.Request.DueDate
-                                </td>
-                                <td>
-                                    @item.Request.MarkupFixedFee
-                                </td>
-                                <td>
-                                    @item.Request.MarkupPercent
-                                </td>
-                                <td>
-                                    @item.Request.MarkupPips
-                                </td>
-                                <td>
-                                    @item.Request.ExternalOrderId
-                                </td>
-                                <td>
-                                    @item.Request.PaidAmount
-                                </td>
-                                <td>
-                                    @item.Request.PaidDate
-                                </td>
-                                <td>
-                                    @item.Request.Timestamp
-                                </td>
-                                <td>
-                                    @item.Request.PaymentAssetId
-                                </td>
-                                <td>
-                                    @item.Request.SettlementAssetId
-                                </td>
-                                <td>
-                                    @item.Request.Status
-                                </td>
-                                <td>
-                                    @item.Request.ProcessingError
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
+                <td style="text-align: right"></td>
             </tr>
         }
     </table>
@@ -185,4 +91,35 @@ else
         <p>@Phrases.NoRecordsFound</p>
     </div>
 }
+<script>
+    $(".requests").click(function (e) {
+        var invoiceId = e.currentTarget.getAttribute("invoiceId");
+            var options = {
+                url: '@Url.Action("PaymentRequests", "Invoices", new { area = "LykkePay" })', type: 'POST', headers: { 'RequestVerificationToken': getAntiForgeryCookie() }, data: {
+                    'invoiceId': invoiceId
+                } };
+            $.ajax(options)
+                .then(function(result) {
+
+                    var historyItem = {
+                        url: '@Url.Action("PaymentRequests", "Invoices", new { area = "LykkePay" })',
+                        div: '#pamain',
+                        type: 'menu'
+                    };
+
+                    historyManager.put(historyItem);
+
+                    $('#pamain').html(result);
+                    layout.ressize();
+                }).fail(function(fr) {
+                    if (xhr && (xhr.status === 403 || xhr.status === 401)) {
+                        console.log("Forbidden redirecting to index...");
+                        window.location = '@Url.Action("Index", "Home")';
+                    } else {
+                        activeItem.addClass('smiSel');
+                        $('#pamain').html(fr.responseText);
+                    }
+                });
+        });
+</script>
 

@@ -13,6 +13,7 @@ using Lykke.Service.PayInvoice.Client;
 using Lykke.Service.PayInternal.Client.Models.Merchant;
 using PagedList.Core;
 using Lykke.Service.PayInvoice.Client.Models.Invoice;
+using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
 
 namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
 {
@@ -49,32 +50,17 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
         public async Task<ActionResult> InvoicesList(InvoicesListViewModel vm)
         {
             var invoices = await _payInvoiceClient.GetMerchantInvoicesAsync(vm.SelectedMerchant);
-            var invoiceslist = new List<InvoiceViewModel>();
-            foreach (var invoice in invoices)
-            {
-                var model = new InvoiceViewModel();
-                model.Invoice = invoice;
-                try
-                {
-                    model.Request = await _payInternalClient.GetPaymentRequestAsync(vm.SelectedMerchant, invoice.PaymentRequestId);
-                    invoiceslist.Add(model);
-                }
-                catch(Exception ex)
-                {
-
-                }
-            }
             vm.PageSize = vm.PageSize == 0 ? 10 : vm.PageSize;
             var pagesize = Request.Cookies["PageSize"];
             if (pagesize != null)
                 vm.PageSize = Convert.ToInt32(pagesize);
             
             
-            var pagedlist = new List<InvoiceViewModel>();
-            var pageCount = Convert.ToInt32(Math.Ceiling((double)invoiceslist.Count / vm.PageSize));
+            var pagedlist = new List<InvoiceModel>();
+            var pageCount = Convert.ToInt32(Math.Ceiling((double)invoices.Count() / vm.PageSize));
             var currentPage = vm.CurrentPage == 0 ? 1 : vm.CurrentPage;
-            if (invoiceslist.Count != 0)
-                pagedlist = invoiceslist.AsQueryable().ToPagedList(currentPage, vm.PageSize).ToList();
+            if (invoices.Count() != 0)
+                pagedlist = invoices.AsQueryable().ToPagedList(currentPage, vm.PageSize).ToList();
             var viewmodel = new InvoicesListViewModel()
             {
                 Invoices = pagedlist,
@@ -83,6 +69,45 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
                 CurrentPage = currentPage,
                 IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsEdit),
                 IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
+            };
+            return View(viewmodel);
+        }
+        public IActionResult PaymentRequests()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> PaymentRequestsPage()
+        {
+            var model = new InvoicesListViewModel();
+            model.CurrentPage = 1;
+            model.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<ActionResult> PaymentRequestsList(InvoicePaymentRequestsViewModel vm)
+        {
+            var invoice = await _payInvoiceClient.GetInvoiceAsync(vm.InvoiceId);
+            var request = await _payInternalClient.GetPaymentRequestAsync(invoice.MerchantId, invoice.PaymentRequestId);
+            var list = new List<PaymentRequestModel>();
+            list.Add(request);
+            vm.PageSize = vm.PageSize == 0 ? 10 : vm.PageSize;
+            var pagesize = Request.Cookies["PageSize"];
+            if (pagesize != null)
+                vm.PageSize = Convert.ToInt32(pagesize);
+
+
+            var pagedlist = new List<PaymentRequestModel>();
+            var pageCount = Convert.ToInt32(Math.Ceiling((double)list.Count() / vm.PageSize));
+            var currentPage = vm.CurrentPage == 0 ? 1 : vm.CurrentPage;
+            if (list.Count() != 0)
+                pagedlist = list.AsQueryable().ToPagedList(currentPage, vm.PageSize).ToList();
+            var viewmodel = new InvoicePaymentRequestsViewModel()
+            {
+                Requests = pagedlist,
+                PageSize = vm.PageSize,
+                Count = pageCount,
+                CurrentPage = currentPage
             };
             return View(viewmodel);
         }

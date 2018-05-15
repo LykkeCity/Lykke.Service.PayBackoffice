@@ -1,0 +1,11 @@
+﻿@using BackOffice.Translates
+
+<ul id="tabs" class="nav nav-tabs">
+    <li id="invoices"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("InvoicesPage")')">Invoices</a></li>
+</ul>
+
+<div id="InvoicePaymentRequestsPage" style="margin: 10px"></div>
+
+<script>
+    requests.doRequest({ url: '@Url.Action("PaymentRequestsPage")', divResult: '#InvoicePaymentRequestsPage' });
+</script>

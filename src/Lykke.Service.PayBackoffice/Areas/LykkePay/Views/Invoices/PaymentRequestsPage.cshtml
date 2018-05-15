@@ -1,0 +1,15 @@
+﻿@model BackOffice.Areas.LykkePay.Models.InvoicesListViewModel
+
+<div>
+    <h1>Payment requests for Invoice:</h1>
+    <hr />
+    <form id="frmInvoicePaymentRequestsPage">
+        @Html.HiddenFor(x => x.CurrentPage)
+        @Html.HiddenFor(x => x.PageSize)
+    </form>
+    <div id="invoicePaymentRequestsList"></div>
+</div>
+
+<script>
+    //requests.doRequest({ url: '@Url.Action("InvoicePaymentRequestsList")', formId: '#frmInvoicePaymentRequestsPage', divResult: '#invoicePaymentRequestsList' });
+</script>
