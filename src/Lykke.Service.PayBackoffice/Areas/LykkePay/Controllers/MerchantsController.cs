@@ -279,7 +279,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
             var setting = new MerchantSetting();
             setting.MerchantId = vm.MerchantId;
             setting.BaseAsset = vm.BaseAsset;
-            await _payInvoiceClient.SetMerchantSettingAsync(setting);
+            try
+            {
+                await _payInvoiceClient.SetMerchantSettingAsync(setting);
+            }
+            catch(Lykke.Service.PayInvoice.Client.ErrorResponseException ex)
+            {
+                return this.JsonFailResult(ex.Error.ErrorMessage, ErrorMessageAnchor);
+            }
             return this.JsonRequestResult("#merchantsSettingsList", Url.Action("MerchantsSettingsList"), new MerchantSettingsListViewModel() { SelectedMerchant = vm.MerchantId });
         }
     }
