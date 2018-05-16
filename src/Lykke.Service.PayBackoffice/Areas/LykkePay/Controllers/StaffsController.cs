@@ -22,6 +22,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
 {
     [Authorize]
     [Area("LykkePay")]
+    [FilterFeaturesAccess(UserFeatureAccess.LykkePayMerchantsView)]
     [FilterFeaturesAccess(UserFeatureAccess.LykkePayStaffsView)]
     public class StaffsController : Controller
     {
