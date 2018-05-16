@@ -14,6 +14,10 @@ using BackOffice.Translates;
 using Lykke.Service.PayAuth.Client;
 using PagedList.Core;
 using Lykke.Service.PayInvoice.Client;
+using Lykke.Service.PayInvoice.Core.Domain;
+using System.Net;
+using Lykke.Service.PayInternal.Client.Exceptions;
+using BackOffice.Areas.LykkePay.Models.Merchants;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -203,6 +207,75 @@ namespace BackOffice.Areas.LykkePay.Controllers
             await _payInternalClient.DeleteMerchantAsync(vm.Id);
 
             return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> MerchantsSettingsPage()
+        {
+            var model = new MerchantSettingsListViewModel();
+            model.Merchants = await _payInternalClient.GetMerchantsAsync();
+            model.CurrentPage = 1;
+            model.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<ActionResult> MerchantsSettingsList(MerchantSettingsListViewModel vm)
+        {
+            var setting = new MerchantSetting();
+            try
+            {
+                setting = await _payInvoiceClient.GetMerchantSettingAsync(vm.SelectedMerchant);
+            }
+            catch(Lykke.Service.PayInvoice.Client.ErrorResponseException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            {
+                setting = null;
+            }
+            vm.PageSize = vm.PageSize == 0 ? 10 : vm.PageSize;
+            var pagesize = Request.Cookies["PageSize"];
+            if (pagesize != null)
+                vm.PageSize = Convert.ToInt32(pagesize);
+            var list = new List<MerchantSetting>();
+            if (setting != null)
+                list.Add(setting);
+            var pagedlist = new List<MerchantSetting>();
+            var pageCount = Convert.ToInt32(Math.Ceiling((double)list.Count() / vm.PageSize));
+            var currentPage = vm.CurrentPage == 0 ? 1 : vm.CurrentPage;
+            if (list.Count() != 0)
+                pagedlist = list.AsQueryable().ToPagedList(currentPage, vm.PageSize).ToList();
+            var viewmodel = new MerchantSettingsListViewModel()
+            {
+                Settings = pagedlist,
+                PageSize = vm.PageSize,
+                Count = pageCount,
+                CurrentPage = currentPage,
+                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsEdit),
+                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
+            };
+            return View(viewmodel);
+        }
+        [HttpPost]
+        public async Task<ActionResult> AddOrEditMerchantSettingDialog(AddOrEditMerchantSettingDialog vm)
+        {
+            vm.Caption = string.IsNullOrEmpty(vm.BaseAsset) ? "Add setting" : "Edit setting";
+            return View(vm);
+        }
+        [HttpPost]
+        public async Task<ActionResult> AddOrEditMerchantSetting(AddOrEditMerchantSettingDialog vm)
+        {
+            if (string.IsNullOrEmpty(vm.BaseAsset))
+                return this.JsonFailResult("BaseAsset required", ErrorMessageAnchor);
+            var setting = new MerchantSetting();
+            setting.MerchantId = vm.MerchantId;
+            setting.BaseAsset = vm.BaseAsset;
+            try
+            {
+                await _payInvoiceClient.SetMerchantSettingAsync(setting);
+            }
+            catch(Lykke.Service.PayInvoice.Client.ErrorResponseException ex)
+            {
+                return this.JsonFailResult(ex.Error.ErrorMessage, ErrorMessageAnchor);
+            }
+            return this.JsonRequestResult("#merchantsSettingsList", Url.Action("MerchantsSettingsList"), new MerchantSettingsListViewModel() { SelectedMerchant = vm.MerchantId });
         }
     }
 }
