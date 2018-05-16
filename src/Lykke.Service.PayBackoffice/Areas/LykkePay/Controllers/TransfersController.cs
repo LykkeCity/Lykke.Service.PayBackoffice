@@ -208,9 +208,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
             catch (RefundErrorResponseException ex)
             {
                 if (ex.InnerException != null)
-                    return this.JsonFailResult("Error: " + ex.InnerException.Message, ErrorMessageAnchor);
+                {
+                    var content = JsonConvert.DeserializeObject<PayInternalException>(((Refit.ApiException)ex.InnerException).Content);
+                    if (content.Code == Helpers.RefundErrorType.Unknown)
+                        return this.JsonFailResult("Error code: Internal Error", ErrorMessageAnchor);
+                    return this.JsonFailResult("Error code: " + content.Code, ErrorMessageAnchor);
+                }
                 else
-                    return this.JsonFailResult("Error: " + ex.Message, ErrorMessageAnchor);
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
             }
         }
         private async Task<IEnumerable<BlockchainTransaction>> GetTransactions(IEnumerable<PaymentRequestModel> addresses)
