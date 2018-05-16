@@ -28,7 +28,7 @@
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.1.1" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
-    <PackageReference Include="Lykke.Common" Version="6.2.0" />
+    <PackageReference Include="Lykke.Common" Version="6.7.0" />
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
     <PackageReference Include="morelinq" Version="2.9.0" />
     <PackageReference Include="NBitcoin" Version="3.0.0.72" />

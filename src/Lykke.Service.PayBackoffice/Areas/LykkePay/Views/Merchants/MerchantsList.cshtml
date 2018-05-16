@@ -15,19 +15,7 @@
                 ApiKey
             </th>
             <th>
-                DeltaSpread
-            </th>
-            <th>
                 TimeCacheRates
-            </th>
-            <th>
-                LpMarkupPercent
-            </th>
-            <th>
-                LpMarkupPips
-            </th>
-            <th>
-                MarkupFixedFee
             </th>
             <th>
                 LwId
@@ -38,6 +26,7 @@
             <th>
                 Requests
             </th>
+            <th>Certificates</th>
             <th></th>
         </tr>
 
@@ -54,19 +43,7 @@
                     @item.ApiKey
                 </td>
                 <td>
-                    @item.DeltaSpread
-                </td>
-                <td>
                     @item.TimeCacheRates
-                </td>
-                <td>
-                    @item.LpMarkupPercent
-                </td>
-                <td>
-                    @item.LpMarkupPips
-                </td>
-                <td>
-                    @item.MarkupFixedFee
                 </td>
                 <td>
                     @item.LwId
@@ -76,6 +53,9 @@
                 </td>
                 <td>
                     <a class="requests" href="javascript:void(0);" merchantId="@item.Id">requests</a>
+                </td>
+                <td>
+                    <a class="certificates" href="javascript:void(0);" merchantId="@item.Id">certificates</a>
                 </td>
                 <td style="text-align: right">
 
@@ -98,6 +78,11 @@
         }
     </table>
     <script>
+        $(".certificates").click(function (e) {
+            var merchantId = e.currentTarget.getAttribute("merchantId");
+            ui.showDialog('@Url.Action("GenerateMerchantCertificatesDialog")', { merchantId: merchantId });
+        });
+        
         $(".requests").click(function (e) {
             var merchantId = e.currentTarget.getAttribute("merchantId");
             var options = {

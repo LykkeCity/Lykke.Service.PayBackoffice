@@ -14,6 +14,22 @@ using BackOffice.Translates;
 using Lykke.Service.PayAuth.Client;
 using PagedList.Core;
 using Lykke.Service.PayInvoice.Client;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.X509;
+using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Asn1.Pkcs;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Crypto.Operators;
+using BackOffice.Areas.LykkePay.Models.Merchants;
+using System.Text;
+using System.IO.Compression;
+using System.IO;
+using System.Net.Http;
+using System.Net;
+using System.Net.Http.Headers;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -36,6 +52,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            //GenerateSertificate();
             return View();
         }
         [HttpPost]
@@ -72,7 +89,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     }
                     list = filtered.AsQueryable();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     list = new List<MerchantModel>().AsQueryable();
                 }
@@ -106,19 +123,15 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Caption = "Add merchant",
                 IsNewMerchant = id == null,
                 ApiKey = merchant.ApiKey,
-                DeltaSpread = merchant.DeltaSpread,
                 Id = id,
-                LpMarkupPercent = merchant.LpMarkupPercent,
-                LpMarkupPips = merchant.LpMarkupPips,
                 LwId = merchant.LwId,
-                MarkupFixedFee = merchant.MarkupFixedFee,
                 Name = merchant.Name,
                 PublicKey = merchant.PublicKey,
                 TimeCacheRates = merchant.TimeCacheRates,
                 Certificate = merchant.PublicKey,
                 SystemId = string.Empty,
                 DisplayName = merchant.DisplayName,
-                IsBlocked = true //TODO: update payinternal
+                IsBlocked = true //TODO: update payinvoice
             };
 
             return View(viewModel);
@@ -150,11 +163,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     {
                         Name = vm.Name,
                         ApiKey = vm.ApiKey,
-                        DeltaSpread = vm.DeltaSpread,
-                        LpMarkupPercent = vm.LpMarkupPercent,
-                        LpMarkupPips = vm.LpMarkupPips,
                         LwId = vm.LwId,
-                        MarkupFixedFee = vm.MarkupFixedFee,
                         TimeCacheRates = vm.TimeCacheRates,
                         DisplayName = vm.Name
                     });
@@ -167,7 +176,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                         SystemId = vm.SystemId
                     });
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
                 }
@@ -178,15 +187,11 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 {
                     Id = vm.Id,
                     ApiKey = vm.ApiKey,
-                    DeltaSpread = vm.DeltaSpread,
-                    LpMarkupPercent = vm.LpMarkupPercent,
-                    LpMarkupPips = vm.LpMarkupPips,
                     LwId = vm.LwId,
-                    MarkupFixedFee = vm.MarkupFixedFee,
                     TimeCacheRates = vm.TimeCacheRates,
                     Name = vm.Name,
                     DisplayName = vm.DisplayName,
-                    //IsBlocked = vm.IsBlocked //TODO: update payinternal
+                    //IsBlocked = vm.IsBlocked //TODO: update payinvoice
                 };
 
                 await _payInternalClient.UpdateMerchantAsync(updatereq);
@@ -218,5 +223,107 @@ namespace BackOffice.Areas.LykkePay.Controllers
 
             return this.JsonRequestResult("#MerchantsPage", Url.Action("MerchantsList"));
         }
+        [HttpPost]
+        public async Task<ActionResult> GenerateMerchantCertificatesDialog(string merchantId)
+        {
+            var merchant = await _payInternalClient.GetMerchantByIdAsync(merchantId);
+            var viewModel = new MerchantCertificateViewModel()
+            {
+                Caption = "Generate merchant certificates",
+                DisplayName = merchant.DisplayName
+            };
+            return View(viewModel);
+        }
+        [HttpPost]
+        public async Task<HttpResponseMessage> GenerateMerchantCertificates(MerchantCertificateViewModel vm)
+        {
+            //var certs = GenerateSertificate(vm);
+            //string result = Path.GetTempPath();
+            string myTempFile = Path.Combine(Path.GetTempPath(), "SaveFile.txt");
+            using (StreamWriter sw = new StreamWriter(myTempFile))
+            {
+                sw.WriteLine("Your error message");
+            }
+            var myTempFile1 = Path.Combine(Path.GetTempPath(), "SaveFile1.txt");
+            using (StreamWriter sw = new StreamWriter(myTempFile1))
+            {
+                sw.WriteLine("Your error message");
+            }
+            using (ZipArchive zip = ZipFile.Open(Path.Combine(Path.GetTempPath(), "certificates.zip"), ZipArchiveMode.Create))
+            {
+                zip.CreateEntryFromFile(myTempFile, "SaveFile.txt");
+                zip.CreateEntryFromFile(myTempFile1, "SaveFile1.txt");
+            }
+            MemoryStream ms = new MemoryStream();
+            using (FileStream file = new FileStream(Path.Combine(Path.GetTempPath(), "certificates.zip"), FileMode.Open, FileAccess.Read))
+                file.CopyTo(ms);
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(ms.ToArray())
+            };
+            result.Content.Headers.ContentDisposition =
+                new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "certificates.zip"
+                };
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/octet-stream");
+            return result;
+        }
+        protected MerchantCertificate GenerateSertificate(MerchantCertificateViewModel vm)
+        {
+            RsaKeyPairGenerator g = new RsaKeyPairGenerator();
+            g.Init(new KeyGenerationParameters(new SecureRandom(), 2048));
+            var pair = g.GenerateKeyPair();
+
+            PrivateKeyInfo privateKeyInfo = PrivateKeyInfoFactory.CreatePrivateKeyInfo(pair.Private);
+            byte[] serializedPrivateBytes = privateKeyInfo.ToAsn1Object().GetEncoded();
+
+            var sb = new StringBuilder();
+            sb.AppendLine("-----BEGIN RSA PRIVATE KEY-----");
+            sb.AppendLine(Convert.ToBase64String(serializedPrivateBytes));
+            sb.AppendLine("-----END RSA PRIVATE KEY-----");
+            var serializedPrivate = sb.ToString();
+
+            var parameters = string.Format("E={0},CN={1},OU={2},O={3},C={4}", vm.Email, vm.DisplayName, vm.OrgUnit, vm.Organization, vm.Country);
+            var caName = new X509Name(parameters);
+            var caCert = GenerateCertificate(caName, caName, pair.Private, pair.Public);
+            var certEncoded = caCert.GetEncoded();
+            sb = new StringBuilder();
+            sb.AppendLine("-----BEGIN CERTIFICATE-----");
+            sb.AppendLine(Convert.ToBase64String(certEncoded));
+            sb.AppendLine("-----END CERTIFICATE-----");
+            var serializedPublic = sb.ToString();
+            return new MerchantCertificate() { Private = serializedPrivate, Public = serializedPublic };
+
+
+            //SubjectPublicKeyInfo publicKeyInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(pair.Public);
+            //byte[] serializedPublicBytes = publicKeyInfo.ToAsn1Object().GetDerEncoded();
+            //string serializedPublic = Convert.ToBase64String(serializedPublicBytes);
+
+            //RsaPrivateCrtKeyParameters privateKey = (RsaPrivateCrtKeyParameters)PrivateKeyFactory.CreateKey(Convert.FromBase64String(serializedPrivate));
+            //RsaKeyParameters publicKey = (RsaKeyParameters)PublicKeyFactory.CreateKey(Convert.FromBase64String(serializedPublic));
+        }
+        protected static X509Certificate GenerateCertificate(
+        X509Name issuer, X509Name subject,
+        AsymmetricKeyParameter issuerPrivate,
+        AsymmetricKeyParameter subjectPublic)
+        {
+            ISignatureFactory signatureFactory;
+            signatureFactory = new Asn1SignatureFactory(
+                PkcsObjectIdentifiers.Sha256WithRsaEncryption.ToString(),
+                issuerPrivate);
+
+            var certGenerator = new X509V3CertificateGenerator();
+            certGenerator.SetIssuerDN(issuer);
+            certGenerator.SetSubjectDN(subject);
+            certGenerator.SetSerialNumber(BigInteger.ValueOf(1));
+            certGenerator.SetNotAfter(DateTime.UtcNow.AddHours(1));
+            certGenerator.SetNotBefore(DateTime.UtcNow);
+            certGenerator.SetPublicKey(subjectPublic);
+            return certGenerator.Generate(signatureFactory);
+        }
+
     }
 }

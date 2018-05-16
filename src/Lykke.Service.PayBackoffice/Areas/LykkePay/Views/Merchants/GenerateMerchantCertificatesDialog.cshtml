@@ -1,0 +1,34 @@
+﻿@using BackOffice.Translates
+@model BackOffice.Areas.LykkePay.Models.Merchants.MerchantCertificateViewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+
+<form id="frmMerchantCertificate" autocomplete="off" style="max-height: 700px;overflow: auto;">
+    <div id="errorMessage"></div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("DisplayName", "DisplayName", Model.DisplayName, focused: true)
+    </div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("Organization unit", "OrgUnit", Model.OrgUnit)
+    </div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("Organization", "Organization", Model.Organization)
+    </div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("Email", "Email", Model.Email)
+    </div>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTop("Country", "Country", Model.Country)
+    </div>
+</form>
+<script>
+    $.post('Url.Action("GenerateMerchantCertificates")', postData, function (retData) {
+        var iframe = document.createElement("iframe");
+        iframe.setAttribute("src", retData.url);
+        iframe.setAttribute("style", "display: none");
+        document.body.appendChild(iframe);
+    });
+</script>
+@Html.RenderSaveCancelButtonPair(Url.Action("GenerateMerchantCertificates"), "#frmMerchantCertificate")

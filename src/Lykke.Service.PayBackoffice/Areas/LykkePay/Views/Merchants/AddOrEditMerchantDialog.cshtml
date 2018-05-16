@@ -30,16 +30,7 @@
         @Html.RenderInputWithLabelOnTop("DisplayName", "DisplayName", Model.DisplayName, focused: true)
     </div>
     <div class="form-group">
-        @Html.RenderInputWithLabelOnTop("LpMarkupPercent", "LpMarkupPercent", Model.LpMarkupPercent.ToString(), null, "number")
-    </div>
-    <div class="form-group">
-        @Html.RenderInputWithLabelOnTop("LpMarkupPips", "LpMarkupPips", Model.LpMarkupPips.ToString(), null, "number")
-    </div>
-    <div class="form-group">
         @Html.RenderInputWithLabelOnTop("LwId", "LwId", Model.LwId)
-    </div>
-    <div class="form-group">
-        @Html.RenderInputWithLabelOnTop("MarkupFixedFee", "MarkupFixedFee", Model.MarkupFixedFee.ToString(), null, "number")
     </div>
     @if (Model.IsNewMerchant)
     {
@@ -52,9 +43,6 @@
     </div>
     <div class="form-group">
         @Html.RenderInputWithLabelOnTop("ApiKey", "ApiKey", Model.ApiKey)
-    </div>
-    <div class="form-group">
-        @Html.RenderInputWithLabelOnTop("DeltaSpread", "DeltaSpread", Model.DeltaSpread.ToString(), null, "number")
     </div>
     @if (Model.IsNewMerchant)
     {
@@ -70,7 +58,6 @@
         if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
             event.preventDefault();
         }
-        debugger;
         if ((event.which != 46 || $(this).val().indexOf('.') == -1) && (event.which < 48 || event.which > 57) && ($(this).attr("name") == "TimeCacheRates" || $(this).attr("name") == "LpMarkupPips")) {
             event.preventDefault();
         }
