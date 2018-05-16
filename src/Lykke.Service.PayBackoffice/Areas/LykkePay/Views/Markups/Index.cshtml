@@ -1,0 +1,19 @@
+﻿@using BackOffice.Translates
+
+<ul id="tabs" class="nav nav-tabs">
+    <li id="markups"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("MarkupsPage")')">Markups</a></li>
+</ul>
+
+<div id="MarkupsPage" style="margin: 10px"></div>
+
+<script>
+    function selectTab(tabId, url) {
+        if ($('#' + tabId).hasClass('active'))
+            return;
+        $('#tabs').children('li').each(function() {
+            (this.id === tabId) && $('#' + this.id).addClass('active') || $('#' + this.id).removeClass('active');
+        });
+        requests.doRequest({ url: url, divResult: '#MarkupsPage' });
+    }
+    selectTab('markups', '@Url.Action("MarkupsPage")');
+</script>
