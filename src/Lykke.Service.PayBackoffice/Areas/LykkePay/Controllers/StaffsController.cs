@@ -17,11 +17,13 @@ using Lykke.Service.PayAuth.Client.Models.Employees;
 using System.Text.RegularExpressions;
 using Lykke.Service.EmailPartnerRouter.Client;
 using Lykke.Service.EmailPartnerRouter.Contracts;
+using BackOffice.Binders;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
     [Authorize]
     [Area("LykkePay")]
+    [FilterFeaturesAccess(UserFeatureAccess.LykkePayMerchantsView)]
     [FilterFeaturesAccess(UserFeatureAccess.LykkePayStaffsView)]
     public class StaffsController : Controller
     {
@@ -30,6 +32,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
         private readonly IPayAuthClient _payAuthClient;
         private const string ErrorMessageAnchor = "#errorMessage";
         private readonly IEmailPartnerRouterClient _emailPartnerRouterClient;
+        protected string PayInvoicePortalResetPasswordLink
+               => AzureBinder.PayInvoicePortalResetPasswordLink;
         public StaffsController(
             IPayInternalClient payInternalClient, IPayInvoiceClient payInvoiceClient, IPayAuthClient payAuthClient, IEmailPartnerRouterClient emailPartnerRouterClient)
         {
@@ -205,7 +209,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                         {
                             {"UserEmail", vm.Email},
                             {"ClientFullName", vm.FirstName},
-                            {"ClientPassword", vm.Password},
+                            {"ResetLink", PayInvoicePortalResetPasswordLink},
+                            {"DateTime", DateTime.Now.ToString()},
                             {"Year", DateTime.Today.Year.ToString()}
                         };
                     var emails = new List<string>();

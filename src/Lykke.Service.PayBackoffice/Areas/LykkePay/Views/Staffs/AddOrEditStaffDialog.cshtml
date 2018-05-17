@@ -30,7 +30,7 @@
             @Html.RenderInputWithLabelOnTopReadOnly("Email", Model.Email, name: "Email"))
     </div>
     <div class="form-group">
-        @Html.RenderInputWithLabelOnTop("Password", "Password", Model.Password, null, "password")
+        @Html.RenderInputWithLabelOnTop("Password", "Password", Model.Password)
         <a onclick="getPassword()">Generate</a>
     </div>
 </form>
