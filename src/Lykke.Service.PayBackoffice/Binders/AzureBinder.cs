@@ -52,7 +52,7 @@ namespace BackOffice.Binders
 
 #if !DEBUG
                 if (!string.IsNullOrEmpty(_monitoringServiceUrl))
-                    await AutoRegistrationInMonitoring.RegisterAsync(Configuration, _monitoringServiceUrl, Log);
+                    AutoRegistrationInMonitoring.RegisterAsync(configuration, _monitoringServiceUrl, Log);
 #endif
             return ioc;
         }
