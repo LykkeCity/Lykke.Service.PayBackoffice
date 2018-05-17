@@ -127,6 +127,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             viewModel.List = list;
             viewModel.SelectedMerchant = vm.SelectedMerchant;
             viewModel.Assets = JsonConvert.SerializeObject(assetsList);
+            viewModel.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayTransfersFull);
             return View(viewModel);
         }
         [HttpPost]
