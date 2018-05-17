@@ -10,6 +10,8 @@ using Lykke.Service.PayInvoice.Client;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.Configuration;
 using QBitNinja.Client;
+using Lykke.Service.EmailPartnerRouter.Client;
+using Lykke.MonitoringServiceApiCaller;
 
 namespace BackOffice.Binders
 {
