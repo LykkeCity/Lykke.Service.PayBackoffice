@@ -235,27 +235,34 @@ namespace BackOffice.Areas.LykkePay.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        public async Task<HttpResponseMessage> GenerateMerchantCertificates(MerchantCertificateViewModel vm)
+        public async Task<JsonResult> GenerateMerchantCertificates(MerchantCertificateViewModel vm)
         {
-            //var certs = GenerateSertificate(vm);
-            //string result = Path.GetTempPath();
-            string myTempFile = Path.Combine(Path.GetTempPath(), "SaveFile.txt");
-            using (StreamWriter sw = new StreamWriter(myTempFile))
+            var certs = GenerateSertificate(vm);
+            var publicKey = Path.Combine(Path.GetTempPath(), string.Format("certificate_{0}.crt", vm.DisplayName));
+            using (StreamWriter sw = new StreamWriter(publicKey))
+                sw.WriteLine(certs.Public);
+
+            var privateKey = Path.Combine(Path.GetTempPath(), string.Format("certificate_{0}-rsa.pem", vm.DisplayName));
+            using (StreamWriter sw = new StreamWriter(privateKey))
+                sw.WriteLine(certs.Private);
+
+            using (ZipArchive zip = ZipFile.Open(Path.Combine(Path.GetTempPath(), string.Format("certificates_{0}.zip", vm.DisplayName)), ZipArchiveMode.Create))
             {
-                sw.WriteLine("Your error message");
+                zip.CreateEntryFromFile(publicKey, string.Format("certificate_{0}.crt", vm.DisplayName));
+                zip.CreateEntryFromFile(privateKey, string.Format("certificate_{0}-rsa.pem", vm.DisplayName));
             }
-            var myTempFile1 = Path.Combine(Path.GetTempPath(), "SaveFile1.txt");
-            using (StreamWriter sw = new StreamWriter(myTempFile1))
-            {
-                sw.WriteLine("Your error message");
-            }
-            using (ZipArchive zip = ZipFile.Open(Path.Combine(Path.GetTempPath(), "certificates.zip"), ZipArchiveMode.Create))
-            {
-                zip.CreateEntryFromFile(myTempFile, "SaveFile.txt");
-                zip.CreateEntryFromFile(myTempFile1, "SaveFile1.txt");
-            }
+            if (System.IO.File.Exists(publicKey))
+                System.IO.File.Delete(publicKey);
+            if (System.IO.File.Exists(privateKey))
+                System.IO.File.Delete(privateKey);
+            return Json(string.Format("certificates_{0}.zip", vm.DisplayName));
+        }
+        [HttpGet]
+        public async Task<FileResult> DownloadCertificate(string filename)
+        {
+            string certificates = Path.Combine(Path.GetTempPath(), filename);
             MemoryStream ms = new MemoryStream();
-            using (FileStream file = new FileStream(Path.Combine(Path.GetTempPath(), "certificates.zip"), FileMode.Open, FileAccess.Read))
+            using (FileStream file = new FileStream(certificates, FileMode.Open, FileAccess.Read))
                 file.CopyTo(ms);
 
             var result = new HttpResponseMessage(HttpStatusCode.OK)
@@ -265,11 +272,13 @@ namespace BackOffice.Areas.LykkePay.Controllers
             result.Content.Headers.ContentDisposition =
                 new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
                 {
-                    FileName = "certificates.zip"
+                    FileName = filename
                 };
             result.Content.Headers.ContentType =
                 new MediaTypeHeaderValue("application/octet-stream");
-            return result;
+            if (System.IO.File.Exists(certificates))
+                System.IO.File.Delete(certificates);
+            return File(ms.ToArray(), "application/octet-stream", filename);
         }
         protected MerchantCertificate GenerateSertificate(MerchantCertificateViewModel vm)
         {

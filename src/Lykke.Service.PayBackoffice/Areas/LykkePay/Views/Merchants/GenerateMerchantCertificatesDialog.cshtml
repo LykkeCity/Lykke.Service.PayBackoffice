@@ -23,12 +23,27 @@
         @Html.RenderInputWithLabelOnTop("Country", "Country", Model.Country)
     </div>
 </form>
+@Html.RenderSaveCancelButtonPair("", "#frmMerchantCertificate", "Generate")
 <script>
-    $.post('Url.Action("GenerateMerchantCertificates")', postData, function (retData) {
-        var iframe = document.createElement("iframe");
-        iframe.setAttribute("src", retData.url);
-        iframe.setAttribute("style", "display: none");
-        document.body.appendChild(iframe);
+    $(".btn.btn-success").click(function (e) {
+        var params = {};
+        params.DisplayName = $("#displayName").val();
+        params.OrgUnit = $("#orgUnit").val();
+        params.Organization = $("#organization").val();
+        params.Email = $("#email").val();
+        params.Country = $("#country").val();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GenerateMerchantCertificates")',
+            data: params,
+            dataType: "json",
+            headers: { 'RequestVerificationToken': getAntiForgeryCookie() },
+            success: function (json, status) {
+                window.location = '@Url.Action("DownloadCertificate")' + '?filename=' + json;
+            },
+            error: function (result, status, err) {
+                return;
+            }
+        });
     });
 </script>
-@Html.RenderSaveCancelButtonPair(Url.Action("GenerateMerchantCertificates"), "#frmMerchantCertificate")

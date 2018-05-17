@@ -155,7 +155,6 @@
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="2.6.362" />
     <PackageReference Include="BundlerMinifier.Core" Version="2.6.362" />
-    <PackageReference Include="ChilkatDnCore" Version="9.5.0.72" />
     <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.28.0.949" />
     <PackageReference Include="Lykke.Common" Version="6.7.0" />
     <PackageReference Include="Lykke.GoogleAuthenticator" Version="1.0.8" />
