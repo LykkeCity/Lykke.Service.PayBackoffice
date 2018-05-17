@@ -8,6 +8,7 @@ namespace BackOffice.Settings
 {
     public class BackOfficeBundle
     {
+        public MonitoringServiceClientSettings MonitoringServiceClient { get; set; }
         public BackOfficeSettings PayBackOffice { get; set; }
         public PayInternalServiceClientSettings PayInternalServiceClient { get; set; }
         public PayInvoiceServiceClientSettings PayInvoiceServiceClient { get; set; }
