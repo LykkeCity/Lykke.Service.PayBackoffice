@@ -93,31 +93,19 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 var paymentrequests = await _payInternalClient.GetPaymentRequestsAsync(vm.SelectedMerchant);
                 var addresses = paymentrequests.Where(p => (p.Status == PaymentRequestStatus.Confirmed || p.Status == PaymentRequestStatus.Error)
                 && p.Amount > 0).ToList();
-                var transactions = (await GetTransactions(addresses)).ToList();
-                var filtered = transactions.Where(t => t.Amount > 0).ToList();
                 assetsList.Add("None");
-                foreach (var transaction in filtered)
+                foreach (var request in addresses)
                 {
-                    var request = paymentrequests.FirstOrDefault(p => p.WalletAddress == transaction.WalletAddress);
-                    var tm = list.FirstOrDefault(r => r.PaymentRequest.WalletAddress == transaction.WalletAddress);
-                    if (tm != null)
-                    {
-                        var amount = (Money)(tm.Amount) + transaction.Amount;
-                        tm.Amount = amount.ToString();
-                    }
-                    else
-                    {
-                        tm = new RequestTransferModel();
-                        tm.Amount = transaction.Amount.ToString();
-                        tm.AssetId = transaction.AssetId;
-                        tm.PaymentRequest = request;
-                        tm.SourceWallet = await _payInternalClient.GetTransactionsSourceWalletsAsync(request.Id);
-                        if (vm.SelectedAsset == "None" || tm.AssetId == vm.SelectedAsset)
-                            list.Add(tm);
-
-                        if (!assetsList.Contains(transaction.AssetId))
-                            assetsList.Add(transaction.AssetId);
-                    }
+                    var requestdetails = await _payInternalClient.GetPaymentRequestDetailsAsync(vm.SelectedMerchant, request.Id);
+                    var tm = new RequestTransferModel();
+                    tm.Amount = requestdetails.Transactions.Sum(x=>x.Amount).ToString();
+                    tm.AssetId = request.PaymentAssetId;
+                    tm.PaymentRequest = request;
+                    tm.SourceWallet = requestdetails.Transactions.SelectMany(x => x.SourceWalletAddresses).ToList();
+                    if (vm.SelectedAsset == "None" || tm.AssetId == vm.SelectedAsset)
+                        list.Add(tm);
+                    if (!assetsList.Contains(request.PaymentAssetId))
+                        assetsList.Add(request.PaymentAssetId);
                 }
             }
             catch (Exception ex)
@@ -179,13 +167,12 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> RefundMoneyDialog(RefundModel model)
         {
-            var sources = await _payInternalClient.GetTransactionsSourceWalletsAsync(model.SelectedPaymentRequest);
             var viewmodel = new RefundMoneyDialogViewModel()
             {
                 SelectedMerchant = model.SelectedMerchant,
                 SelectedPaymentRequest = model.SelectedPaymentRequest,
                 SelectedWalletAddress = model.SelectedWalletAddress,
-                Wallets = sources
+                Wallets = model.Wallets.Split(';').ToList()
             };
             return View(viewmodel);
         }
@@ -204,7 +191,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 };
                 var response = await _payInternalClient.RefundAsync(refund);
 
-                return this.JsonRequestResult("#transfersList", Url.Action("TransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant, SelectedAsset = "None"  });
+                return this.JsonRequestResult("#transfersList", Url.Action("TransfersList"), new TransfersPageViewModel() { SelectedMerchant = vm.SelectedMerchant, SelectedAsset = "None" });
             }
             catch (RefundErrorResponseException ex)
             {
