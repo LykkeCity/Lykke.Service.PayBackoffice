@@ -22,5 +22,6 @@ namespace BackOffice.Areas.LykkePay.Models
         public string SelectedMerchant { get; set; }
         public string SelectedPaymentRequest { get; set; }
         public string SelectedWalletAddress { get; set; }
+        public string Wallets { get; set; }
     }
 }
