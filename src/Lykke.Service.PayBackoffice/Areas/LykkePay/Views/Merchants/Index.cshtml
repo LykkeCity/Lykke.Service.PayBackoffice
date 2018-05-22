@@ -2,9 +2,11 @@
 
 <ul id="tabs" class="nav nav-tabs">
     <li id="merchants"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("MerchantsPage")')">Merchants</a></li>
+    <li id="merchantsSettings"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("MerchantsSettingsPage")')">Settings</a></li>
 </ul>
 
 <div id="MerchantsPage" style="margin: 10px"></div>
+<div id="MerchantsSettingsPage" style="margin: 10px"></div>
 
 <script>
     function selectTab(tabId, url) {
