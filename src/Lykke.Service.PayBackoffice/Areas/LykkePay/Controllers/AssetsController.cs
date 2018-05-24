@@ -19,7 +19,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
 {
     [Authorize]
     [Area("LykkePay")]
-    [FilterFeaturesAccess(UserFeatureAccess.MenuAssets)]
+    [FilterFeaturesAccess(UserFeatureAccess.LykkePayMerchantsView)]
     public class AssetsController : Controller
     {
         private const string ErrorMessageAnchor = "#errorMessage";
