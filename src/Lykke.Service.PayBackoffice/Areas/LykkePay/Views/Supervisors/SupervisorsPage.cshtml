@@ -1,0 +1,61 @@
+﻿@using BackOffice.Translates
+@using BackOffice.Models
+@model BackOffice.Areas.LykkePay.Models.StaffsPageViewModel
+
+@{
+    IEnumerable<ItemViewModel> merchantList = Model.Merchants.
+        Select(m => new ItemViewModel { Id = m.Id, Title = m.Name }).ToArray();
+}
+
+@if (merchantList.Any())
+{
+    <div>
+        <h1>Supervisors</h1>
+        <div class="row">
+            <div class="col-md-2">
+
+                @*@if (Model.IsFullAccess)
+                {*@
+                    <a class="btn btn btn-success"
+                       onclick="openDialog()">
+                        Add
+                    </a>
+                @*}*@
+            </div>
+        </div>
+    </div>
+    <hr />
+    <form id="frmSupervisors">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-0 input-lg">
+                @Html.RenderSelect2("", "SelectedMerchant", merchantList, false, "Select merchant...")
+            </div>
+        </div>
+    </form>
+    <div id="supervisorsList"></div>
+
+        <script>
+        $(function () {
+            var $merchantSelect = $('#selectedMerchant');
+            $merchantSelect.select2().on("change",
+                function (e) {
+                    requests.doRequest({
+                        url: '@Url.Action("SupervisorsList")',
+                        formId: '#frmSupervisors',
+                        divResult: '#supervisorsList'
+                    });
+                });
+            $('.select2-container--default').width(200);
+            requests.doRequest({ url: '@Url.Action("SupervisorsList")', formId: '#frmSupervisors', divResult: '#supervisorsList' });
+        });
+        function openDialog()
+        {
+            var $merchantSelect = $('#selectedMerchant');
+            ui.showDialog('@Url.Action("AddSupervisorDialog")', { merchant: $merchantSelect.val() });
+        }
+        </script>
+}
+else
+{
+    <p>@Phrases.NoGroupsExist</p>
+}

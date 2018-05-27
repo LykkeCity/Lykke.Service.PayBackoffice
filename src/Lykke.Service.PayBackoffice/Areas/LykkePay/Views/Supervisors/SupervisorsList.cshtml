@@ -1,0 +1,50 @@
+﻿@using BackOffice.Translates
+@model BackOffice.Areas.LykkePay.Models.Supervisors.SupervisorsListViewModel
+
+@if (Model.Employees != null && Model.Employees.Any())
+{
+    <table class="table table-striped">
+        <tr>
+            <th>
+                Email
+            </th>
+            <th>
+                FirstName
+            </th>
+            <th>
+                LastName
+            </th>
+            <th>
+                SUpervising merchants
+            </th>
+        </tr>
+
+        @foreach (var item in Model.Employees)
+        {
+            <tr>
+                <td>
+                    @item.Email
+                </td>
+                <td>
+                    @item.FirstName
+                </td>
+                <td>
+                    @item.LastName
+                </td>
+                <td>
+                    @string.Join(";", item.SupervisingMerchants)
+                </td>
+            </tr>
+        }
+    </table>
+
+    <script>
+        $(function() {
+            $('#SelectedMerchant').val('@Model.SelectedMerchant');
+        });
+    </script>
+}
+else
+{
+    <p>@Phrases.NoRecordsFound</p>
+}

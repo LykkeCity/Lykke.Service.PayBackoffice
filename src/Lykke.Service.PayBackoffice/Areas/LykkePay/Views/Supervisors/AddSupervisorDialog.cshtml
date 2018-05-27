@@ -1,0 +1,30 @@
+﻿@using BackOffice.Translates
+@using BackOffice.Models
+@model BackOffice.Areas.LykkePay.Models.Supervisors.AddSupervisorDialogViewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+
+    IEnumerable<ItemViewModel> merchantsList = Model.Merchants.
+        Select(m => new ItemViewModel { Id = m.Id, Title = m.Name }).ToArray();
+    IEnumerable<ItemViewModel> employeesList = Model.Employees.
+        Select(m => new ItemViewModel { Id = m.Id, Title = m.LastName }).ToArray();
+}
+
+<form id="frmAddSupervisor" autocomplete="off">
+    <div id="errorMessage"></div>
+    @Html.HiddenFor(x => x.SelectedMerchant)
+    <div class="form-group">
+        @Html.RenderSelect2("", "SelectedEmployee", employeesList, false, "Select employee...")
+    </div>
+    <div class="form-group">
+        @Html.RenderMultiselect("Merchants", "SelectedMerchants", merchantsList.Select(itm => new KeyValuePair<string, string>(itm.Id, itm.Title)), null)
+    </div>
+</form>
+
+@Html.RenderSaveCancelButtonPair(Url.Action("AddSupervisor"), "#frmAddSupervisor")
+<script>
+    @*$(function () {
+        $('#SelectedMerchant').val('@Model.SelectedMerchant');
+    });*@
+</script>

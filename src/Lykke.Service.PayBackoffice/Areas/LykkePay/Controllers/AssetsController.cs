@@ -64,14 +64,16 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AssetByMerchantList(AssetByMerchantViewModel vm)
         {
-            var assets = await _payInternalClient.GetPersonalAvailableAssetsAsync(vm.SelectedMerchant);
-            return View(assets);
+            //var assets = await _payInternalClient.GetPersonalAvailableAssetsAsync(vm.SelectedMerchant);
+            //return View(assets);
+            return View();//TODO: fix assets
         }
         [HttpPost]
         public async Task<ActionResult> AssetPaymentList()
         {
-            var assetPaymentList = await _payInternalClient.GetGeneralAvailableAssetsAsync(AssetAvailabilityType.Payment);
-            return View(assetPaymentList.Assets);
+            //var assetPaymentList = await _payInternalClient.GetGeneralAvailableAssetsAsync(AssetAvailabilityType.Payment);
+            //return View(assetPaymentList.Assets);
+            return View();//TODO: fix assets
         }
         [HttpPost]
         public async Task<ActionResult> AssetSettlement()
@@ -81,8 +83,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AssetSettlementList()
         {
-            var assetSettlementList = await _payInternalClient.GetGeneralAvailableAssetsAsync(AssetAvailabilityType.Settlement);
-            return View(assetSettlementList.Assets);
+            //var assetSettlementList = await _payInternalClient.GetGeneralAvailableAssetsAsync(AssetAvailabilityType.Settlement);
+            //return View(assetSettlementList.Assets);
+            return View(); //TODO: fix assets
         }
         [HttpPost]
         public async Task<ActionResult> AddAssetPaymentDialog()
@@ -107,34 +110,36 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddAssetByMerchantDialog(string merchant = null)
         {
-            var assets = await _payInternalClient.GetPersonalAvailableAssetsAsync(merchant);
-            var vm = new AddAssetsByMerchantDialogViewModel
-            {
-                Caption = "Add assets to merchant",
-                MerchantId = merchant,
-                PaymentAssets = assets?.PaymentAssets ?? string.Empty,
-                SettlementAssets = assets?.SettlementAssets ?? string.Empty,
-            };
-            return View(vm);
+            //var assets = await _payInternalClient.GetPersonalAvailableAssetsAsync(merchant);
+            //var vm = new AddAssetsByMerchantDialogViewModel
+            //{
+            //    Caption = "Add assets to merchant",
+            //    MerchantId = merchant,
+            //    PaymentAssets = assets?.PaymentAssets ?? string.Empty,
+            //    SettlementAssets = assets?.SettlementAssets ?? string.Empty,
+            //};
+            //return View(vm);
+            return View(); //TODO: fix assets
         }
         [HttpPost]
         public async Task<ActionResult> AddAssetByMerchant(AddAssetsByMerchantDialogViewModel vm)
         {
-            if (string.IsNullOrEmpty(vm.PaymentAssets))
-                return this.JsonFailResult("PaymentAssets required", ErrorMessageAnchor);
-            if (string.IsNullOrEmpty(vm.SettlementAssets))
-                return this.JsonFailResult("SettlementAssets required", ErrorMessageAnchor);
-            vm.SettlementAssets = vm.SettlementAssets.Replace(' ', ';').Replace(',', ';');
-            vm.PaymentAssets = vm.PaymentAssets.Replace(' ', ';').Replace(',', ';');
-            vm.SettlementAssets = String.Join(";", vm.SettlementAssets.Split(';').Where(x => !string.IsNullOrEmpty(x)).ToArray());
-            vm.PaymentAssets = String.Join(";", vm.PaymentAssets.Split(';').Where(x => !string.IsNullOrEmpty(x)).ToArray());
-            await _payInternalClient.SetPersonalAvailableAssetsAsync(new UpdateAssetAvailabilityByMerchantRequest()
-            {
-                MerchantId = vm.MerchantId,
-                PaymentAssets = vm.PaymentAssets,
-                SettlementAssets = vm.SettlementAssets
-            });
-            return this.JsonRequestResult("#assetByMerchantList", Url.Action("AssetByMerchantList"), new AssetByMerchantViewModel() { SelectedMerchant = vm.MerchantId });
+            //if (string.IsNullOrEmpty(vm.PaymentAssets))
+            //    return this.JsonFailResult("PaymentAssets required", ErrorMessageAnchor);
+            //if (string.IsNullOrEmpty(vm.SettlementAssets))
+            //    return this.JsonFailResult("SettlementAssets required", ErrorMessageAnchor);
+            //vm.SettlementAssets = vm.SettlementAssets.Replace(' ', ';').Replace(',', ';');
+            //vm.PaymentAssets = vm.PaymentAssets.Replace(' ', ';').Replace(',', ';');
+            //vm.SettlementAssets = String.Join(";", vm.SettlementAssets.Split(';').Where(x => !string.IsNullOrEmpty(x)).ToArray());
+            //vm.PaymentAssets = String.Join(";", vm.PaymentAssets.Split(';').Where(x => !string.IsNullOrEmpty(x)).ToArray());
+            //await _payInternalClient.SetPersonalAvailableAssetsAsync(new UpdateAssetAvailabilityByMerchantRequest()
+            //{
+            //    MerchantId = vm.MerchantId,
+            //    PaymentAssets = vm.PaymentAssets,
+            //    SettlementAssets = vm.SettlementAssets
+            //});
+            //return this.JsonRequestResult("#assetByMerchantList", Url.Action("AssetByMerchantList"), new AssetByMerchantViewModel() { SelectedMerchant = vm.MerchantId });
+            return View(); //TODO: fix assets
         }
         [HttpPost]
         public async Task<ActionResult> DeleteAssetByMerchantDialog(string merchantId = "")
@@ -150,44 +155,47 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> DeleteAssetByMerchant(AddAssetsByMerchantDialogViewModel vm)
         {
-            await _payInternalClient.SetPersonalAvailableAssetsAsync(new UpdateAssetAvailabilityByMerchantRequest()
-            {
-                MerchantId = vm.MerchantId
-            });
-            return this.JsonRequestResult("#assetByMerchantList", Url.Action("AssetByMerchantList"), new AssetByMerchantViewModel() { SelectedMerchant = vm.MerchantId });
+            //await _payInternalClient.SetPersonalAvailableAssetsAsync(new UpdateAssetAvailabilityByMerchantRequest()
+            //{
+            //    MerchantId = vm.MerchantId
+            //});
+            //return this.JsonRequestResult("#assetByMerchantList", Url.Action("AssetByMerchantList"), new AssetByMerchantViewModel() { SelectedMerchant = vm.MerchantId });
+            return View(); //TODO: fix assets
         }
         [HttpPost]
         public async Task<ActionResult> AddAssetPayment(AddAssetPaymentDialogViewModel model)
         {
-            var request = new UpdateAssetAvailabilityRequest();
-            request.AssetId = model.Id;
-            request.Value = true;
-            request.AvailabilityType = AssetAvailabilityType.Payment;
-            try
-            {
-                await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
-            }
-            catch(DefaultErrorResponseException ex)
-            {
-                if (ex.InnerException != null)
-                {
-                    var content = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(((Refit.ApiException)ex.InnerException).Content);
-                    return this.JsonFailResult(content.ErrorMessage, ErrorMessageAnchor);
-                }
-                else
-                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
-            }
-            return this.JsonRequestResult("#assetPaymentList", Url.Action("AssetPaymentList"));
+            //var request = new UpdateAssetAvailabilityRequest();
+            //request.AssetId = model.Id;
+            //request.Value = true;
+            //request.AvailabilityType = AssetAvailabilityType.Payment;
+            //try
+            //{
+            //    await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
+            //}
+            //catch(DefaultErrorResponseException ex)
+            //{
+            //    if (ex.InnerException != null)
+            //    {
+            //        var content = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(((Refit.ApiException)ex.InnerException).Content);
+            //        return this.JsonFailResult(content.ErrorMessage, ErrorMessageAnchor);
+            //    }
+            //    else
+            //        return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
+            //}
+            //return this.JsonRequestResult("#assetPaymentList", Url.Action("AssetPaymentList"));
+            return View(); //TODO: fix assets
         }
         [HttpPost]
         public async Task<ActionResult> DeleteAssetPayment(AddAssetPaymentDialogViewModel model)
         {
-            var request = new UpdateAssetAvailabilityRequest();
-            request.AssetId = model.Id;
-            request.Value = false;
-            request.AvailabilityType = AssetAvailabilityType.Payment;
-            await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
-            return this.JsonRequestResult("#assetPaymentList", Url.Action("AssetPaymentList"));
+            //var request = new UpdateAssetAvailabilityRequest();
+            //request.AssetId = model.Id;
+            //request.Value = false;
+            //request.AvailabilityType = AssetAvailabilityType.Payment;
+            //await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
+            //return this.JsonRequestResult("#assetPaymentList", Url.Action("AssetPaymentList"));
+            return View(); //TODO: fix assets
         }
         [HttpPost]
         public async Task<ActionResult> AddAssetSettlementDialog()
@@ -212,35 +220,37 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddAssetSettlement(AddAssetPaymentDialogViewModel model)
         {
-            var request = new UpdateAssetAvailabilityRequest();
-            request.AssetId = model.Id;
-            request.Value = true;
-            request.AvailabilityType = AssetAvailabilityType.Settlement;
-            try
-            {
-                await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
-            }
-            catch (DefaultErrorResponseException ex)
-            {
-                if (ex.InnerException != null)
-                {
-                    var content = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(((Refit.ApiException)ex.InnerException).Content);
-                    return this.JsonFailResult(content.ErrorMessage, ErrorMessageAnchor);
-                }
-                else
-                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
-            }
-            return this.JsonRequestResult("#assetSettlementList", Url.Action("AssetSettlementList"));
+            //var request = new UpdateAssetAvailabilityRequest();
+            //request.AssetId = model.Id;
+            //request.Value = true;
+            //request.AvailabilityType = AssetAvailabilityType.Settlement;
+            //try
+            //{
+            //    await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
+            //}
+            //catch (DefaultErrorResponseException ex)
+            //{
+            //    if (ex.InnerException != null)
+            //    {
+            //        var content = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(((Refit.ApiException)ex.InnerException).Content);
+            //        return this.JsonFailResult(content.ErrorMessage, ErrorMessageAnchor);
+            //    }
+            //    else
+            //        return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
+            //}
+            //return this.JsonRequestResult("#assetSettlementList", Url.Action("AssetSettlementList"));
+            return View(); //TODO: fix assets
         }
         [HttpPost]
         public async Task<ActionResult> DeleteAssetSettlement(AddAssetPaymentDialogViewModel model)
         {
-            var request = new UpdateAssetAvailabilityRequest();
-            request.AssetId = model.Id;
-            request.Value = false;
-            request.AvailabilityType = AssetAvailabilityType.Settlement;
-            await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
-            return this.JsonRequestResult("#assetSettlementList", Url.Action("AssetSettlementList"));
+            //var request = new UpdateAssetAvailabilityRequest();
+            //request.AssetId = model.Id;
+            //request.Value = false;
+            //request.AvailabilityType = AssetAvailabilityType.Settlement;
+            //await _payInternalClient.SetGeneralAvailableAssetsAsync(request);
+            //return this.JsonRequestResult("#assetSettlementList", Url.Action("AssetSettlementList"));
+            return View(); //TODO: fix assets
         }
     }
 }
