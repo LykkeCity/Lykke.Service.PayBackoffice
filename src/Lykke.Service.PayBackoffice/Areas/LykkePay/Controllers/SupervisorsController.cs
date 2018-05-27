@@ -7,8 +7,6 @@ using Lykke.Service.PayInternal.Client;
 using Microsoft.AspNetCore.Authorization;
 using BackOffice.Controllers;
 using BackOffice.Translates;
-using BackOffice.Areas.LykkePay.Models;
-using Core.Users;
 using Lykke.Service.PayInvoice.Client;
 using BackOffice.Areas.LykkePay.Models.Supervisors;
 using Lykke.Service.PayInternal.Client.Models.Supervisor;
