@@ -13,14 +13,10 @@
         <h1>Supervisors</h1>
         <div class="row">
             <div class="col-md-2">
-
-                @*@if (Model.IsFullAccess)
-                {*@
-                    <a class="btn btn btn-success"
-                       onclick="openDialog()">
-                        Add
-                    </a>
-                @*}*@
+                <a class="btn btn btn-success"
+                   onclick="openDialog()">
+                    Add
+                </a>
             </div>
         </div>
     </div>
@@ -34,7 +30,7 @@
     </form>
     <div id="supervisorsList"></div>
 
-        <script>
+    <script>
         $(function () {
             var $merchantSelect = $('#selectedMerchant');
             $merchantSelect.select2().on("change",
@@ -53,7 +49,7 @@
             var $merchantSelect = $('#selectedMerchant');
             ui.showDialog('@Url.Action("AddSupervisorDialog")', { merchant: $merchantSelect.val() });
         }
-        </script>
+    </script>
 }
 else
 {

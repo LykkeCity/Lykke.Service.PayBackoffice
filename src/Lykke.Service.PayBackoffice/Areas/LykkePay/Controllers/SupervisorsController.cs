@@ -51,12 +51,10 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
                 }
             }
 
-            return View(new StaffsPageViewModel
+            return View(new SupervisorsPageViewModel
             {
                 SelectedMerchant = merchant,
-                Merchants = merchants,
-                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsFull),
-                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsEdit)
+                Merchants = merchants
             });
         }
 
@@ -94,8 +92,7 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
             var viewModel = new SupervisorsListViewModel
             {
                 Employees = filteredstaffs,
-                SelectedMerchant = vm.SelectedMerchant,
-                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsFull),
+                SelectedMerchant = vm.SelectedMerchant
             };
 
             return View(viewModel);
