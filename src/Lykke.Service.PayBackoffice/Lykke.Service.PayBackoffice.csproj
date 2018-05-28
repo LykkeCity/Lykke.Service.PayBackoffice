@@ -133,6 +133,9 @@
     <None Remove="Areas\Wallets\**" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Areas\LykkePay\Controllers\AssetsController.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Remove="Views\Shared\FindAllForEmail.cshtml" />
     <Content Remove="Views\Shared\PartialFindCleint.cshtml" />
     <Content Remove="Views\Shared\PartialFindClientByPhrase.cshtml" />
@@ -160,7 +163,7 @@
     <PackageReference Include="Lykke.GoogleAuthenticator" Version="1.0.8" />
     <PackageReference Include="Lykke.Service.EmailPartnerRouter.Client" Version="2.0.4" />
     <PackageReference Include="Lykke.Service.PayAuth.Client" Version="1.0.14" />
-    <PackageReference Include="Lykke.Service.PayInternal.Client" Version="1.1.17" />
+    <PackageReference Include="Lykke.Service.PayInternal.Client" Version="1.1.22" />
     <PackageReference Include="Lykke.Service.PayInvoice.Client" Version="4.2.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0" />

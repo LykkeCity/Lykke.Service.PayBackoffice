@@ -18,6 +18,7 @@ using Lykke.Service.PayInvoice.Core.Domain;
 using System.Net;
 using Lykke.Service.PayInternal.Client.Exceptions;
 using BackOffice.Areas.LykkePay.Models.Merchants;
+using Microsoft.AspNetCore.Http;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -105,6 +106,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 merchant = await _payInternalClient.GetMerchantByIdAsync(id);
             }
+            var merchantfiles = (await _payInternalClient.GetFilesAsync(id)).ToList();
+            var merchantlogo = await _payInternalClient.GetFileAsync(id, merchantfiles[0].Id);
+
             var viewModel = new AddOrEditMerchantDialogViewModel
             {
                 Caption = "Add merchant",
@@ -117,13 +121,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 TimeCacheRates = merchant.TimeCacheRates,
                 Certificate = merchant.PublicKey,
                 SystemId = string.Empty,
-                DisplayName = merchant.DisplayName
+                DisplayName = merchant.DisplayName,
+                LogoImage = Convert.ToBase64String(merchantlogo)
             };
 
             return View(viewModel);
         }
         [HttpPost]
-        public async Task<ActionResult> AddOrEditMerchant(AddOrEditMerchantDialogViewModel vm)
+        public async Task<ActionResult> AddOrEditMerchant(AddOrEditMerchantDialogViewModel vm, IFormFile file)
         {
             var merchants = await _payInternalClient.GetMerchantsAsync();
             if (string.IsNullOrEmpty(vm.ApiKey))
