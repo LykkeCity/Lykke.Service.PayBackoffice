@@ -1,11 +1,11 @@
 ﻿@using BackOffice.Translates
-@model BackOffice.Areas.LykkePay.Models.AddAssetsByMerchantDialogViewModel
+@model BackOffice.Areas.LykkePay.Models.Assets.AddMerchantSettingDialogViewModel
 
 @{
     Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
 }
 
-<form id="frmAddAssetByMerchant" autocomplete="off">
+<form id="frmAddMerchantSetting" autocomplete="off">
     @Html.HiddenFor(x => x.MerchantId)
     <div id="errorMessage"></div>
     <div>Please, enter asset(s) divided by semicolon. For example "USD;EUR;BTC"</div>
@@ -17,4 +17,4 @@
     </div>
 </form>
 
-@Html.RenderSaveCancelButtonPair(Url.Action("AddAssetByMerchant"), "#frmAddAssetByMerchant")
+@Html.RenderSaveCancelButtonPair(Url.Action("AddMerchantSetting"), "#frmAddMerchantSetting")
