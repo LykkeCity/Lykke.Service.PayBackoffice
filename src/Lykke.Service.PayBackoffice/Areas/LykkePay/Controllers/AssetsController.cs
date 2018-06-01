@@ -140,14 +140,19 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddMerchantSetting(AddMerchantSettingDialogViewModel vm)
         {
-            if (string.IsNullOrEmpty(vm.PaymentAssets))
-                return this.JsonFailResult("PaymentAssets required", ErrorMessageAnchor);
-            if (string.IsNullOrEmpty(vm.SettlementAssets))
-                return this.JsonFailResult("SettlementAssets required", ErrorMessageAnchor);
+            vm.PaymentAssets = vm.PaymentAssets ?? string.Empty;
+            vm.SettlementAssets = vm.SettlementAssets ?? string.Empty;
+
             vm.SettlementAssets = vm.SettlementAssets.Replace(' ', ';').Replace(',', ';');
             vm.PaymentAssets = vm.PaymentAssets.Replace(' ', ';').Replace(',', ';');
             vm.SettlementAssets = String.Join(";", vm.SettlementAssets.Split(';').Where(x => !string.IsNullOrEmpty(x)).ToArray());
             vm.PaymentAssets = String.Join(";", vm.PaymentAssets.Split(';').Where(x => !string.IsNullOrEmpty(x)).ToArray());
+
+            if (string.IsNullOrEmpty(vm.PaymentAssets))
+                return this.JsonFailResult("PaymentAssets required", ErrorMessageAnchor);
+            if (string.IsNullOrEmpty(vm.SettlementAssets))
+                return this.JsonFailResult("SettlementAssets required", ErrorMessageAnchor);
+
             await _payInternalClient.SetAssetMerchantSettingsAsync(new UpdateAssetMerchantSettingsRequest()
             {
                 MerchantId = vm.MerchantId,
