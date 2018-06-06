@@ -216,6 +216,12 @@ namespace BackOffice.Areas.LykkePay.Controllers
             const int MAX_FILE_SIZE = 50 * 1024 * 1024;
             var merchantId = Request.Form["MerchantId"];
 
+            var merchantfiles = (await _payInternalClient.GetFilesAsync(merchantId)).ToList();
+            foreach (var fileitem in merchantfiles)
+            {
+                await _payInternalClient.DeleteFileAsync(merchantId, fileitem.Id);
+            }
+
             if (file == null)
                 file = Request.Form.Files.FirstOrDefault();
 

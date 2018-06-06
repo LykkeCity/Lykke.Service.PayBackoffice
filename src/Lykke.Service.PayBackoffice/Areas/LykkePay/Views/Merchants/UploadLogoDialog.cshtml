@@ -14,7 +14,7 @@
             </div>
         }
         <div>
-            <input type="file" name="file" style="visibility: hidden;" id="selectFileDialog" accept=".png,.jpg,.jpeg,.gif">
+            <input type="file" name="file" style="visibility: hidden;" id="selectFileDialog" accept=".png,.jpg,.jpeg">
             <div class="form-inline">
                 <input type="button" class="btn btn-info" onclick="$('#selectFileDialog').click();" value="Choose File" style="width: 30%" />
                 <input type="text" id="subfile" class="form-control" required="required" style="width: 67%" autocomplete="off">
@@ -47,8 +47,15 @@
             var fileNames = [];
             var totalSize = 0;
             Array.prototype.every.call($(this)[0].files, file => {
-                fileNames.push(file.name);
-                totalSize += file.size;
+                if (file.type == "image/png" || file.type == "image/jpeg") {
+                    fileNames.push(file.name);
+                    totalSize += file.size;
+                }
+                else
+                {
+                    alert("This file extension isn't supported.Allowed file extension is .png, .jpeg");
+                    return;
+                }
             });
 
             if (totalSize >= 50 * 1024 * 1024) {
