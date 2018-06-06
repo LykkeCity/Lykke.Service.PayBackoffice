@@ -1,10 +1,5 @@
 ﻿using Lykke.Service.PayInternal.Client.Models.Merchant;
-using Lykke.Service.PayInternal.Client.Models.Supervisor;
-using Lykke.Service.PayInvoice.Client.Models.Employee;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BackOffice.Areas.LykkePay.Models.Supervisors
 {

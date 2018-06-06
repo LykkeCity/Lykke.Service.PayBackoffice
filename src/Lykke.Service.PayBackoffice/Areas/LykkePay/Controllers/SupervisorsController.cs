@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +8,7 @@ using BackOffice.Controllers;
 using BackOffice.Translates;
 using Lykke.Service.PayInvoice.Client;
 using BackOffice.Areas.LykkePay.Models.Supervisors;
-using Lykke.Service.PayInternal.Client.Models.Supervisor;
+using Lykke.Service.PayInternal.Client.Models.SupervisorMembership;
 
 namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
 {
@@ -19,7 +18,7 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
     {
         private readonly IPayInternalClient _payInternalClient;
         private readonly IPayInvoiceClient _payInvoiceClient;
-        private const string ErrorMessageAnchor = "#errorMessage";
+
         public SupervisorsController(
             IPayInternalClient payInternalClient,
             IPayInvoiceClient payInvoiceClient)
@@ -66,25 +65,20 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
             var filteredstaffs = new List<SupervisorViewModel>();
             foreach (var staff in staffs)
             {
-                try
-                {
-                    var supervisor = await _payInternalClient.GetSupervisingMerchantsAsync(vm.SelectedMerchant, staff.Id);
-                    if (supervisor != null)
-                    {
-                        var item = new SupervisorViewModel()
-                        {
-                            Id = staff.Id,
-                            Email = staff.Email,
-                            FirstName = staff.FirstName,
-                            LastName = staff.LastName,
-                            SupervisingMerchants = supervisor.Merchants
-                        };
-                        filteredstaffs.Add(item);
-                    }
-                }
-                catch (Exception ex)
-                {
+                MerchantsSupervisorMembershipResponse supervisor =
+                    await _payInternalClient.GetSupervisorMembershipWithMerchantsAsync(staff.Id);
 
+                if (supervisor != null)
+                {
+                    var item = new SupervisorViewModel()
+                    {
+                        Id = staff.Id,
+                        Email = staff.Email,
+                        FirstName = staff.FirstName,
+                        LastName = staff.LastName,
+                        SupervisingMerchants = supervisor.Merchants.ToList()
+                    };
+                    filteredstaffs.Add(item);
                 }
             }
             var viewModel = new SupervisorsListViewModel
@@ -111,11 +105,14 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddSupervisor(AddSupervisorDialogViewModel vm)
         {
-            var request = new CreateSupervisingEmployeeRequest();
-            request.EmployeeId = vm.SelectedEmployee;
-            request.MerchantId = vm.SelectedMerchant;
-            request.SupervisorMerchants = string.Join(";", vm.SelectedMerchants);
-            await _payInternalClient.SetSupervisingMerchantsAsync(request);
+            await _payInternalClient.AddSupervisorMembershipForMerchantsAsync(
+                new AddSupervisorMembershipMerchantsRequest
+                {
+                    MerchantId = vm.SelectedMerchant,
+                    EmployeeId = vm.SelectedEmployee,
+                    Merchants = vm.SelectedMerchants
+                });
+            
             return this.JsonRequestResult("#supervisorsList", Url.Action("SupervisorsList"), new SupervisorsPageViewModel() { SelectedMerchant = vm.SelectedMerchant });
         }
     }
