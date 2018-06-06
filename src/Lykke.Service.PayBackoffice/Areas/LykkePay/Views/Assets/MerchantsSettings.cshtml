@@ -1,0 +1,49 @@
+﻿@using BackOffice.Models
+@model BackOffice.Areas.LykkePay.Models.Assets.MerchantsSettingsViewModel
+
+@{
+    IEnumerable<ItemViewModel> merchantList = Model.Merchants.
+        Select(m => new ItemViewModel { Id = m.Id, Title = m.Name }).ToArray();
+}
+<div class="row" style="margin-left: 30px">
+    <h1>Merchant settings</h1>
+    <div class="col-md-2">
+        <a class="btn btn btn-success"
+           onclick="openDialog();">
+            Add
+        </a>
+    </div>
+</div>
+<hr />
+<form id="frmMerchantsSettings">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-0 input-lg">
+            @Html.RenderSelect2("", "SelectedMerchant", merchantList, false, "Select merchant...")
+        </div>
+    </div>
+</form>
+<div id="merchantsSettingsList"></div>
+<script>
+    $(function ()
+    {
+        var $merchantSelect = $('#selectedMerchant');
+        $merchantSelect.select2().on("change",
+        function (e) {
+            requests.doRequest({
+            url: '@Url.Action("MerchantsSettingsList")',
+            formId: '#frmMerchantsSettings',
+            divResult: '#merchantsSettingsList'
+            });
+        });
+        $('.select2-container--default').width(200);
+    });
+    function openDialog()
+    {
+        var $merchantSelect = $('#selectedMerchant');
+        ui.showDialog('@Url.Action("AddMerchantSettingDialog")', { merchant: $merchantSelect.val() });
+    }
+    $(function ()
+    {
+        requests.doRequest({ url: '@Url.Action("MerchantsSettingsList")', formId: '#frmMerchantsSettings', divResult: '#merchantsSettingsList' });
+    });
+</script>

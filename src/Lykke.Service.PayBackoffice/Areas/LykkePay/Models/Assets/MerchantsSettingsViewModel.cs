@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackOffice.Areas.LykkePay.Models
+namespace BackOffice.Areas.LykkePay.Models.Assets
 {
-    public class AssetByMerchantViewModel
+    public class MerchantsSettingsViewModel
     {
         public string SelectedMerchant { get; set; }
         public IReadOnlyList<MerchantModel> Merchants { get; set; }

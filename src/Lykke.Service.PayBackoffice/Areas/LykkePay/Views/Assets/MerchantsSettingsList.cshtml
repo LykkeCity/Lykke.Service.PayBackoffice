@@ -1,0 +1,29 @@
+﻿@using BackOffice.Translates
+@using Lykke.Service.PayInternal.Client.Models.Asset
+@model AssetMerchantSettingsResponse
+
+@if (Model != null)
+{
+    <table class="table table-striped">
+        <tr>
+            <th>
+                PaymentAvailable
+            </th>
+            <th>
+                SettlementAvailable
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Model.PaymentAssets
+            </td>
+            <td>
+                @Model.SettlementAssets
+            </td>
+        </tr>
+    </table>
+}
+else
+{
+    <p>@Phrases.NoRecordsFound</p>
+}
