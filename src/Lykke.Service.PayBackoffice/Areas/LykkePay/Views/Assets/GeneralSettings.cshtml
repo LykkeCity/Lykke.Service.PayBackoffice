@@ -1,0 +1,20 @@
+﻿<div class="row" style="margin-left: 30px">
+    <h1>General settings</h1>
+    <div class="col-md-2">
+        <a class="btn btn btn-success"
+           onclick="ui.showDialog('@Url.Action("AddGeneralSettingsDialog")');">
+            Add
+        </a>
+    </div>
+</div>
+<hr />
+<form id="frmGeneralSettings">
+    <div class="row">
+    </div>
+</form>
+<div id="generalSettingsList"></div>
+<script>
+    $(function () {
+        requests.doRequest({ url: '@Url.Action("GeneralSettingsList")', formId: '#frmGeneralSettings', divResult: '#generalSettingsList' });
+    });
+</script>

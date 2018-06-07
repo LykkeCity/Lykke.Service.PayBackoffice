@@ -1,9 +1,8 @@
 ﻿@using BackOffice.Translates
 
 <ul id="tabs" class="nav nav-tabs">
-    <li id="assetPayment"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("AssetPayment")')">Payment</a></li>
-    <li id="assetSettlement"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("AssetSettlement")')">Settlement</a></li>
-    <li id="assetByMerchant"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("AssetByMerchant")')">Assets by merchants</a></li>
+    <li id="generalSettings"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("GeneralSettings")')">General settings</a></li>
+    <li id="merchantsSettings"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("MerchantsSettings")')">Merchant settings</a></li>
 </ul>
 
 <div id="assetPage"></div>
@@ -17,5 +16,5 @@
         });
         requests.doRequest({ url: url, divResult: '#assetPage' });
     }
-    selectTab('assetPayment', '@Url.Action("AssetPayment")');
+    selectTab('generalSettings', '@Url.Action("GeneralSettings")');
 </script>

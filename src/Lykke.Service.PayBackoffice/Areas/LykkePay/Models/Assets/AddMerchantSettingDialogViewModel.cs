@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackOffice.Areas.LykkePay.Models
+namespace BackOffice.Areas.LykkePay.Models.Assets
 {
-    public class AddAssetsByMerchantDialogViewModel : IPersonalAreaDialog
+    public class AddMerchantSettingDialogViewModel : IPersonalAreaDialog
     {
         public string Caption { get; set; }
         public string Width { get; set; }
