@@ -109,6 +109,9 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddSupervisor(AddSupervisorDialogViewModel vm)
         {
+            if (!vm.SelectedMerchants.Any())
+                return this.JsonFailResult("Please, select merchants", "#errorMessage");
+
             try
             {
                 await _payInternalClient.AddSupervisorMembershipForMerchantsAsync(
@@ -121,7 +124,7 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
             }
             catch (DefaultErrorResponseException ex)
             {
-                return this.JsonFailResult(ex.Message, "#errorMessage");
+                return this.JsonFailResult(ex.Error?.ErrorMessage ?? "Unkhown API error", "#errorMessage");
             }
 
             return this.JsonRequestResult("#supervisorsList", Url.Action("SupervisorsList"),
