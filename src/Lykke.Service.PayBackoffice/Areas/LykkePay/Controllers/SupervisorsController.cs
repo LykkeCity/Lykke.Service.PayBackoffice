@@ -115,8 +115,9 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
         {
             await _log.WriteWarningAsync(nameof(SupervisorsController), nameof(AddSupervisor), new
             {
-                SelectedMerchantsCount = vm.SelectedMerchants.Length,
-                SelectedMerchants = string.Join(";", vm.SelectedMerchants),
+                SelectedMerchantsCount = vm.SelectedMerchants?.Length ?? 0,
+                SelectedMerchants = vm.SelectedMerchants != null ? string.Join(";", vm.SelectedMerchants) : string.Empty,
+                SeletecMerchantsNull = vm.SelectedMerchants == null,
                 vm.SelectedEmployee,
                 vm.SelectedMerchant,
                 Employees = string.Join(";", vm.Employees),
