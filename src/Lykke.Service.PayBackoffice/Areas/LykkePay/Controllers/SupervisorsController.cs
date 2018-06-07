@@ -113,19 +113,8 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddSupervisor(AddSupervisorDialogViewModel vm)
         {
-            await _log.WriteWarningAsync(nameof(SupervisorsController), nameof(AddSupervisor), new
-            {
-                SelectedMerchantsCount = vm.SelectedMerchants?.Length ?? 0,
-                SelectedMerchants = vm.SelectedMerchants != null ? string.Join(";", vm.SelectedMerchants) : string.Empty,
-                SeletecMerchantsNull = vm.SelectedMerchants == null,
-                vm.SelectedEmployee,
-                vm.SelectedMerchant,
-                Employees = vm.Employees != null ? string.Join(";", vm.Employees) : string.Empty,
-                Merchants = vm.Merchants != null ? string.Join(";", vm.Merchants) : string.Empty
-            }.ToJson());
-
-            if (!vm.SelectedMerchants.Any())
-                return this.JsonFailResult(Phrases.MerchantsEmptyError, "#errorMessage");
+            if (vm.SelectedMerchants == null || !vm.SelectedMerchants.Any())
+                return this.JsonFailResult(Phrases.PleaseSelectAtLeastOneItem, "#selectedMerchants");
 
             try
             {
