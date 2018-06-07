@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using BackOffice.Controllers;
 using BackOffice.Translates;
 using Lykke.Service.PayInvoice.Client;
 using BackOffice.Areas.LykkePay.Models.Supervisors;
+using Lykke.Service.PayInternal.Client.Exceptions;
 using Lykke.Service.PayInternal.Client.Models.SupervisorMembership;
 
 namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
@@ -89,6 +91,7 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
 
             return View(viewModel);
         }
+
         [HttpPost]
         public async Task<ActionResult> AddSupervisorDialog(string merchant = null)
         {
@@ -102,18 +105,27 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
             };
             return View(viewmodel);
         }
+
         [HttpPost]
         public async Task<ActionResult> AddSupervisor(AddSupervisorDialogViewModel vm)
         {
-            await _payInternalClient.AddSupervisorMembershipForMerchantsAsync(
-                new AddSupervisorMembershipMerchantsRequest
-                {
-                    MerchantId = vm.SelectedMerchant,
-                    EmployeeId = vm.SelectedEmployee,
-                    Merchants = vm.SelectedMerchants
-                });
-            
-            return this.JsonRequestResult("#supervisorsList", Url.Action("SupervisorsList"), new SupervisorsPageViewModel() { SelectedMerchant = vm.SelectedMerchant });
+            try
+            {
+                await _payInternalClient.AddSupervisorMembershipForMerchantsAsync(
+                    new AddSupervisorMembershipMerchantsRequest
+                    {
+                        MerchantId = vm.SelectedMerchant,
+                        EmployeeId = vm.SelectedEmployee,
+                        Merchants = vm.SelectedMerchants
+                    });
+            }
+            catch (DefaultErrorResponseException ex)
+            {
+                return this.JsonFailResult(ex.Message, "#errorMessage");
+            }
+
+            return this.JsonRequestResult("#supervisorsList", Url.Action("SupervisorsList"),
+                new SupervisorsPageViewModel {SelectedMerchant = vm.SelectedMerchant});
         }
     }
 }
