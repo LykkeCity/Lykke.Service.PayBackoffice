@@ -213,7 +213,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> UploadLogo(IFormFile file)
         {
-            const int MAX_FILE_SIZE = 50 * 1024 * 1024;
+            const int MAX_FILE_SIZE = 10 * 1024 * 1024;
             var merchantId = Request.Form["MerchantId"];
 
             var merchantfiles = (await _payInternalClient.GetFilesAsync(merchantId)).ToList();
