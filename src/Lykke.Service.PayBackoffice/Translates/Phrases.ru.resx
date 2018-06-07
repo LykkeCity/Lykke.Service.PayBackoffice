@@ -1107,10 +1107,10 @@
   <data name="WalletAmountError" xml:space="preserve">
     <value>Пожалуйста, укажитье сумму с правильным формате. (0.00)</value>
   </data>
-  <data name="WalletAmountError" xml:space="preserve">
-    <value>Пожалуйста, укажитье сумму с правильным формате. (0.00)</value>
+  <data name="ApiUnknownError" xml:space="preserve">
+    <value>Неизвестная ошибка вызова API</value>
   </data>
-  <data name="WalletAmountError" xml:space="preserve">
-    <value>Пожалуйста, укажитье сумму с правильным формате. (0.00)</value>
+  <data name="MerchantsEmptyError" xml:space="preserve">
+    <value>Пожалуйста, выберите мерчантов</value>
   </data>
 </root>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +8,8 @@ using BackOffice.Controllers;
 using BackOffice.Translates;
 using Lykke.Service.PayInvoice.Client;
 using BackOffice.Areas.LykkePay.Models.Supervisors;
+using Common;
+using Common.Log;
 using Lykke.Service.PayInternal.Client.Exceptions;
 using Lykke.Service.PayInternal.Client.Models.SupervisorMembership;
 
@@ -20,12 +21,15 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
     {
         private readonly IPayInternalClient _payInternalClient;
         private readonly IPayInvoiceClient _payInvoiceClient;
+        private readonly ILog _log;
 
         public SupervisorsController(
             IPayInternalClient payInternalClient,
-            IPayInvoiceClient payInvoiceClient)
+            IPayInvoiceClient payInvoiceClient, 
+            ILog log)
         {
             _payInvoiceClient = payInvoiceClient;
+            _log = log;
             _payInternalClient = payInternalClient;
         }
         public IActionResult Index()
@@ -109,8 +113,18 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddSupervisor(AddSupervisorDialogViewModel vm)
         {
+            await _log.WriteWarningAsync(nameof(SupervisorsController), nameof(AddSupervisor), new
+            {
+                SelectedMerchantsCount = vm.SelectedMerchants.Length,
+                SelectedMerchants = string.Join(";", vm.SelectedMerchants),
+                vm.SelectedEmployee,
+                vm.SelectedMerchant,
+                Employees = string.Join(";", vm.Employees),
+                Merchants = string.Join(";", vm.Merchants)
+            }.ToJson());
+
             if (!vm.SelectedMerchants.Any())
-                return this.JsonFailResult("Please, select merchants", "#errorMessage");
+                return this.JsonFailResult(Phrases.MerchantsEmptyError, "#errorMessage");
 
             try
             {
@@ -124,7 +138,7 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
             }
             catch (DefaultErrorResponseException ex)
             {
-                return this.JsonFailResult(ex.Error?.ErrorMessage ?? "Unkhown API error", "#errorMessage");
+                return this.JsonFailResult(ex.Error?.ErrorMessage ?? Phrases.ApiUnknownError, "#errorMessage");
             }
 
             return this.JsonRequestResult("#supervisorsList", Url.Action("SupervisorsList"),
