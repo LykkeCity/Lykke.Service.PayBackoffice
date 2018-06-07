@@ -120,8 +120,8 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
                 SeletecMerchantsNull = vm.SelectedMerchants == null,
                 vm.SelectedEmployee,
                 vm.SelectedMerchant,
-                Employees = string.Join(";", vm.Employees),
-                Merchants = string.Join(";", vm.Merchants)
+                Employees = vm.Employees != null ? string.Join(";", vm.Employees) : string.Empty,
+                Merchants = vm.Merchants != null ? string.Join(";", vm.Merchants) : string.Empty
             }.ToJson());
 
             if (!vm.SelectedMerchants.Any())
