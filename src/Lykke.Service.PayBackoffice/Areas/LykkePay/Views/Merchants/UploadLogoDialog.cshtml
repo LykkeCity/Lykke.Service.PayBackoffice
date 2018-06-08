@@ -1,0 +1,133 @@
+﻿@model BackOffice.Areas.LykkePay.Models.Merchants.UploadLogoDialogViewModel
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+@using (Html.BeginForm("UploadLogo", "Merchants", FormMethod.Post, new { enctype = "multipart/form-data", id = "UploadLogoForm" }))
+{
+    <div>
+        @if (!string.IsNullOrEmpty(Model.LogoImage))
+        {
+            <div class="form-group">
+                <label class="control-label">Logo</label>
+                <br />
+                <img width="150" src="data:image/jpeg;base64,@Model.LogoImage" />
+            </div>
+        }
+        <div>
+            <input type="file" name="file" style="visibility: hidden;" id="selectFileDialog" accept=".png,.jpg,.jpeg">
+            <div class="form-inline">
+                <input type="button" class="btn btn-info" onclick="$('#selectFileDialog').click();" value="Choose File" style="width: 30%" />
+                <input type="text" id="subfile" class="form-control" required="required" style="width: 67%" autocomplete="off">
+            </div>
+            <br />
+        </div>
+    </div>
+
+    <input name="MerchantId" type="hidden" value="@Model.MerchantId" />
+    <input class="btn btn-primary" type="submit" name="Submit" id="Submit" value="Upload" />
+}
+<script>
+    $(document).ready(function () {
+        $('#UploadLogoForm').submit(function (event) {
+            // disable form submit to avoid redirection, but use submit input to leave native HTML5 validation
+            event.preventDefault();
+
+            if (!$("#UploadLogoForm")[0].checkValidity()) {
+                return;
+            }
+
+            uploadDocument();
+        });
+        $('#selectFileDialog').change(function () {
+            $('#subfile').val(null);
+
+            if ($(this)[0].files == null)
+                return;
+
+            var fileNames = [];
+            var totalSize = 0;
+            Array.prototype.every.call($(this)[0].files, file => {
+                if (file.type == "image/png" || file.type == "image/jpeg") {
+                    fileNames.push(file.name);
+                    totalSize += file.size;
+                }
+                else
+                {
+                    alert("This file extension isn't supported. Allowed file extension is .png, .jpeg");
+                    return;
+                }
+            });
+
+            if (totalSize >= 10 * 1024 * 1024) {
+                alert('File size cannot exceed 10 MB!');
+                return;
+            }
+
+            $('#subfile').val(fileNames.join(', '));
+        });
+
+        // Make #subfile read-only, but allow HTML5 validations
+        $("#subfile").keydown(function (e) {
+            e.preventDefault();
+            return;
+        });
+    });
+
+    function ignoreKeyPress(e) {
+        e.preventDefault();
+    }
+
+    function uploadDocument() {
+        var myFormData = new FormData();
+
+        var files = $('#selectFileDialog')[0].files;
+        for (var i = 0; i < files.length ; i++) {
+            myFormData.append(files[i].name, files[i]);
+        }
+
+        $('#UploadLogoForm').serializeArray().forEach(function (item, i, arr) {
+            myFormData.append(item.name, item.value);
+        });
+
+        $.ajax({
+            url: '@Url.Action("UploadLogo")',
+            type: 'POST',
+            headers: { 'RequestVerificationToken': getAntiForgeryCookie() },
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            data: myFormData,
+            success: function (response) {
+
+                var div = $(response.div);
+                var divDataUrl = response.refreshUrl;
+                var divError = $(response.divError);
+
+                if (response.msg) {
+                    divError.text(response.msg);
+                } else {
+                    ui.hideDialog();
+
+                    if (div != null && divDataUrl != null) {
+
+                        div.html('<div style="text-align:center; margin-top:20px;"><img src="/images/loading-pa.gif"/></div>');
+                        div.show();
+
+                        $.ajax({
+                            url: divDataUrl,
+                            type: 'POST',
+                            headers: { 'RequestVerificationToken': getAntiForgeryCookie() },
+                            success: function (response) {
+                                div.html(response);
+                                div.show();
+                            }
+                        });
+                    }
+                }
+            },
+            error: function () {
+                ui.hideDialog();
+            }
+        });
+    }
+</script>

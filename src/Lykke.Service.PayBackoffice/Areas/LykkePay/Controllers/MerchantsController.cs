@@ -18,6 +18,8 @@ using Lykke.Service.PayInvoice.Core.Domain;
 using System.Net;
 using Lykke.Service.PayInternal.Client.Exceptions;
 using BackOffice.Areas.LykkePay.Models.Merchants;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -105,6 +107,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 merchant = await _payInternalClient.GetMerchantByIdAsync(id);
             }
+            
+
             var viewModel = new AddOrEditMerchantDialogViewModel
             {
                 Caption = "Add merchant",
@@ -117,11 +121,12 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 TimeCacheRates = merchant.TimeCacheRates,
                 Certificate = merchant.PublicKey,
                 SystemId = string.Empty,
-                DisplayName = merchant.DisplayName
+                DisplayName = merchant.DisplayName                
             };
 
             return View(viewModel);
         }
+
         [HttpPost]
         public async Task<ActionResult> AddOrEditMerchant(AddOrEditMerchantDialogViewModel vm)
         {
@@ -181,8 +186,64 @@ namespace BackOffice.Areas.LykkePay.Controllers
 
                 await _payInternalClient.UpdateMerchantAsync(updatereq);
             }
-
             return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
+        }
+        [HttpPost]
+        public async Task<ActionResult> UploadLogoDialog(string id = null)
+        {
+            var merchant = new MerchantModel();
+            if (id != null)
+            {
+                merchant = await _payInternalClient.GetMerchantByIdAsync(id);
+            }
+            var merchantfiles = (await _payInternalClient.GetFilesAsync(id)).ToList();
+            byte[] merchantlogo = null;
+            if (merchantfiles.Any())
+                merchantlogo = await _payInternalClient.GetFileAsync(id, merchantfiles[0].Id);
+
+            var viewModel = new UploadLogoDialogViewModel
+            {
+                Caption = "Merchant logo",
+                MerchantId = id,
+                LogoImage = merchantlogo == null ? string.Empty : Convert.ToBase64String(merchantlogo)
+            };
+
+            return View(viewModel);
+        }
+        [HttpPost]
+        public async Task<ActionResult> UploadLogo(IFormFile file)
+        {
+            const int MAX_FILE_SIZE = 10 * 1024 * 1024;
+            var merchantId = Request.Form["MerchantId"];
+
+            var merchantfiles = (await _payInternalClient.GetFilesAsync(merchantId)).ToList();
+            foreach (var fileitem in merchantfiles)
+            {
+                await _payInternalClient.DeleteFileAsync(merchantId, fileitem.Id);
+            }
+
+            if (file == null)
+                file = Request.Form.Files.FirstOrDefault();
+
+            if (file != null && file.Length <= MAX_FILE_SIZE)
+            {
+                using (var stream = file.OpenReadStream())
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        stream.CopyTo(ms);
+
+                        if (ms.Length > 0)
+                        {
+                            string contentType = file.ContentType;
+                            byte[] imageBytes = ms.ToArray();
+                            await _payInternalClient.UploadFileAsync(merchantId, imageBytes, file.FileName, contentType);
+                        }
+                    }
+                }
+            }
+
+            return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList", new { id = merchantId }));
         }
         [HttpPost]
         public ActionResult DeleteMerchantDialog(string merchant, string id)
