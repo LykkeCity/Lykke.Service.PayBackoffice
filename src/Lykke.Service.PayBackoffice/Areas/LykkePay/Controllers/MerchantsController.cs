@@ -198,7 +198,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             }
             var merchantfiles = (await _payInternalClient.GetFilesAsync(id)).ToList();
             byte[] merchantlogo = null;
-            if (merchantfiles.Count != 0)
+            if (merchantfiles.Any())
                 merchantlogo = await _payInternalClient.GetFileAsync(id, merchantfiles[0].Id);
 
             var viewModel = new UploadLogoDialogViewModel
