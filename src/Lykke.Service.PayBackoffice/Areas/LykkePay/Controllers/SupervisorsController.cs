@@ -116,6 +116,9 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
             if (vm.SelectedMerchants == null || !vm.SelectedMerchants.Any())
                 return this.JsonFailResult(Phrases.PleaseSelectAtLeastOneItem, "#selectedMerchants");
 
+            if (string.IsNullOrEmpty(vm.SelectedEmployee))
+                return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, "#selectedEmployee");
+
             try
             {
                 await _payInternalClient.AddSupervisorMembershipForMerchantsAsync(
