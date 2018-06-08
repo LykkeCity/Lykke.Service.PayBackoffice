@@ -1474,4 +1474,10 @@
   <data name="MarketMakerStates" xml:space="preserve">
     <value>Market Maker States</value>
   </data>
+  <data name="ApiUnknownError" xml:space="preserve">
+    <value>Unknown API error</value>
+  </data>
+  <data name="MerchantsEmptyError" xml:space="preserve">
+    <value>Please, select merchants</value>
+  </data>
 </root>

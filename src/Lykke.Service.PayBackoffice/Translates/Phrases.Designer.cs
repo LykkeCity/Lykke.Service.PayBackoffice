@@ -340,6 +340,15 @@ namespace BackOffice.Translates {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown API error.
+        /// </summary>
+        public static string ApiUnknownError {
+            get {
+                return ResourceManager.GetString("ApiUnknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Applications.
         /// </summary>
         public static string Applications {
@@ -2478,6 +2487,15 @@ namespace BackOffice.Translates {
         public static string MenuReportKycOfficerStats {
             get {
                 return ResourceManager.GetString("MenuReportKycOfficerStats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please, select merchants.
+        /// </summary>
+        public static string MerchantsEmptyError {
+            get {
+                return ResourceManager.GetString("MerchantsEmptyError", resourceCulture);
             }
         }
         
