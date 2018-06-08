@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
 }
 
-<form id="frmMerchant" autocomplete="off" style="max-height: 700px;overflow: auto;">
+<form id="frmMerchant" autocomplete="off" enctype="multipart/form-data" style="max-height: 700px;overflow: auto;">
     @Html.HiddenFor(x => x.IsNewMerchant)
     @Html.HiddenFor(x => x.Id)
 
@@ -45,7 +45,6 @@
         </div>
     }
 </form>
-
 @Html.RenderSaveCancelButtonPair(Url.Action("AddOrEditMerchant"), "#frmMerchant")
 <script>
     $('input[type=number]').keypress(function (event) {

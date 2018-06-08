@@ -1,4 +1,5 @@
 ﻿using BackOffice.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace BackOffice.Areas.LykkePay.Models
         public string LwId { get; set; }
         public string Certificate { get; set; }
         public string SystemId { get; set; }
+        public string LogoImage { get; set; }
     }
     public class DeleteMerchantDialogViewModel : IPersonalAreaDialog
     {
