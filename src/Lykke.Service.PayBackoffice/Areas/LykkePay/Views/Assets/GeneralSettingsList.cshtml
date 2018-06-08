@@ -1,0 +1,52 @@
+﻿@using BackOffice.Translates
+@using Lykke.Service.PayInternal.Client.Models.Asset
+@model IReadOnlyList<AssetGeneralSettingsResponse>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped">
+        <tr>
+            <th>
+                AssetDisplayId
+            </th>
+            <th>
+                Network
+            </th>
+            <th>
+                PaymentAvailable
+            </th>
+            <th>
+                SettlementAvailable
+            </th>
+            @*<th></th>*@
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.AssetDisplayId
+                </td>
+                <td>
+                    @item.Network.ToString()
+                </td>
+                <td>
+                    @item.PaymentAvailable.ToString()
+                </td>
+                <td>
+                    @item.SettlementAvailable.ToString()
+                </td>
+                @*<td style="text-align: right">
+                    <button class="btn btn-xs btn-danger btn-raised"
+                            onclick="ui.showDialog('@Url.Action("DeleteGeneralSettingsDialog")', { assetId: '@item' });">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+                </td>*@
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>@Phrases.NoRecordsFound</p>
+}
