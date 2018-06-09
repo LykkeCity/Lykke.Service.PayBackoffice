@@ -1,39 +1,37 @@
-﻿using System;
+﻿using BackOffice.Helpers;
+using BackOffice.Models;
+using BackOffice.Services;
+using BackOffice.Settings;
+using BackOffice.Translates;
+using Core.Settings;
+using Google.Apis.Auth;
+using Lykke.GoogleAuthenticator;
+using Lykke.Service.BackofficeMembership.Client;
+using Lykke.Service.BackofficeMembership.Client.AutorestClient.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using BackOffice.Helpers;
-using BackOffice.Models;
-using BackOffice.Services;
-using BackOffice.Settings;
-using BackOffice.Translates;
-using Core;
-using Core.Settings;
-using Core.Users;
-using Google.Apis.Auth;
-using Lykke.GoogleAuthenticator;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication;
+using Lykke.Service.BackofficeMembership.Client.Models;
 
 namespace BackOffice.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IBrowserSessionsRepository _browserSessionsRepository;
-        private readonly IBackOfficeUsersRepository _backOfficeUsersRepository;
+        private readonly IBackofficeMembershipClient _backofficeMembershipClient;
         private readonly GoogleAuthSettings _googleAuthSettings;
         private readonly TwoFactorVerificationSettingsEx _twoFactorVerificationSettings;
 
-        public HomeController(IBrowserSessionsRepository browserSessionsRepository,
-            IBackOfficeUsersRepository backOfficeUsersRepository,
+        public HomeController(IBackofficeMembershipClient backofficeMembershipClient,
             GoogleAuthSettings googleAuthSettings,
             TwoFactorVerificationSettingsEx twoFactorVerificationSettings)
         {
-            _browserSessionsRepository = browserSessionsRepository;
-            _backOfficeUsersRepository = backOfficeUsersRepository;
+            _backofficeMembershipClient = backofficeMembershipClient;
             _googleAuthSettings = googleAuthSettings;
             _twoFactorVerificationSettings = twoFactorVerificationSettings;
         }
@@ -53,7 +51,7 @@ namespace BackOffice.Controllers
 
             var viewModel = new IndexPageModel
             {
-                BrowserSession = await _browserSessionsRepository.GetSessionAsync(sessionId),
+                BrowserSession = await _backofficeMembershipClient.GetBrowserSessionAsync(sessionId),
                 GoogleApiClientId = _googleAuthSettings.ApiClientId
             };
 
@@ -72,40 +70,29 @@ namespace BackOffice.Controllers
                 if (checkError != null)
                     return checkError;
 
-                IBackOfficeUser user = await _backOfficeUsersRepository.GetAsync(webSignature.Email);
-
-                if (user == null)
-                    return this.JsonFailResult(Phrases.UserNotRegistered, "#googleSignIn");
-
-                if (user.IsDisabled)
-                    return this.JsonFailResult(Phrases.UserIsDisabled, "#googleSignIn");
-
-                if (_twoFactorVerificationSettings.UseVerification && user.UseTwoFactorVerification)
-                {
-                    if (!IsTrustedIp(user.TwoFactorVerificationTrustedIPs, this.GetIp()))
+                var authenticationResult = await _backofficeMembershipClient.AuthenticateAsync(
+                    new AuthenticationDataModel
                     {
-                        if (!CheckTwoFactorAuthenticator(user.GoogleAuthenticatorPrivateKey, data.Code))
-                            return this.JsonFailResult(Phrases.UserNotRegistered, "#googleSignIn");
+                        UserId = webSignature.Email,
+                        Code = data.Code,
+                        Ip = this.GetIp(),
+                        SessionId = this.GetSession(),
+                        TrustedTimeSpan = TimeSpan.Parse(_twoFactorVerificationSettings.TrustedTimeSpan),
+                        UseTwoFactorVerification = _twoFactorVerificationSettings.UseVerification
+                    });
 
-                        if (!TimeSpan.TryParse(user.TwoFactorVerificationTrustedTimeSpan, out TimeSpan trustedTimeSpan))
-                            trustedTimeSpan = TimeSpan.Parse(_twoFactorVerificationSettings.TrustedTimeSpan);
-
-                        string ips = AddTrustedIp(user.TwoFactorVerificationTrustedIPs, this.GetIp(), trustedTimeSpan);
-
-                        await _backOfficeUsersRepository.SetTrustedIpAddresses(user.Id, ips);
-                    }
-
-                    if (!user.GoogleAuthenticatorConfirmBinding)
-                        await _backOfficeUsersRepository.SetGoogleAuthenticatorConfirmBinding(user.Id, true);
+                if (authenticationResult.Result == AuthenticationResult.UserNotRegistered
+                    || authenticationResult.Result == AuthenticationResult.SecondFactorIsFailed)
+                {
+                    return this.JsonFailResult(Phrases.UserNotRegistered, "#googleSignIn");
                 }
 
-                await _backOfficeUsersRepository.ResetForceLogoutAsync(user.Id);
+                if (authenticationResult.Result == AuthenticationResult.UserIsDisabled)
+                {
+                    return this.JsonFailResult(Phrases.UserIsDisabled, "#googleSignIn");
+                }
 
-                var sessionId = this.GetSession();
-
-                await _browserSessionsRepository.SaveSessionAsync(sessionId, user.Id);
-
-                await SignIn(user);
+                await SignIn(authenticationResult.User);
             }
             catch (InvalidJwtException)
             {
@@ -117,7 +104,7 @@ namespace BackOffice.Controllers
             return this.JsonRequestResult(divResult, Url.Action(nameof(BackOfficeController.Layout), "BackOffice"));
         }
 
-        private static ClaimsIdentity MakeIdentity(IBackOfficeUser user)
+        private static ClaimsIdentity MakeIdentity(BackofficeUserModel user)
         {
             var claims = new List<Claim>
             {
@@ -129,7 +116,7 @@ namespace BackOffice.Controllers
         }
 
 
-        private async Task SignIn(IBackOfficeUser user)
+        private async Task SignIn(BackofficeUserModel user)
         {
             var identity = MakeIdentity(user);
             await HttpContext.SignInAsync("Cookie", new ClaimsPrincipal(identity), new AuthenticationProperties { IsPersistent = false });
@@ -182,7 +169,7 @@ namespace BackOffice.Controllers
 
                 string email = webSignature.Email;
 
-                IBackOfficeUser user = await _backOfficeUsersRepository.GetAsync(email);
+                BackofficeUserModel user = UsersCache.GetUsersRolePair(email).User;
 
                 if (user == null)
                 {
@@ -204,8 +191,7 @@ namespace BackOffice.Controllers
 
                     if (!res.ExistCode)
                     {
-                        await _backOfficeUsersRepository.GenerateGoogleAuthenticatorPrivateKey(user.Id);
-                        user = await _backOfficeUsersRepository.GetAsync(email);
+                        user = await _backofficeMembershipClient.GenerateGoogleAuthenticatorPrivateKeyAsync(user.Id);
 
                         var setupInfo =
                             GenerateTwoFactorAuthenticatorSetupCode(user.Id, user.GoogleAuthenticatorPrivateKey);

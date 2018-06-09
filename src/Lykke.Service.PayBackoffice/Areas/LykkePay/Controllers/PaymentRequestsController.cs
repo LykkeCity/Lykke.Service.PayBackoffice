@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BackOffice.Areas.LykkePay.Models;
+﻿using BackOffice.Areas.LykkePay.Models;
+using BackOffice.Binders;
 using BackOffice.Controllers;
-using BackOffice.Filters;
+using BackOffice.Helpers;
 using BackOffice.Translates;
-using Core.Users;
+using Lykke.Service.BackofficeMembership.Client.Filters;
 using Lykke.Service.PayInternal.Client;
 using Lykke.Service.PayInternal.Client.Models.Merchant;
 using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using BackOffice.Binders;
 using PagedList.Core;
-using BackOffice.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {

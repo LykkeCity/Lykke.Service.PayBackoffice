@@ -1,23 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Lykke.Service.PayInternal.Client;
-using BackOffice.Filters;
-using Core.Users;
+﻿using BackOffice.Areas.LykkePay.Models;
+using BackOffice.Binders;
 using BackOffice.Controllers;
+using BackOffice.Helpers;
 using BackOffice.Translates;
-using Lykke.Service.PayInvoice.Client;
-using BackOffice.Areas.LykkePay.Models;
-using Lykke.Service.PayInvoice.Client.Models.Employee;
-using Lykke.Service.PayAuth.Client;
-using Lykke.Service.PayAuth.Client.Models.Employees;
-using System.Text.RegularExpressions;
+using Lykke.Service.BackofficeMembership.Client;
+using Lykke.Service.BackofficeMembership.Client.Filters;
 using Lykke.Service.EmailPartnerRouter.Client;
 using Lykke.Service.EmailPartnerRouter.Contracts;
-using BackOffice.Binders;
+using Lykke.Service.PayAuth.Client;
+using Lykke.Service.PayAuth.Client.Models.Employees;
+using Lykke.Service.PayInternal.Client;
+using Lykke.Service.PayInvoice.Client;
+using Lykke.Service.PayInvoice.Client.Models.Employee;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -68,8 +69,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 SelectedMerchant = merchant,
                 Merchants = merchants,
-                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsFull),
-                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsEdit)
+                IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsFull),
+                IsEditAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsEdit)
             });
         }
         [HttpPost]
@@ -109,8 +110,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 Employees = filteredstaffs,
                 SelectedMerchant = vm.SelectedMerchant,
-                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsFull),
-                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsEdit),
+                IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsFull),
+                IsEditAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayStaffsEdit),
                 IsSearchMode = !string.IsNullOrEmpty(vm.SearchValue)
             };
 

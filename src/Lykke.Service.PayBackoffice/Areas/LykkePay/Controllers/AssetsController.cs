@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BackOffice.Areas.LykkePay.Models.Assets;
+using BackOffice.Controllers;
+using BackOffice.Helpers;
+using BackOffice.Translates;
+using Lykke.Common.Api.Contract.Responses;
+using Lykke.Service.BackofficeMembership.Client.Filters;
+using Lykke.Service.PayInternal.Client;
+using Lykke.Service.PayInternal.Client.Exceptions;
+using Lykke.Service.PayInternal.Client.Models;
+using Lykke.Service.PayInternal.Client.Models.Asset;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using BackOffice.Filters;
-using Core.Users;
-using Lykke.Service.PayInternal.Client;
-using Lykke.Service.PayInternal.Client.Models.Asset;
-using BackOffice.Controllers;
-using BackOffice.Areas.LykkePay.Models;
-using BackOffice.Translates;
-using AutoMapper;
-using Lykke.Service.PayInternal.Client.Exceptions;
-using Lykke.Common.Api.Contract.Responses;
-using BackOffice.Areas.LykkePay.Models.Assets;
-using Lykke.Service.PayInternal.Client.Models;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {

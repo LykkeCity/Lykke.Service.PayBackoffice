@@ -1,13 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-
-namespace Core.Settings
+﻿namespace Core.Settings
 {
     public class DbSettings
     {
-        public string ClientPersonalInfoConnString { get; set; }
-        public string BackOfficeConnString { get; set; }
         public string LogsConnString { get; set; }
     }
 

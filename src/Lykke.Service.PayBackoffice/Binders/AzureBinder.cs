@@ -4,6 +4,7 @@ using BackOffice.Settings;
 using Common.Cache;
 using Common.IocContainer;
 using Common.Log;
+using Lykke.Service.BackofficeMembership.Client;
 using Microsoft.Extensions.Configuration;
 using Lykke.SettingsReader;
 using Lykke.Service.PayInternal.Client;
@@ -40,8 +41,6 @@ namespace BackOffice.Binders
 
             var cacheManager = new MemoryCacheManager();
             ioc.RegisterInstance<ICacheManager>(cacheManager);
-            ioc.BindAzureRepositories(settings.Nested(x => x.PayBackOffice.Db), cacheManager, Log);
-            ioc.BindBackOfficeRepositories(settings.Nested(x => x.PayBackOffice.Db), Log);
 
             ioc.RegisterInstance<IEmailPartnerRouterClient>(new EmailPartnerRouterClient(settings.CurrentValue.EmailPartnerRouterServiceClient.ServiceUrl));
             ioc.RegisterInstance<IPayInternalClient>(new PayInternalClient(new PayInternalServiceClientSettings() { ServiceUrl = settings.CurrentValue.PayInternalServiceClient.ServiceUrl }));
@@ -49,6 +48,8 @@ namespace BackOffice.Binders
             ioc.RegisterInstance<IPayAuthClient>(new PayAuthClient(new PayAuthServiceClientSettings() { ServiceUrl = settings.CurrentValue.PayAuthServiceClient.ServiceUrl }, Log));
 
             ioc.RegisterInstance(new QBitNinjaClient(settings.CurrentValue.NinjaServiceClient.ServiceUrl)).AsSelf();
+
+            ioc.BindBackofficeMembershipClient(settings.CurrentValue.BackofficeMembershipServiceClient.ServiceUrl);
 
             Log.WriteInfoAsync("DResolver", "Binding", "", "App Stated");
 

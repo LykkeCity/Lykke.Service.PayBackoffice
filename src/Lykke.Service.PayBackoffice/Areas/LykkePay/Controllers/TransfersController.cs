@@ -1,28 +1,27 @@
-﻿using System;
+﻿using BackOffice.Areas.LykkePay.Models;
+using BackOffice.Controllers;
+using BackOffice.Helpers;
+using BackOffice.Translates;
+using Core.Settings;
+using Lykke.Common.Api.Contract.Responses;
+using Lykke.Service.BackofficeMembership.Client;
+using Lykke.Service.BackofficeMembership.Client.Filters;
+using Lykke.Service.PayAuth.Client;
+using Lykke.Service.PayInternal.Client;
+using Lykke.Service.PayInternal.Client.Exceptions;
+using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
+using Lykke.Service.PayInvoice.Client;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MoreLinq;
+using NBitcoin;
+using Newtonsoft.Json;
+using QBitNinja.Client;
+using QBitNinja.Client.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using BackOffice.Filters;
-using Core.Users;
-using Lykke.Service.PayInternal.Client;
-using Lykke.Service.PayInvoice.Client;
-using Lykke.Service.PayAuth.Client;
-using BackOffice.Controllers;
-using BackOffice.Translates;
-using BackOffice.Areas.LykkePay.Models;
-using QBitNinja.Client;
-using QBitNinja.Client.Models;
-using NBitcoin;
-using MoreLinq;
-using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
-using Core.Settings;
-using Newtonsoft.Json;
-using Lykke.Service.PayInternal.Client.Models.Transactions;
-using BackOffice.Helpers;
-using Lykke.Service.PayInternal.Client.Exceptions;
-using Lykke.Common.Api.Contract.Responses;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -76,7 +75,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 SelectedMerchant = merchant,
                 Merchants = merchants,
                 Assets = assetsList,
-                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayTransfersFull)
+                IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayTransfersFull)
             });
         }
         [HttpPost]
@@ -115,7 +114,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             viewModel.List = list;
             viewModel.SelectedMerchant = vm.SelectedMerchant;
             viewModel.Assets = JsonConvert.SerializeObject(assetsList);
-            viewModel.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayTransfersFull);
+            viewModel.IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayTransfersFull);
             return View(viewModel);
         }
         [HttpPost]
