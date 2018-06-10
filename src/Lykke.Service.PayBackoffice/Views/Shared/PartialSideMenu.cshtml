@@ -1,16 +1,11 @@
 ﻿@using BackOffice.Translates
-@using Core.Users
+@using Lykke.Service.BackofficeMembership.Client
 
 @model BackOffice.Models.MainMenuViewModel
 @{
     Layout = null;
 }
 <ul class="sidemenu" style="width: 201px;">
-    @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.MenuUsers))
-
-    {
-        <li class="smi" data-url="@Url.Action("Index", "Menu", new {area = "Users"})" data-text="Users and roles"></li>
-    }
     @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.MenuLykkePay))
     {
         <li class="smi" data-text="Lykke Pay" style="pointer-events: none;"></li>

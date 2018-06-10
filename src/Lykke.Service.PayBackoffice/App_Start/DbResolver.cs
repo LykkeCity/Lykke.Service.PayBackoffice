@@ -1,33 +1,20 @@
 ﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Common.IocContainer;
 using Common.Log;
-using Core.Users;
+using Lykke.Service.BackofficeMembership.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Autofac.Extensions.DependencyInjection;
-using Core.Settings;
 
 namespace BackOffice
 {
-	public static class Dependencies
+    public static class Dependencies
 	{
-		public static IBackOfficeUsersRepository BackOfficeUsersRepository { get; private set; }
-		public static IBackofficeUserRolesRepository BackofficeUserRolesRepository { get; private set; }
-
-        private static void CreateAdminUser(IContainer ioc)
-		{
-			var usersRepo = ioc.Resolve<IBackOfficeUsersRepository>();
-		    var googleAuthSettings = ioc.Resolve<GoogleAuthSettings>();
-
-			var adminUser = usersRepo.UserExists(googleAuthSettings.DefaultAdminEmail).Result;
-		    if (!adminUser)
-		        usersRepo.CreateAsync(googleAuthSettings.DefaultAdminEmail, "Admin", true, new string[0]).Wait();
-		}
+		public static IBackofficeMembershipClient BackofficeMembershipClient { get; private set; }
 
         private static void InitSingletones(IContainer ioc)
 		{
-			BackOfficeUsersRepository = ioc.Resolve<IBackOfficeUsersRepository>();
-			BackofficeUserRolesRepository = ioc.Resolve<IBackofficeUserRolesRepository>();
+			BackofficeMembershipClient = ioc.Resolve<IBackofficeMembershipClient>();
 			//TcpMeClient = ioc.Resolve<TcpMatchingEngineClient>();
 		}
 
@@ -43,7 +30,6 @@ namespace BackOffice
 
             var container = ioc.Build();
 
-            CreateAdminUser(container);
 			InitSingletones(container);
 
             container.Resolve<ILog>().WriteInfoAsync("DResolver", "Binding", "", "App Stated");

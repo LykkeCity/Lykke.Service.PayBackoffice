@@ -10,6 +10,7 @@ using BackOffice.Filters;
 using BackOffice.Middleware;
 using Autofac.Extensions.DependencyInjection;
 using BackOffice.ModelBinders;
+using Lykke.Service.BackofficeMembership.Client.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackOffice

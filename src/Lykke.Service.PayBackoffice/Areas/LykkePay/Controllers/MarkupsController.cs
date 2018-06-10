@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Core.Users;
-using BackOffice.Filters;
-using Lykke.Service.PayInternal.Client;
-using System.Threading.Tasks;
-using BackOffice.Areas.LykkePay.Models;
+﻿using BackOffice.Areas.LykkePay.Models;
 using BackOffice.Controllers;
-using System;
+using BackOffice.Helpers;
+using Lykke.Service.BackofficeMembership.Client;
+using Lykke.Service.BackofficeMembership.Client.Filters;
+using Lykke.Service.PayInternal.Client;
+using Lykke.Service.PayInternal.Client.Exceptions;
 using Lykke.Service.PayInternal.Client.Models.Markup;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using PagedList.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using PagedList.Core;
-using BackOffice.Translates;
-using Lykke.Service.PayInternal.Client.Exceptions;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
 {
@@ -38,7 +38,7 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
             var model = new MarkupsListViewModel();
             model.Merchants = merchants;
             model.CurrentPage = 1;
-            model.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
+            model.IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
             return View(model);
         }
         [HttpPost]
@@ -66,8 +66,8 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
                 Count = pageCount,
                 SelectedMerchant = vm.SelectedMerchant,
                 CurrentPage = currentPage,
-                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsEdit),
-                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
+                IsEditAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsEdit),
+                IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
             };
             return View(viewmodel);
         }

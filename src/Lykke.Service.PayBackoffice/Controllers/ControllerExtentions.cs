@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
-using BackOffice.Models;
+﻿using BackOffice.Models;
 using Common;
-using Core.Users;
+using Lykke.Service.BackofficeMembership.Client.AutorestClient.Models;
+using Lykke.Service.BackofficeMembership.Client.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Lykke.Service.BackofficeMembership.Client;
 
 namespace BackOffice.Controllers
 {
@@ -148,33 +148,19 @@ namespace BackOffice.Controllers
             return request.Headers["User-Agent"];
         }
 
-
-
-        public static async Task<IBackOfficeUser> GetBackofficeUserAsync(this Controller contr)
+        public static BackofficeUserModel GetBackofficeUser(this Controller contr)
         {
-            return await Dependencies.BackOfficeUsersRepository.GetAsync(contr.GetUserId());
+            return UsersCache.GetUsersRolePair(contr.GetUserId()).User;
         }
-
 
         public static string GetUserId(this Controller controller)
         {
             return controller.User.Identity.Name;
         }
 
-
-        public static async Task<UserRolesPair> GetUserRolesPair(this Controller controller)
+        public static UserRolesPair GetUserRolesPair(this Controller controller)
         {
-            var userId = controller.GetUserId();
-
-            var result = new UserRolesPair();
-
-            var taskBackOfficeUser = Dependencies.BackOfficeUsersRepository.GetAsync(userId);
-            var taskUserRoles = Dependencies.BackofficeUserRolesRepository.GetAllRolesAsync();
-
-            result.User = await taskBackOfficeUser;
-            result.Roles = (await taskUserRoles).ToArray();
-
-            return result;
+            return UsersCache.GetUsersRolePair(controller.GetUserId());
         }
 
         public static string GetIp(this Controller ctx)

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BackOffice.Services;
+using Lykke.Service.BackofficeMembership.Client;
 using Microsoft.AspNetCore.Http;
 
 namespace BackOffice.Middleware

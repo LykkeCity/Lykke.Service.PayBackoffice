@@ -1,25 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using BackOffice.Filters;
-using Core.Users;
+﻿using BackOffice.Areas.LykkePay.Models;
+using BackOffice.Areas.LykkePay.Models.Merchants;
+using BackOffice.Controllers;
+using BackOffice.Helpers;
+using BackOffice.Translates;
+using Lykke.Service.BackofficeMembership.Client;
+using Lykke.Service.BackofficeMembership.Client.Filters;
+using Lykke.Service.PayAuth.Client;
 using Lykke.Service.PayInternal.Client;
 using Lykke.Service.PayInternal.Client.Models.Merchant;
-using BackOffice.Areas.LykkePay.Models;
-using BackOffice.Controllers;
-using BackOffice.Translates;
-using Lykke.Service.PayAuth.Client;
-using PagedList.Core;
 using Lykke.Service.PayInvoice.Client;
 using Lykke.Service.PayInvoice.Core.Domain;
-using System.Net;
-using Lykke.Service.PayInternal.Client.Exceptions;
-using BackOffice.Areas.LykkePay.Models.Merchants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using PagedList.Core;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -49,7 +49,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         {
             var model = new MerchantsListViewModel();
             model.CurrentPage = 1;
-            model.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
+            model.IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
             return View(model);
         }
         [HttpPost]
@@ -94,8 +94,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 PageSize = vm.PageSize,
                 Count = pageCount,
                 CurrentPage = currentPage,
-                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsEdit),
-                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
+                IsEditAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsEdit),
+                IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
             };
             return View(viewmodel);
         }
@@ -276,7 +276,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             var model = new MerchantSettingsListViewModel();
             model.Merchants = await _payInternalClient.GetMerchantsAsync();
             model.CurrentPage = 1;
-            model.IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
+            model.IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
             return View(model);
         }
         [HttpPost]
@@ -309,8 +309,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 PageSize = vm.PageSize,
                 Count = pageCount,
                 CurrentPage = currentPage,
-                IsEditAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsEdit),
-                IsFullAccess = (await this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
+                IsEditAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsEdit),
+                IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
             };
             return View(viewmodel);
         }

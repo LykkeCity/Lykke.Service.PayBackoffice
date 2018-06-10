@@ -1,4 +1,5 @@
-﻿using Lykke.Service.PayInternal.Client;
+﻿using Lykke.Service.BackofficeMembership.Client;
+using Lykke.Service.PayInternal.Client;
 using Lykke.Service.PayInvoice.Client;
 using Lykke.Service.PayAuth.Client;
 
@@ -12,5 +13,6 @@ namespace BackOffice.Settings
         public PayAuthServiceClientSettings PayAuthServiceClient { get; set; }
         public NinjaServiceClientSettings NinjaServiceClient { get; set; }
         public EmailPartnerRouterServiceClientSettings EmailPartnerRouterServiceClient { get; set; }
+        public BackofficeMembershipServiceClientSettings BackofficeMembershipServiceClient { get; set; }
     }
 }

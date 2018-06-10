@@ -1,15 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-
-using BackOffice.Filters;
-using BackOffice.Models;
-using BackOffice.Services;
+﻿using BackOffice.Models;
 using Common.Log;
-using Core.BackOffice;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace BackOffice.Controllers
 {
@@ -17,14 +10,10 @@ namespace BackOffice.Controllers
     
     public class BackOfficeController : Controller
     {
-        private readonly IMenuBadgesRepository _menuBadgesRepository;
         private readonly ILog _log;
 
-        public BackOfficeController(
-            IMenuBadgesRepository menuBadgesRepository,
-            ILog log)
+        public BackOfficeController(ILog log)
         {
-            _menuBadgesRepository = menuBadgesRepository;
             _log = log;
         }
 
@@ -42,7 +31,7 @@ namespace BackOffice.Controllers
             var viewModel = new MainMenuViewModel
             {
                 Ver = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion,
-                UserRolesPair = await this.GetUserRolesPair()
+                UserRolesPair = this.GetUserRolesPair()
             };
             return View(viewModel);
         }
@@ -51,9 +40,7 @@ namespace BackOffice.Controllers
         [IgnoreAntiforgeryToken]
         public async Task<ActionResult> GetBadges()
         {
-            var badges = (await _menuBadgesRepository.GetBadesAsync()).ToList();
-
-            return Json(badges.Select(itm => new { id = itm.Id, value = itm.Value }));
+            return Json(new object[0]);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Core;
-using Core.Users;
+﻿using Lykke.Service.BackofficeMembership.Client.AutorestClient.Models;
+using Lykke.Service.BackofficeMembership.Client.Models;
 
 namespace BackOffice.Models
 {
@@ -10,7 +10,7 @@ namespace BackOffice.Models
 
     public class IndexPageModel
     {
-        public IBrowserSession BrowserSession { get; set; }
+        public BrowserSessionModel BrowserSession { get; set; }
         public string GoogleApiClientId { get; set; }
         public string Test { get; set; }
     }
@@ -24,9 +24,8 @@ namespace BackOffice.Models
 
     public class MainMenuViewModel
     {
-       public string Ver { get; set; }
+        public string Ver { get; set; }
         public UserRolesPair UserRolesPair { get; set; }
-
     }
 
     public class TwoFactorInfo

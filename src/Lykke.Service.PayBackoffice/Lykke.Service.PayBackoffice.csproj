@@ -169,6 +169,7 @@
     <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.28.0.949" />
     <PackageReference Include="Lykke.Common" Version="6.7.0" />
     <PackageReference Include="Lykke.GoogleAuthenticator" Version="1.0.8" />
+    <PackageReference Include="Lykke.Service.BackofficeMembership.Client" Version="1.0.21-beta" />
     <PackageReference Include="Lykke.Service.EmailPartnerRouter.Client" Version="2.0.4" />
     <PackageReference Include="Lykke.Service.PayAuth.Client" Version="1.0.14" />
     <PackageReference Include="Lykke.Service.PayInternal.Client" Version="1.1.23" />
