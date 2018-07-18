@@ -29,7 +29,6 @@ namespace BackOffice.Binders
             bool fromTest = false)
         {
             var settings = configuration.LoadSettings<BackOfficeBundle>();
-            _monitoringServiceUrl = settings.CurrentValue.MonitoringServiceClient?.MonitoringServiceUrl;
             BlockchainExplorerUrl = settings.CurrentValue.PayBackOffice.BlockchainExplorerUrl;
             PayInvoicePortalResetPasswordLink = settings.CurrentValue.PayBackOffice.PayInvoicePortalResetPasswordLink;
             var ioc = builder ?? new ContainerBuilder();
@@ -50,10 +49,6 @@ namespace BackOffice.Binders
 
             ioc.RegisterBackofficeMembershipClient(settings.CurrentValue.BackofficeMembershipServiceClient.ServiceUrl);
 
-#if !DEBUG
-                if (!string.IsNullOrEmpty(_monitoringServiceUrl))
-                    AutoRegistrationInMonitoring.RegisterAsync(configuration, _monitoringServiceUrl, Log);
-#endif
             return ioc;
         }
     }

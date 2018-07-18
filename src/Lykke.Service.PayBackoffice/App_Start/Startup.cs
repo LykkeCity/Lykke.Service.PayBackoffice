@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,7 @@ using Lykke.Common.Log;
 using Lykke.Service.BackofficeMembership.Client.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Lykke.Logs;
+using Lykke.MonitoringServiceApiCaller;
 using Lykke.SettingsReader;
 
 namespace BackOffice
@@ -26,6 +28,7 @@ namespace BackOffice
         public IContainer ApplicationContainer { get; private set; }
         private ILog _log;
         private IHealthNotifier _healthNotifier;
+        private string _monitoringServiceUrl;
 
 
         public Startup(IHostingEnvironment env)
@@ -45,7 +48,7 @@ namespace BackOffice
 
             Configuration = builder.Build();
         }
-        
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
@@ -69,27 +72,28 @@ namespace BackOffice
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
                 });
 
-            var settings = Configuration.LoadSettings<BackOfficeBundle>();
+            var appSettings = Configuration.LoadSettings<BackOfficeBundle>();
+            _monitoringServiceUrl = appSettings.CurrentValue.MonitoringServiceClient?.MonitoringServiceUrl;
 
             services.AddLykkeLogging
             (
-                settings.ConnectionString(x => x.PayBackOffice.Db.LogsConnString),
+                appSettings.ConnectionString(x => x.PayBackOffice.Db.LogsConnString),
                 "LogBackoffce",
-                settings.CurrentValue.SlackNotifications.AzureQueue.ConnectionString,
-                settings.CurrentValue.SlackNotifications.AzureQueue.QueueName
+                appSettings.CurrentValue.SlackNotifications.AzureQueue.ConnectionString,
+                appSettings.CurrentValue.SlackNotifications.AzureQueue.QueueName
             );
 
             ApplicationContainer = Dependencies.BindDependecies(services, Configuration);
 
             _log = ApplicationContainer.Resolve<ILogFactory>().CreateLog(this);
-            _healthNotifier = ApplicationContainer.Resolve<IHealthNotifier>();
-            _log.Info("App Stated");
+            _healthNotifier = ApplicationContainer.Resolve<IHealthNotifier>();            
 
             return new AutofacServiceProvider(ApplicationContainer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+            IApplicationLifetime appLifetime)
         {
             app.UseDeveloperExceptionPage();
 
@@ -108,13 +112,40 @@ namespace BackOffice
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(name: "changePassword", template: "{action=ChangePassword}/{id}", defaults: new { controller = "Home" });
-                routes.MapRoute(name: "changePin", template: "{action=ChangePin}/{id}", defaults: new { controller = "Home" });
+                routes.MapRoute(name: "changePassword", template: "{action=ChangePassword}/{id}",
+                    defaults: new {controller = "Home"});
+                routes.MapRoute(name: "changePin", template: "{action=ChangePin}/{id}",
+                    defaults: new {controller = "Home"});
                 routes.MapRoute(name: "areaRoute", template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute(name: "Default", template: "{controller=Home}/{action=Index}/{id?}");
             });
 
+
+            appLifetime.ApplicationStarted.Register(() => StartApplication().GetAwaiter().GetResult());
             appLifetime.ApplicationStopped.Register(CleanUp);
+        }
+
+        private async Task StartApplication()
+        {
+            try
+            {
+                // NOTE: Service not yet recieve and process requests here
+
+                _healthNotifier.Notify("Started");
+                
+                #if !DEBUG
+                if (!string.IsNullOrEmpty(_monitoringServiceUrl))
+                {
+                    await Configuration.RegisterInMonitoringServiceAsync(_monitoringServiceUrl,
+                        _healthNotifier);
+                }
+                #endif
+            }
+            catch (Exception ex)
+            {
+                _log.Critical(ex);
+                throw;
+            }
         }
 
         private void CleanUp()
