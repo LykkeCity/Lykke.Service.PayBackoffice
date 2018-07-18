@@ -3,6 +3,7 @@ using Common.Log;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Lykke.Common.Log;
 
 namespace BackOffice.Controllers
 {
@@ -12,9 +13,9 @@ namespace BackOffice.Controllers
     {
         private readonly ILog _log;
 
-        public BackOfficeController(ILog log)
+        public BackOfficeController(ILogFactory logFactory)
         {
-            _log = log;
+            _log = logFactory.CreateLog(this);
         }
 
         [HttpPost]

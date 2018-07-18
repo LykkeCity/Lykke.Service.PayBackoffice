@@ -21,10 +21,10 @@
     <environment names="Staging,Production">
         <script src="~/output/mobile-site.min.js" asp-append-version="true"></script>
     </environment>
-    
+
     @RenderSection("header", required: false)
 
-    @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
+    @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body style="overflow: hidden; background: white;">
     @Html.Partial("PartialInitScriptMobile")

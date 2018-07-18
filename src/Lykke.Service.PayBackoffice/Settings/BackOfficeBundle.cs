@@ -1,4 +1,5 @@
-﻿using Lykke.Service.BackofficeMembership.Client;
+﻿using BackOffice.Settings.SlackNotifications;
+using Lykke.Service.BackofficeMembership.Client;
 using Lykke.Service.PayInternal.Client;
 using Lykke.Service.PayInvoice.Client;
 using Lykke.Service.PayAuth.Client;
@@ -14,5 +15,6 @@ namespace BackOffice.Settings
         public NinjaServiceClientSettings NinjaServiceClient { get; set; }
         public EmailPartnerRouterServiceClientSettings EmailPartnerRouterServiceClient { get; set; }
         public BackofficeMembershipServiceClientSettings BackofficeMembershipServiceClient { get; set; }
+        public SlackNotificationsSettings SlackNotifications { get; set; }
     }
 }
