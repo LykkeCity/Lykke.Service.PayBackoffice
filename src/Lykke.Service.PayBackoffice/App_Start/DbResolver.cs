@@ -2,6 +2,7 @@
 using Autofac.Extensions.DependencyInjection;
 using Common.IocContainer;
 using Common.Log;
+using Lykke.Common.Log;
 using Lykke.Service.BackofficeMembership.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +19,8 @@ namespace BackOffice
 			//TcpMeClient = ioc.Resolve<TcpMatchingEngineClient>();
 		}
 
-		public static IContainer BindDependecies(IServiceCollection collection, IConfigurationRoot configuration)
+		public static IContainer BindDependecies(IServiceCollection collection, 
+		    IConfigurationRoot configuration)
 		{
 			var provider = collection.BuildServiceProvider();
 
@@ -31,8 +33,6 @@ namespace BackOffice
             var container = ioc.Build();
 
 			InitSingletones(container);
-
-            container.Resolve<ILog>().WriteInfoAsync("DResolver", "Binding", "", "App Stated");
 
 		    return container;
 		}

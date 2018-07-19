@@ -10,8 +10,13 @@ using BackOffice.Filters;
 using BackOffice.Middleware;
 using Autofac.Extensions.DependencyInjection;
 using BackOffice.ModelBinders;
+using BackOffice.Settings;
+using Common.Log;
+using Lykke.Common.Log;
 using Lykke.Service.BackofficeMembership.Client.Filters;
 using Microsoft.AspNetCore.Mvc;
+using Lykke.Logs;
+using Lykke.SettingsReader;
 
 namespace BackOffice
 {
@@ -19,7 +24,10 @@ namespace BackOffice
     {
         public IConfigurationRoot Configuration { get; }
         public IContainer ApplicationContainer { get; private set; }
-        
+        private ILog _log;
+        private IHealthNotifier _healthNotifier;
+
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -61,7 +69,21 @@ namespace BackOffice
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
                 });
 
+            var settings = Configuration.LoadSettings<BackOfficeBundle>();
+
+            services.AddLykkeLogging
+            (
+                settings.ConnectionString(x => x.PayBackOffice.Db.LogsConnString),
+                "LogBackoffce",
+                settings.CurrentValue.SlackNotifications.AzureQueue.ConnectionString,
+                settings.CurrentValue.SlackNotifications.AzureQueue.QueueName
+            );
+
             ApplicationContainer = Dependencies.BindDependecies(services, Configuration);
+
+            _log = ApplicationContainer.Resolve<ILogFactory>().CreateLog(this);
+            _healthNotifier = ApplicationContainer.Resolve<IHealthNotifier>();
+            _log.Info("App Stated");
 
             return new AutofacServiceProvider(ApplicationContainer);
         }
@@ -97,11 +119,11 @@ namespace BackOffice
 
         private void CleanUp()
         {
-            Console.WriteLine("Cleaning up...");
+            _log?.Info("Cleaning up...");
 
             ApplicationContainer.Dispose();
 
-            Console.WriteLine("Cleaned up");
+            _log?.Info("Cleaned up");
         }
     }
 }

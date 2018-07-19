@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using Common.Log;
+using Lykke.Common.Log;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -16,10 +17,10 @@ namespace BackOffice.Filters
         private readonly IHostingEnvironment _environment;
         private readonly ILog _log;
 
-        public HandleAllExceptionsFilter(IHostingEnvironment environment, ILog log)
+        public HandleAllExceptionsFilter(IHostingEnvironment environment, ILogFactory logFactory)
         {
             _environment = environment;
-            _log = log;
+            _log = logFactory.CreateLog(this);
         }
 
         public void OnException(ExceptionContext filterContext)

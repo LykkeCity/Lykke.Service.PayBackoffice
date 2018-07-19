@@ -10,6 +10,7 @@ using Lykke.Service.PayInvoice.Client;
 using BackOffice.Areas.LykkePay.Models.Supervisors;
 using Common;
 using Common.Log;
+using Lykke.Common.Log;
 using Lykke.Service.PayInternal.Client.Exceptions;
 using Lykke.Service.PayInternal.Client.Models.SupervisorMembership;
 
@@ -25,11 +26,11 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
 
         public SupervisorsController(
             IPayInternalClient payInternalClient,
-            IPayInvoiceClient payInvoiceClient, 
-            ILog log)
+            IPayInvoiceClient payInvoiceClient,
+            ILogFactory logFactory)
         {
             _payInvoiceClient = payInvoiceClient;
-            _log = log;
+            _log = logFactory.CreateLog(this);
             _payInternalClient = payInternalClient;
         }
         public IActionResult Index()

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 using Common;
@@ -16,7 +16,7 @@ namespace LkeServices {
 
         protected abstract ILog Log { get; }
 
-        private IFlurlClient GetClient(string action)
+        private IFlurlRequest GetClient(string action)
         {
             return $"{ServiceUri}/{BaseUrl}/{action}".WithHeader("api-key", ApiKey);
         }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using BackOffice.Services;
 using Lykke.Service.BackofficeMembership.Client;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +24,6 @@ namespace BackOffice.Middleware
             await taskUpdateFilter;
             await _next.Invoke(context);
         }
-
 
         private static void DetectLanguage(HttpRequest request)
         {
