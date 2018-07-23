@@ -10,6 +10,8 @@ using Lykke.Service.PayInvoice.Client;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.Configuration;
 using QBitNinja.Client;
+using Lykke.Service.EmailPartnerRouter.Client;
+using Lykke.MonitoringServiceApiCaller;
 
 namespace BackOffice.Binders
 {
@@ -17,6 +19,7 @@ namespace BackOffice.Binders
     {
         internal static string BlockchainExplorerUrl;
         internal static string PayInvoicePortalResetPasswordLink;
+        private string _monitoringServiceUrl;
         public ContainerBuilder Bind(IConfigurationRoot configuration, ContainerBuilder builder = null)
         {
             return Bind(configuration, builder, false);
