@@ -13,6 +13,7 @@ using Autofac.Extensions.DependencyInjection;
 using BackOffice.ModelBinders;
 using BackOffice.Settings;
 using Common.Log;
+using Lykke.Backoffice.Common;
 using Lykke.Common.Log;
 using Lykke.Service.BackofficeMembership.Client.Filters;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ namespace BackOffice
         private ILog _log;
         private IHealthNotifier _healthNotifier;
         private string _monitoringServiceUrl;
-
+        private SupportedBrowsersSettings _supportedBrowsers;
 
         public Startup(IHostingEnvironment env)
         {
@@ -74,6 +75,7 @@ namespace BackOffice
 
             var appSettings = Configuration.LoadSettings<BackOfficeBundle>();
             _monitoringServiceUrl = appSettings.CurrentValue.MonitoringServiceClient?.MonitoringServiceUrl;
+            _supportedBrowsers = appSettings.CurrentValue.PayBackOffice.SupportedBrowsers;
 
             services.AddLykkeLogging
             (
@@ -105,6 +107,7 @@ namespace BackOffice
             app.UseStaticFiles();
 
             app.UseMiddleware<LocalizationMiddleware>();
+            app.UseMiddleware<CheckBrowserMiddleware>(_supportedBrowsers.Browsers, _supportedBrowsers.SkipUrls);
 
             app.UseAuthentication();
 
@@ -119,7 +122,6 @@ namespace BackOffice
                 routes.MapRoute(name: "areaRoute", template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute(name: "Default", template: "{controller=Home}/{action=Index}/{id?}");
             });
-
 
             appLifetime.ApplicationStarted.Register(() => StartApplication().GetAwaiter().GetResult());
             appLifetime.ApplicationStopped.Register(CleanUp);
