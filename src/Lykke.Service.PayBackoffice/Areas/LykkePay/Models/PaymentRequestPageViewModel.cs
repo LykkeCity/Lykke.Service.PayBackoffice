@@ -23,5 +23,6 @@ namespace BackOffice.Areas.LykkePay.Models
         public string SelectedMerchant { get; set; }
         public IEnumerable<PaymentRequestModel> Requests { get; set; }
         public string BlockchainExplorerUrl { get; set; }
+        public string EthereumBlockchainExplorerUrl { get; set; }
     }
 }

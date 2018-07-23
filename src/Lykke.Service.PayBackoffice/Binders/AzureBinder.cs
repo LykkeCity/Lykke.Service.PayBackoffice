@@ -18,6 +18,7 @@ namespace BackOffice.Binders
     public class AzureBinder : IDependencyBinder
     {
         internal static string BlockchainExplorerUrl;
+        internal static string EthereumBlockchainExplorerUrl;
         internal static string PayInvoicePortalResetPasswordLink;
         private string _monitoringServiceUrl;
         public ContainerBuilder Bind(IConfigurationRoot configuration, ContainerBuilder builder = null)
@@ -30,7 +31,9 @@ namespace BackOffice.Binders
         {
             var settings = configuration.LoadSettings<BackOfficeBundle>();
             BlockchainExplorerUrl = settings.CurrentValue.PayBackOffice.BlockchainExplorerUrl;
+            EthereumBlockchainExplorerUrl = settings.CurrentValue.PayBackOffice.EthereumBlockchainExplorerUrl;
             PayInvoicePortalResetPasswordLink = settings.CurrentValue.PayBackOffice.PayInvoicePortalResetPasswordLink;
+
             var ioc = builder ?? new ContainerBuilder();
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice);
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.GoogleAuthSettings);

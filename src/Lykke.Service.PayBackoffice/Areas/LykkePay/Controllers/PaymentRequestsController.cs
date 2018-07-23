@@ -24,6 +24,10 @@ namespace BackOffice.Areas.LykkePay.Controllers
     {
         protected string BlockchainExplorerUrl
                => AzureBinder.BlockchainExplorerUrl;
+
+        protected string EthereumBlockchainExplorerUrl
+            => AzureBinder.EthereumBlockchainExplorerUrl;
+
         private readonly IPayInternalClient _payInternalClient;
         public PaymentRequestsController(
             IPayInternalClient payInternalClient)
@@ -103,6 +107,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Requests = pagedlist,
                 SelectedMerchant = vm.SelectedMerchant,
                 BlockchainExplorerUrl = BlockchainExplorerUrl + "address/",
+                EthereumBlockchainExplorerUrl = EthereumBlockchainExplorerUrl + "/address/",
                 PageSize = vm.PageSize,
                 Count = pageCount,
                 CurrentPage = currentPage

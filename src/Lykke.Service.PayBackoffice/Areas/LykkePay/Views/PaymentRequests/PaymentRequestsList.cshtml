@@ -49,7 +49,7 @@
                 Error
             </th>
             <th>
-                WalletAddress
+                WalletAddresses
             </th>
             <th></th>
         </tr>
@@ -100,7 +100,25 @@
                     @item.ProcessingError
                 </td>
                 <td>
-                    <a href="@Model.BlockchainExplorerUrl@item.WalletAddress" target="_blank">@item.WalletAddress</a>
+                    @if (string.IsNullOrEmpty(item.WalletAddress))
+                    {
+                        @:&nbsp;
+                    }
+                    else
+                    {
+                        @item.WalletAddress
+                        <a href="@Model.BlockchainExplorerUrl@item.WalletAddress" 
+                           target="_blank"><img src="images/bl_explorer_logo.svg"
+                                                alt="Look at Lykke Blockchain Explorer"
+                                                width="32"
+                                                height="32"/></a>
+                        
+                        <a href="@Model.EthereumBlockchainExplorerUrl@item.WalletAddress" 
+                           target="_blank"><img src="images/etherscan_32x32.png"
+                                                alt="Look at Ropsten Etherscan Blockchain Explorer"
+                                                width="32"
+                                                height="32"/></a>
+                    }
                 </td>
                 <td style="text-align: right">
                     @*<button class="btn btn-xs btn-default btn-raised"
