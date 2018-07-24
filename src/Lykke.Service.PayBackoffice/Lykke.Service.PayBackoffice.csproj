@@ -164,6 +164,7 @@
     <ProjectReference Include="..\LkeServices\LkeServices.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
     <PackageReference Include="BundlerMinifier.Core" Version="2.8.391" />
     <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.34.0.1134" />

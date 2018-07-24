@@ -1,4 +1,5 @@
 ﻿@using BackOffice.Translates
+@using Lykke.Service.PayInternal.Client.Models
 @model BackOffice.Areas.LykkePay.Models.PaymentRequestListViewModel
 
 @if (Model.Requests != null && Model.Requests.Any())
@@ -49,7 +50,7 @@
                 Error
             </th>
             <th>
-                WalletAddresses
+                WalletAddress
             </th>
             <th></th>
         </tr>
@@ -100,25 +101,23 @@
                     @item.ProcessingError
                 </td>
                 <td>
-                    @if (string.IsNullOrEmpty(item.WalletAddress))
+                    @if (!string.IsNullOrEmpty(item.WalletAddress) 
+                             && item.PaymentAssetGeneralSettings?.Network == BlockchainType.Bitcoin)
                     {
-                        @:&nbsp;
+                        <a href="@Model.BlockchainExplorerUrl@item.WalletAddress"
+                           target="_blank">@item.WalletAddress</a>
+                    }
+                    else if (!string.IsNullOrEmpty(item.WalletAddress) 
+                             && item.PaymentAssetGeneralSettings?.Network == BlockchainType.Ethereum)
+                    {
+                        <a href="@Model.EthereumBlockchainExplorerUrl@item.WalletAddress"
+                           target="_blank">@item.WalletAddress</a>
                     }
                     else
                     {
-                        @item.WalletAddress
-                        <a href="@Model.BlockchainExplorerUrl@item.WalletAddress" 
-                           target="_blank"><img src="images/bl_explorer_logo.svg"
-                                                alt="Look at Lykke Blockchain Explorer"
-                                                width="32"
-                                                height="32"/></a>
-                        
-                        <a href="@Model.EthereumBlockchainExplorerUrl@item.WalletAddress" 
-                           target="_blank"><img src="images/etherscan_32x32.png"
-                                                alt="Look at Ropsten Etherscan Blockchain Explorer"
-                                                width="32"
-                                                height="32"/></a>
+                        @:&nbsp;
                     }
+
                 </td>
                 <td style="text-align: right">
                     @*<button class="btn btn-xs btn-default btn-raised"

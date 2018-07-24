@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using AutoMapper;
 using BackOffice.Settings;
 using Common.Cache;
 using Common.IocContainer;
@@ -33,6 +34,10 @@ namespace BackOffice.Binders
             PayInvoicePortalResetPasswordLink = settings.CurrentValue.PayBackOffice.PayInvoicePortalResetPasswordLink;
 
             var ioc = builder ?? new ContainerBuilder();
+
+            IMapper mapper = new MapperProvider().GetMapper();
+            ioc.RegisterInstance(mapper).As<IMapper>();
+
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice);
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.GoogleAuthSettings);
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.TwoFactorVerification ?? new TwoFactorVerificationSettingsEx());
