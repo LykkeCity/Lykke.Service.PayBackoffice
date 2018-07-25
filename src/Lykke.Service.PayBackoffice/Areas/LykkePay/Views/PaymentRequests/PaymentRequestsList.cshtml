@@ -1,4 +1,5 @@
 ﻿@using BackOffice.Translates
+@using Lykke.Service.PayInternal.Client.Models
 @model BackOffice.Areas.LykkePay.Models.PaymentRequestListViewModel
 
 @if (Model.Requests != null && Model.Requests.Any())
@@ -100,7 +101,24 @@
                     @item.ProcessingError
                 </td>
                 <td>
-                    <a href="@Model.BlockchainExplorerUrl@item.WalletAddress" target="_blank">@item.WalletAddress</a>
+                    @if (!string.IsNullOrEmpty(item.WalletAddress) 
+                             && item.PaymentAssetGeneralSettings?.Network == BlockchainType.Bitcoin)
+                    {
+                        <a href="@Model.BlockchainExplorerUrl@item.WalletAddress"
+                           target="_blank">@item.WalletAddress</a>
+                    }
+                    else if (!string.IsNullOrEmpty(item.WalletAddress) 
+                             && (item.PaymentAssetGeneralSettings?.Network == BlockchainType.Ethereum
+                        || item.PaymentAssetGeneralSettings?.Network == BlockchainType.EthereumIata))
+                    {
+                        <a href="@Model.EthereumBlockchainExplorerUrl@item.WalletAddress"
+                           target="_blank">@item.WalletAddress</a>
+                    }
+                    else
+                    {
+                        @:&nbsp;
+                    }
+
                 </td>
                 <td style="text-align: right">
                     @*<button class="btn btn-xs btn-default btn-raised"

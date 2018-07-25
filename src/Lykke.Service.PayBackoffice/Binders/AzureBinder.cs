@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using AutoMapper;
 using BackOffice.Settings;
 using Common.Cache;
 using Common.IocContainer;
@@ -10,16 +11,15 @@ using Lykke.Service.PayInvoice.Client;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.Configuration;
 using QBitNinja.Client;
-using Lykke.Service.EmailPartnerRouter.Client;
-using Lykke.MonitoringServiceApiCaller;
 
 namespace BackOffice.Binders
 {
     public class AzureBinder : IDependencyBinder
     {
         internal static string BlockchainExplorerUrl;
+        internal static string EthereumBlockchainExplorerUrl;
         internal static string PayInvoicePortalResetPasswordLink;
-        private string _monitoringServiceUrl;
+
         public ContainerBuilder Bind(IConfigurationRoot configuration, ContainerBuilder builder = null)
         {
             return Bind(configuration, builder, false);
@@ -30,8 +30,14 @@ namespace BackOffice.Binders
         {
             var settings = configuration.LoadSettings<BackOfficeBundle>();
             BlockchainExplorerUrl = settings.CurrentValue.PayBackOffice.BlockchainExplorerUrl;
+            EthereumBlockchainExplorerUrl = settings.CurrentValue.PayBackOffice.EthereumBlockchainExplorerUrl;
             PayInvoicePortalResetPasswordLink = settings.CurrentValue.PayBackOffice.PayInvoicePortalResetPasswordLink;
+
             var ioc = builder ?? new ContainerBuilder();
+
+            IMapper mapper = new MapperProvider().GetMapper();
+            ioc.RegisterInstance(mapper).As<IMapper>();
+
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice);
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.GoogleAuthSettings);
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.TwoFactorVerification ?? new TwoFactorVerificationSettingsEx());
