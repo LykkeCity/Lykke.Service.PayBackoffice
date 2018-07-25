@@ -139,7 +139,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Requests = requestViewModels,
                 SelectedMerchant = vm.SelectedMerchant,
                 BlockchainExplorerUrl = BlockchainExplorerUrl + "address/",
-                EthereumBlockchainExplorerUrl = EthereumBlockchainExplorerUrl + "/address/",
+                EthereumBlockchainExplorerUrl = EthereumBlockchainExplorerUrl.TrimEnd('/') + "/address/",
                 PageSize = vm.PageSize,
                 Count = pageCount,
                 CurrentPage = currentPage
