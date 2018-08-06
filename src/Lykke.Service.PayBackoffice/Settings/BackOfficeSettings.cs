@@ -16,5 +16,7 @@ namespace BackOffice.Settings
         public TwoFactorVerificationSettingsEx TwoFactorVerification { get; set; }
 
         public LykkePayWalletListSettings LykkePayWalletList { get; set; }
+
+        public SupportedBrowsersSettings SupportedBrowsers { get; set; }
     }
 }
