@@ -17,6 +17,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Common.Log;
+using Lykke.Common.Log;
 using Lykke.Service.BackofficeMembership.Client.Models;
 
 namespace BackOffice.Controllers
@@ -25,15 +27,18 @@ namespace BackOffice.Controllers
     {
         private readonly IBackofficeMembershipClient _backofficeMembershipClient;
         private readonly GoogleAuthSettings _googleAuthSettings;
-        private readonly TwoFactorVerificationSettingsEx _twoFactorVerificationSettings;
+        private readonly BackOfficeTwoFactorVerificationSettings _twoFactorVerificationSettings;
+        private readonly ILog _log;
 
         public HomeController(IBackofficeMembershipClient backofficeMembershipClient,
             GoogleAuthSettings googleAuthSettings,
-            TwoFactorVerificationSettingsEx twoFactorVerificationSettings)
+            BackOfficeTwoFactorVerificationSettings twoFactorVerificationSettings,
+            ILogFactory logFactory)
         {
             _backofficeMembershipClient = backofficeMembershipClient;
             _googleAuthSettings = googleAuthSettings;
             _twoFactorVerificationSettings = twoFactorVerificationSettings;
+            _log = logFactory.CreateLog(this);
         }
 
         public async Task<ActionResult> Index(string langId)
@@ -77,7 +82,6 @@ namespace BackOffice.Controllers
                         Code = data.Code,
                         Ip = this.GetIp(),
                         SessionId = this.GetSession(),
-                        TrustedTimeSpan = TimeSpan.Parse(_twoFactorVerificationSettings.TrustedTimeSpan),
                         UseTwoFactorVerification = _twoFactorVerificationSettings.UseVerification
                     });
 
@@ -94,12 +98,15 @@ namespace BackOffice.Controllers
 
                 await SignIn(authenticationResult.User);
             }
-            catch (InvalidJwtException)
+            catch (InvalidJwtException ex)
             {
+                _log.Info($"Invalid Jwt: {ex}");
                 return this.JsonFailResult(Phrases.InvalidJwt, "#googleSignIn");
             }
 
             var divResult = Request.IsMobileBrowser() ? "#pamain" : "body";
+
+            _log.Info("Authenticate success");
 
             return this.JsonRequestResult(divResult, Url.Action(nameof(BackOfficeController.Layout), "BackOffice"));
         }
@@ -169,46 +176,44 @@ namespace BackOffice.Controllers
 
                 string email = webSignature.Email;
 
-                BackofficeUserModel user = UsersCache.GetUsersRolePair(email).User;
+                TwoFactorInfoModel twoFactorInfo = await _backofficeMembershipClient.CheckTwoFactorAsync(
+                    new CheckTwoFactorModel()
+                    {
+                        UserId = email,
+                        Ip = this.GetIp()
+                    });
 
-                if (user == null)
+                if (twoFactorInfo.Result == CheckTwoFactorResult.UserNotRegistered)
                 {
+                    _log.Info($"User {email} is not registered.");
                     return this.JsonFailResult(Phrases.UserNotRegistered, "#googleSignIn");
                 }
 
-                if (user.IsDisabled)
+                if (twoFactorInfo.Result == CheckTwoFactorResult.UserIsDisabled)
                 {
+                    _log.Info($"User {email} is disabled");
                     return this.JsonFailResult(Phrases.UserIsDisabled, "#googleSignIn");
                 }
 
-                if (user.UseTwoFactorVerification)
+                if (twoFactorInfo.Result == CheckTwoFactorResult.SkipVerification)
                 {
-                    var res = new TwoFactorInfo
+                    return Json(new TwoFactorInfo
                     {
-                        ExistCode = user.GoogleAuthenticatorConfirmBinding,
-                        UseVerification = !IsTrustedIp(user.TwoFactorVerificationTrustedIPs, this.GetIp())
-                    };
-
-                    if (!res.ExistCode)
-                    {
-                        user = await _backofficeMembershipClient.GenerateGoogleAuthenticatorPrivateKeyAsync(user.Id);
-
-                        var setupInfo =
-                            GenerateTwoFactorAuthenticatorSetupCode(user.Id, user.GoogleAuthenticatorPrivateKey);
-
-                        res.ImageUrl = setupInfo.QrCodeSetupImageUrl;
-                        res.TextKey = setupInfo.ManualEntryKey;
-                    }
-                    return Json(res);
+                        UseVerification = false
+                    });
                 }
 
                 return Json(new TwoFactorInfo
                 {
-                    UseVerification = false
+                    UseVerification = true,
+                    ExistCode = twoFactorInfo.ExistCode,
+                    ImageUrl = twoFactorInfo.ImageUrl,
+                    TextKey = twoFactorInfo.TextKey
                 });
             }
-            catch (InvalidJwtException)
+            catch (InvalidJwtException ex)
             {
+                _log.Info($"Invalid Jwt: {ex}");
                 return this.JsonFailResult(Phrases.InvalidJwt, "#googleSignIn");
             }
         }
@@ -217,106 +222,29 @@ namespace BackOffice.Controllers
         {
             if (!string.Equals(webSignature.Audience, _googleAuthSettings.ApiClientId))
             {
+                _log.Info($"Invalid Google Api Client Id: {webSignature.Audience}");
                 return this.JsonFailResult(Phrases.InvalidGoogleApiClientId, "#googleSignIn");
             }
 
             if (string.IsNullOrWhiteSpace(webSignature.Email))
             {
+                _log.Info("Email Is Empty");
                 return this.JsonFailResult(Phrases.EmailIsEmpty, "#googleSignIn");
             }
 
             if (!Regex.IsMatch(webSignature.Email, _googleAuthSettings.AvailableEmailsRegex))
             {
+                _log.Info($"{webSignature.Email} is invalid. Email Should Be At Lykke.");
                 return this.JsonFailResult(Phrases.EmailShouldBeAtLykke, "#googleSignIn");
             }
 
             if (!webSignature.IsEmailValidated)
             {
+                _log.Info(webSignature.Email, "Email Is Not Validated");
                 return this.JsonFailResult(Phrases.EmailIsNotValidated, "#googleSignIn");
             }
 
             return null;
         }
-
-        private bool CheckTwoFactorAuthenticator(string privateKey, string code)
-        {
-            var tfa = new TwoFactorAuthenticator();
-            var twoFactorResult = tfa.ValidateTwoFactorPIN(privateKey, code);
-
-            return twoFactorResult;
-        }
-
-        private SetupCode GenerateTwoFactorAuthenticatorSetupCode(string userId, string privateKey)
-        {
-            var tfa = new TwoFactorAuthenticator();
-
-            var prefix = !string.IsNullOrEmpty(_twoFactorVerificationSettings.AppNamePrefix)
-                ? _twoFactorVerificationSettings.AppNamePrefix + "."
-                : "";
-
-
-            var setupInfo = tfa.GenerateSetupCode(prefix + "LykkeWallet.BackOffice",
-                userId, privateKey, 200, 200, true);
-
-            return setupInfo;
-        }
-
-        #region Methods for working with user trusted ip addresses
-
-        private static bool IsTrustedIp(string collection, string ip)
-        {
-            if (string.IsNullOrEmpty(collection))
-                return false;
-
-            List<Tuple<string, DateTime>> list = ParceTrustedIpList(collection);
-
-            return !IsExpiredIp(ip, DateTime.UtcNow, list);
-        }
-
-        private static string AddTrustedIp(string collection, string ip, TimeSpan trustedTimeSpan)
-        {
-            List<Tuple<string, DateTime>> list = ParceTrustedIpList(collection);
-
-            DateTime dateTime = DateTime.UtcNow;
-
-            list = list.Where(o => !string.Equals(o.Item1, ip) && !IsExpiredIp(o.Item1, dateTime, list))
-                .ToList();
-
-            list.Add(new Tuple<string, DateTime>(ip, dateTime.Add(trustedTimeSpan)));
-
-            return string.Join("&", list.Select(o => $"{o.Item1}|{o.Item2:u}"));
-        }
-
-        private static List<Tuple<string, DateTime>> ParceTrustedIpList(string value)
-        {
-            var result = new List<Tuple<string, DateTime>>();
-
-            if (string.IsNullOrEmpty(value))
-                return result;
-
-            foreach (string pair in value.Split("&"))
-            {
-                string[] values = pair.Split("|");
-
-                if(values.Length != 2)
-                    continue;
-
-                if(!DateTime.TryParseExact(values[1], "u", null, DateTimeStyles.AdjustToUniversal, out DateTime experitionDate))
-                    continue;
-
-                result.Add(new Tuple<string, DateTime>(values[0], experitionDate));
-            }
-
-            return result;
-        }
-
-        private static bool IsExpiredIp(string ip, DateTime dateTime, List<Tuple<string, DateTime>> list)
-        {
-            var trustedIp = list.FirstOrDefault(o => o.Item1 == ip);
-
-            return trustedIp == null || trustedIp.Item2 <= dateTime;
-        }
-
-        #endregion
     }
 }
