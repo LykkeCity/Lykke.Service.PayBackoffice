@@ -20,7 +20,7 @@ PayBackOffice:
             SkipUrls:
                 settings-key: PayBackOffice-SupportedBrowsers-SkipUrls
                 types: [ JsonArray ]
-        GoogleAuthSettings:
+        GoogleAuth:
             ApiClientId:
                 settings-key: PayBackOffice-GoogleAuthSettings-ApiClientId
             AvailableEmailsRegex:
