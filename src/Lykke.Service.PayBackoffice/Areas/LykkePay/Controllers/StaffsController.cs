@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -211,8 +212,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
                         {
                             {"UserEmail", vm.Email},
                             {"ClientFullName", vm.FirstName},
+                            {"ClientPassword", vm.Password},
                             {"ResetLink", PayInvoicePortalResetPasswordLink},
-                            {"DateTime", DateTime.Now.ToString()},
+                            {"DateTime", DateTime.Now.ToString(CultureInfo.InvariantCulture)},
                             {"Year", DateTime.Today.Year.ToString()}
                         };
                     var emails = new List<string>();
