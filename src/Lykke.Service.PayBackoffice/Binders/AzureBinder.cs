@@ -39,8 +39,8 @@ namespace BackOffice.Binders
             ioc.RegisterInstance(mapper).As<IMapper>();
 
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice);
-            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.GoogleAuthSettings);
-            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.TwoFactorVerification ?? new TwoFactorVerificationSettingsEx());
+            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.GoogleAuth);
+            ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.TwoFactorVerification ?? new BackOfficeTwoFactorVerificationSettings());
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.LykkePayWalletList);
 
             var cacheManager = new MemoryCacheManager();

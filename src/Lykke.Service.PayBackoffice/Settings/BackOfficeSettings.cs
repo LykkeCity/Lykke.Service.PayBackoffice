@@ -11,9 +11,9 @@ namespace BackOffice.Settings
         public DbSettings Db { get; set; }
 
 
-        public GoogleAuthSettings GoogleAuthSettings { get; set; }
+        public GoogleAuthSettings GoogleAuth { get; set; }
 
-        public TwoFactorVerificationSettingsEx TwoFactorVerification { get; set; }
+        public BackOfficeTwoFactorVerificationSettings TwoFactorVerification { get; set; }
 
         public LykkePayWalletListSettings LykkePayWalletList { get; set; }
 
