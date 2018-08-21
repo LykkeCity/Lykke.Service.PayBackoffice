@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3140B787-9E25-4792-9438-52C4342769AF}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		settings.yaml = settings.yaml
 		WebEssentials2015-Settings.json = WebEssentials2015-Settings.json
 	EndProjectSection
 EndProject
