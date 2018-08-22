@@ -1,4 +1,4 @@
-﻿using Lykke.Service.PayInternal.Client.Models.Merchant;
+﻿using Lykke.Service.PayMerchant.Client.Models;
 using System.Collections.Generic;
 
 namespace BackOffice.Areas.LykkePay.Models.Supervisors

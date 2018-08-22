@@ -11,8 +11,11 @@ using Lykke.Service.PayInternal.Client.Models.Asset;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Lykke.Service.PayMerchant.Client;
+using Lykke.Service.PayMerchant.Client.Models;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -23,10 +26,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
     {
         private const string ErrorMessageAnchor = "#errorMessage";
         private readonly IPayInternalClient _payInternalClient;
+        private readonly IPayMerchantClient _payMerchantClient;
+
         public AssetsController(
-            IPayInternalClient payInternalClient)
+            IPayInternalClient payInternalClient, 
+            IPayMerchantClient payMerchantClient)
         {
             _payInternalClient = payInternalClient;
+            _payMerchantClient = payMerchantClient;
         }
         public IActionResult Index()
         {
@@ -94,7 +101,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> MerchantsSettings(string merchant = "")
         {
-            var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+            IReadOnlyList<MerchantModel> merchants = await _payMerchantClient.Api.GetAllAsync();
 
             if (!string.IsNullOrEmpty(merchant) && !merchants.Select(x => x.Id).Contains(merchant))
             {
