@@ -17,6 +17,7 @@
             <th>
                 LwId
             </th>
+            <th>Certificates</th>
             <th></th>
         </tr>
 
@@ -34,6 +35,9 @@
                 </td>
                 <td>
                     @item.LwId
+                </td>
+                <td>
+                    <a class="certificates" href="javascript:void(0);" merchantId="@item.Id">certificates</a>
                 </td>
                 <td style="text-align: right">
 
@@ -59,6 +63,12 @@
             </tr>
         }
     </table>
+    <script>
+        $(".certificates").click(function (e) {
+            var merchantId = e.currentTarget.getAttribute("merchantId");
+            ui.showDialog('@Url.Action("GenerateMerchantCertificatesDialog")', { merchantId: merchantId });
+        });
+    </script>
 }
 else
 {
