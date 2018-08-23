@@ -34,9 +34,9 @@ namespace BackOffice.Helpers
             return helper.Partial("~/Views/Helpers/RenderOkDialogButton.cshtml");
         }
 
-        public static IHtmlContent RenderInputWithLabelOnTop(this IHtmlHelper helper, string name, string caption, string value = null, string placeHolder = null, string type = null, bool lg = true, bool focused = false)
+        public static IHtmlContent RenderInputWithLabelOnTop(this IHtmlHelper helper, string name, string caption, string value = null, string placeHolder = null, string type = null, bool lg = true, bool focused = false, bool required = false)
         {
-            return helper.Partial("~/Views/Helpers/RenderInputWithLabelOnTop.cshtml", new InputWithLabelModel { Name = name, Caption = caption, Value = value, Placeholder = placeHolder, Type = type, Lg = lg, Focused = focused });
+            return helper.Partial("~/Views/Helpers/RenderInputWithLabelOnTop.cshtml", new InputWithLabelModel { Name = name, Caption = caption, Value = value, Placeholder = placeHolder, Type = type, Lg = lg, Focused = focused, Required = required });
         }
 
         public static IHtmlContent RenderDateSelectorWithLabelOnTop(this IHtmlHelper helper, string name, string caption, string value = null, string placeHolder = null, string type = null, bool lg = true, bool focused = false)
@@ -161,6 +161,7 @@ namespace BackOffice.Helpers
         public string Type { get; set; }
         public bool Lg { get; set; }
         public bool Focused { get; set; }
+        public bool Required { get; set; }
     }
 
     public class SelectModel

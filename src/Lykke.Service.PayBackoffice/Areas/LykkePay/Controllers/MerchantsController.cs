@@ -109,15 +109,17 @@ namespace BackOffice.Areas.LykkePay.Controllers
         public async Task<ActionResult> AddOrEditMerchantDialog(string id = null)
         {
             var merchant = new MerchantModel();
-            if (id != null)
+
+            bool isNewMerchant = id == null;
+
+            if (!isNewMerchant)
             {
                 merchant = await _payMerchantClient.Api.GetByIdAsync(id);
             }
-            
 
             var viewModel = new AddOrEditMerchantDialogViewModel
             {
-                Caption = "Add merchant",
+                Caption = isNewMerchant ? "Add merchant" : "Edit merchant",
                 IsNewMerchant = id == null,
                 ApiKey = merchant.ApiKey,
                 Id = id,
@@ -133,19 +135,23 @@ namespace BackOffice.Areas.LykkePay.Controllers
         public async Task<ActionResult> AddOrEditMerchant(AddOrEditMerchantDialogViewModel vm)
         {
             var merchants = await _payMerchantClient.Api.GetAllAsync();
-            if (string.IsNullOrEmpty(vm.ApiKey))
-                return this.JsonFailResult("ApiKey id required", ErrorMessageAnchor);
+            
             if (string.IsNullOrEmpty(vm.Name))
-                return this.JsonFailResult("Name required", ErrorMessageAnchor);
+                return this.JsonFailResult("MerchantId required", ErrorMessageAnchor);
+
             if (string.IsNullOrEmpty(vm.DisplayName))
                 return this.JsonFailResult("DisplayName required", ErrorMessageAnchor);
 
+            if (string.IsNullOrEmpty(vm.ApiKey))
+                vm.ApiKey = Guid.NewGuid().ToString().ToLower().Replace("-", string.Empty);
+
             if (vm.IsNewMerchant)
             {
-                if (merchants != null && (merchants.Select(x => x.Name).Contains(vm.Name) || merchants.Select(x => x.ApiKey).Contains(vm.ApiKey)))
+                if (merchants != null && merchants.Select(x => x.Name).Contains(vm.Name))
                 {
                     return this.JsonFailResult(Phrases.AlreadyExists, "#name");
                 }
+
                 try
                 {
                     var merchant = await _payMerchantClient.Api.CreateAsync(new CreateMerchantRequest
@@ -153,7 +159,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                         Name = vm.Name,
                         ApiKey = vm.ApiKey,
                         LwId = vm.LwId,
-                        DisplayName = vm.Name
+                        DisplayName = vm.DisplayName
                     });
 
                     await _payAuthClient.RegisterAsync(new Lykke.Service.PayAuth.Client.Models.RegisterRequest
@@ -169,17 +175,31 @@ namespace BackOffice.Areas.LykkePay.Controllers
             }
             else
             {
-                var updatereq = new UpdateMerchantRequest
+                try
                 {
-                    Id = vm.Id,
-                    ApiKey = vm.ApiKey,
-                    LwId = vm.LwId,
-                    Name = vm.Name,
-                    DisplayName = vm.DisplayName
-                };
+                    var updatereq = new UpdateMerchantRequest
+                    {
+                        Id = vm.Id,
+                        ApiKey = vm.ApiKey,
+                        LwId = vm.LwId,
+                        Name = vm.Name,
+                        DisplayName = vm.DisplayName
+                    };
 
-                await _payMerchantClient.Api.UpdateAsync(updatereq);
+                    await _payMerchantClient.Api.UpdateAsync(updatereq);
+
+                    await _payAuthClient.UpdateApiKeyAsync(new Lykke.Service.PayAuth.Client.Models.UpdateApiKeyRequest
+                    {
+                        ApiKey = vm.ApiKey,
+                        ClientId = vm.Id
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
+                }
             }
+
             return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
         }
         [HttpPost]
