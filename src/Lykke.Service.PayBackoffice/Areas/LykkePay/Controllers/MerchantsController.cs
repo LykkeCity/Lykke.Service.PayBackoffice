@@ -21,6 +21,23 @@ using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.PayMerchant.Client;
 using Lykke.Service.PayMerchant.Client.Models;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.X509;
+using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Asn1.Pkcs;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Crypto.Operators;
+using BackOffice.Areas.LykkePay.Models.Merchants;
+using System.Text;
+using System.IO.Compression;
+using System.IO;
+using System.Net.Http;
+using System.Net;
+using System.Net.Http.Headers;
+using Lykke.Service.PayAuth.Client.Models.GenerateRsaKeys;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -336,6 +353,74 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 return this.JsonFailResult(ex.Error.ErrorMessage, ErrorMessageAnchor);
             }
             return this.JsonRequestResult("#merchantsSettingsList", Url.Action("MerchantsSettingsList"), new MerchantSettingsListViewModel() { SelectedMerchant = vm.MerchantId });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GenerateMerchantCertificatesDialog(string merchantId)
+        {
+            var merchant = await _payMerchantClient.Api.GetByIdAsync(merchantId);
+            var viewModel = new MerchantCertificateViewModel()
+            {
+                Caption = "Generate merchant certificates",
+                MerchantId = merchant.Id,
+                MerchantDisplayName = merchant.DisplayName
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GenerateMerchantCertificates(MerchantCertificateViewModel vm)
+        {
+            GenerateRsaKeysResponse certs = await _payAuthClient.GenerateRsaKeysAsync(new GenerateRsaKeysRequest
+            {
+                ClientId = vm.MerchantId,
+                ClientDisplayName = vm.MerchantDisplayName
+            });
+
+            var publicKeyFileName = $"rsa-public-key_{vm.MerchantDisplayName}.crt";
+            var privateKeyFileName = $"rsa-private-key_{vm.MerchantDisplayName}.pem";
+            var zipFileName = $"certificates_{vm.MerchantDisplayName}.zip";
+
+            var publicKeyPath = Path.Combine(Path.GetTempPath(), publicKeyFileName);
+            using (var sw = new StreamWriter(publicKeyPath))
+                sw.WriteLine(certs.PublicKey);
+
+            var privateKeyPath = Path.Combine(Path.GetTempPath(), privateKeyFileName);
+
+            using (var sw = new StreamWriter(privateKeyPath))
+                sw.WriteLine(certs.PrivateKey);
+            
+            using (var zip = ZipFile.Open(Path.Combine(Path.GetTempPath(), zipFileName), ZipArchiveMode.Create))
+            {
+                zip.CreateEntryFromFile(publicKeyPath, publicKeyFileName);
+                zip.CreateEntryFromFile(privateKeyPath, privateKeyFileName);
+            }
+
+            if (System.IO.File.Exists(publicKeyPath))
+                System.IO.File.Delete(publicKeyPath);
+
+            if (System.IO.File.Exists(privateKeyPath))
+                System.IO.File.Delete(privateKeyPath);
+
+            return Json(zipFileName);
+        }
+
+        [HttpGet]
+        public async Task<FileResult> DownloadCertificate(string filename)
+        {
+            string certificatesPath = Path.Combine(Path.GetTempPath(), filename);
+
+            var ms = new MemoryStream();
+            
+            using (var file = new FileStream(certificatesPath, FileMode.Open, FileAccess.Read))
+            {
+                file.CopyTo(ms);
+            }
+                
+            if (System.IO.File.Exists(certificatesPath))
+                System.IO.File.Delete(certificatesPath);
+
+            return File(ms.ToArray(), "application/octet-stream", filename);
         }
     }
 }
