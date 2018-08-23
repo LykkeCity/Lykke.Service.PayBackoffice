@@ -9,7 +9,6 @@ using Lykke.Service.EmailPartnerRouter.Client;
 using Lykke.Service.EmailPartnerRouter.Contracts;
 using Lykke.Service.PayAuth.Client;
 using Lykke.Service.PayAuth.Client.Models.Employees;
-using Lykke.Service.PayInternal.Client;
 using Lykke.Service.PayInvoice.Client;
 using Lykke.Service.PayInvoice.Client.Models.Employee;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +19,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Lykke.Service.PayMerchant.Client;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -29,20 +29,24 @@ namespace BackOffice.Areas.LykkePay.Controllers
     [FilterFeaturesAccess(UserFeatureAccess.LykkePayStaffsView)]
     public class StaffsController : Controller
     {
-        private readonly IPayInternalClient _payInternalClient;
         private readonly IPayInvoiceClient _payInvoiceClient;
         private readonly IPayAuthClient _payAuthClient;
+        private readonly IPayMerchantClient _payMerchantClient;
+
         private const string ErrorMessageAnchor = "#errorMessage";
         private readonly IEmailPartnerRouterClient _emailPartnerRouterClient;
         protected string PayInvoicePortalResetPasswordLink
                => AzureBinder.PayInvoicePortalResetPasswordLink;
         public StaffsController(
-            IPayInternalClient payInternalClient, IPayInvoiceClient payInvoiceClient, IPayAuthClient payAuthClient, IEmailPartnerRouterClient emailPartnerRouterClient)
+            IPayInvoiceClient payInvoiceClient, 
+            IPayAuthClient payAuthClient, 
+            IEmailPartnerRouterClient emailPartnerRouterClient, 
+            IPayMerchantClient payMerchantClient)
         {
-            _payInternalClient = payInternalClient;
             _payInvoiceClient = payInvoiceClient;
             _payAuthClient = payAuthClient;
             _emailPartnerRouterClient = emailPartnerRouterClient;
+            _payMerchantClient = payMerchantClient;
         }
         public async Task<IActionResult> Index()
         {
@@ -51,7 +55,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> StaffsPage(string merchant = "")
         {
-            var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+            var merchants = await _payMerchantClient.Api.GetAllAsync();
 
             if (!string.IsNullOrEmpty(merchant) && !merchants.Select(x => x.Id).Contains(merchant))
             {
@@ -80,10 +84,11 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (string.IsNullOrEmpty(vm.SelectedMerchant))
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, "#selectedMerchant");
 
-            var filteredstaffs = new List<StaffViewModel>();
+            List<StaffViewModel> filteredstaffs;
+
             if (!string.IsNullOrEmpty(vm.SearchValue))
             {
-                var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+                var merchants = await _payMerchantClient.Api.GetAllAsync();
                 var allstaffs = await _payInvoiceClient.GetEmployeesAsync();
                 filteredstaffs = allstaffs.Where(s => !string.IsNullOrEmpty(s.Email) && s.Email.Contains(vm.SearchValue)).Select(x => new StaffViewModel()
                 {
@@ -126,7 +131,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 employee = await _payInvoiceClient.GetEmployeeAsync(id);
             }
-            var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+            var merchants = await _payMerchantClient.Api.GetAllAsync();
             var viewmodel = new AddStaffDialogViewModel()
             {
                 SelectedMerchant = merchant,

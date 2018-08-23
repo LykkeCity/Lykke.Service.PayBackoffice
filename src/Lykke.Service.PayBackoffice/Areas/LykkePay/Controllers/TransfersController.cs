@@ -6,11 +6,9 @@ using Core.Settings;
 using Lykke.Common.Api.Contract.Responses;
 using Lykke.Service.BackofficeMembership.Client;
 using Lykke.Service.BackofficeMembership.Client.Filters;
-using Lykke.Service.PayAuth.Client;
 using Lykke.Service.PayInternal.Client;
 using Lykke.Service.PayInternal.Client.Exceptions;
 using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
-using Lykke.Service.PayInvoice.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MoreLinq;
@@ -22,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Lykke.Service.PayMerchant.Client;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -31,21 +30,22 @@ namespace BackOffice.Areas.LykkePay.Controllers
     public class TransfersController : Controller
     {
         private readonly IPayInternalClient _payInternalClient;
-        private readonly IPayInvoiceClient _payInvoiceClient;
-        private readonly IPayAuthClient _payAuthClient;
+        private readonly IPayMerchantClient _payMerchantClient;
         private readonly QBitNinjaClient _qBitNinjaClient;
         private readonly LykkePayWalletListSettings _walletlist;
         private const int BatchPieceSize = 15;
         private const string ErrorMessageAnchor = "#errorMessage";
 
         public TransfersController(
-            IPayInternalClient payInternalClient, IPayInvoiceClient payInvoiceClient, IPayAuthClient payAuthClient, QBitNinjaClient qBitNinjaClient, LykkePayWalletListSettings walletlist)
+            IPayInternalClient payInternalClient, 
+            QBitNinjaClient qBitNinjaClient, 
+            LykkePayWalletListSettings walletlist, 
+            IPayMerchantClient payMerchantClient)
         {
             _payInternalClient = payInternalClient;
-            _payInvoiceClient = payInvoiceClient;
-            _payAuthClient = payAuthClient;
             _qBitNinjaClient = qBitNinjaClient ?? throw new ArgumentNullException(nameof(qBitNinjaClient));
             _walletlist = walletlist;
+            _payMerchantClient = payMerchantClient;
         }
         public async Task<IActionResult> Index()
         {
@@ -54,7 +54,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> TransfersPage(string merchant = "")
         {
-            var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+            var merchants = await _payMerchantClient.Api.GetAllAsync();
 
             if (!string.IsNullOrEmpty(merchant) && !merchants.Select(x => x.Id).Contains(merchant))
             {

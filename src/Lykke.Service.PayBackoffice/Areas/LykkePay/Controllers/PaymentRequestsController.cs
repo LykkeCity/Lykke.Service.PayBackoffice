@@ -5,7 +5,7 @@ using BackOffice.Helpers;
 using BackOffice.Translates;
 using Lykke.Service.BackofficeMembership.Client.Filters;
 using Lykke.Service.PayInternal.Client;
-using Lykke.Service.PayInternal.Client.Models.Merchant;
+using Lykke.Service.PayMerchant.Client.Models;
 using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Lykke.Service.PayMerchant.Client;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -30,13 +31,17 @@ namespace BackOffice.Areas.LykkePay.Controllers
             => AzureBinder.EthereumBlockchainExplorerUrl;
 
         private readonly IPayInternalClient _payInternalClient;
+        private readonly IPayMerchantClient _payMerchantClient;
         private readonly IMapper _mapper;
 
-        public PaymentRequestsController(IPayInternalClient payInternalClient,
-            IMapper mapper)
+        public PaymentRequestsController(
+            IPayInternalClient payInternalClient,
+            IMapper mapper, 
+            IPayMerchantClient payMerchantClient)
         {
             _payInternalClient = payInternalClient;
             _mapper = mapper;
+            _payMerchantClient = payMerchantClient;
         }
 
         public IActionResult Index()
@@ -47,7 +52,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> PaymentRequestsPage(string merchant = "")
         {
-            var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+            var merchants = await _payMerchantClient.Api.GetAllAsync();
 
             if (!string.IsNullOrEmpty(merchant) && !merchants.Select(x => x.Id).Contains(merchant))
             {
@@ -78,7 +83,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             var merchant = new MerchantModel();
             if (!string.IsNullOrEmpty(vm.MerchantName))
             {
-                var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+                var merchants = await _payMerchantClient.Api.GetAllAsync();
                 merchant = merchants.FirstOrDefault(m => String.Equals(m.Name, vm.MerchantName, StringComparison.CurrentCultureIgnoreCase));
             }
 

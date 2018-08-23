@@ -1,10 +1,7 @@
 ﻿using BackOffice.Models;
 using Lykke.Service.PayInternal.Client.Models.Markup;
-using Lykke.Service.PayInternal.Client.Models.Merchant;
-using System;
+using Lykke.Service.PayMerchant.Client.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BackOffice.Areas.LykkePay.Models
 {
