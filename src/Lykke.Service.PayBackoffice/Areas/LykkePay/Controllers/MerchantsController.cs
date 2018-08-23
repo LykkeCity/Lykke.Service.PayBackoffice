@@ -123,9 +123,6 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Id = id,
                 LwId = merchant.LwId,
                 Name = merchant.Name,
-                PublicKey = merchant.PublicKey,
-                Certificate = merchant.PublicKey,
-                SystemId = string.Empty,
                 DisplayName = merchant.DisplayName                
             };
 
@@ -145,10 +142,6 @@ namespace BackOffice.Areas.LykkePay.Controllers
 
             if (vm.IsNewMerchant)
             {
-                if (string.IsNullOrEmpty(vm.SystemId))
-                    return this.JsonFailResult("System id required", ErrorMessageAnchor);
-                if (string.IsNullOrEmpty(vm.PublicKey))
-                    return this.JsonFailResult("Public key required", ErrorMessageAnchor);
                 if (merchants != null && (merchants.Select(x => x.Name).Contains(vm.Name) || merchants.Select(x => x.ApiKey).Contains(vm.ApiKey)))
                 {
                     return this.JsonFailResult(Phrases.AlreadyExists, "#name");
@@ -166,9 +159,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     await _payAuthClient.RegisterAsync(new Lykke.Service.PayAuth.Client.Models.RegisterRequest
                     {
                         ApiKey = vm.ApiKey,
-                        Certificate = vm.PublicKey,
-                        ClientId = merchant.Id,
-                        SystemId = vm.SystemId
+                        ClientId = merchant.Id
                     });
                 }
                 catch (Exception ex)
