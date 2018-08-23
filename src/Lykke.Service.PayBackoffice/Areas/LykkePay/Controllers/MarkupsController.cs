@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Lykke.Service.PayMerchant.Client;
 
 namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
 {
@@ -23,10 +24,14 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
     {
         private const string ErrorMessageAnchor = "#errorMessage";
         private readonly IPayInternalClient _payInternalClient;
+        private readonly IPayMerchantClient _payMerchantClient;
+
         public MarkupsController(
-            IPayInternalClient payInternalClient)
+            IPayInternalClient payInternalClient, 
+            IPayMerchantClient payMerchantClient)
         {
             _payInternalClient = payInternalClient;
+            _payMerchantClient = payMerchantClient;
         }
         public async Task<IActionResult> Index()
         {
@@ -34,7 +39,7 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
         }
         public async Task<ActionResult> MarkupsPage()
         {
-            var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+            var merchants = await _payMerchantClient.Api.GetAllAsync();
             var model = new MarkupsListViewModel();
             model.Merchants = merchants;
             model.CurrentPage = 1;

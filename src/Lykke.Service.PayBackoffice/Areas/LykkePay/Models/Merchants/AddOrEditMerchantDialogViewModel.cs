@@ -1,9 +1,4 @@
 ﻿using BackOffice.Models;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BackOffice.Areas.LykkePay.Models
 {
@@ -17,7 +12,6 @@ namespace BackOffice.Areas.LykkePay.Models
         public string DisplayName { get; set; }
         public string PublicKey { get; set; }
         public string ApiKey { get; set; }
-        public int TimeCacheRates { get; set; }
         public string LwId { get; set; }
         public string Certificate { get; set; }
         public string SystemId { get; set; }

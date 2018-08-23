@@ -7,7 +7,6 @@ using Lykke.Service.BackofficeMembership.Client;
 using Lykke.Service.BackofficeMembership.Client.Filters;
 using Lykke.Service.PayAuth.Client;
 using Lykke.Service.PayInternal.Client;
-using Lykke.Service.PayInternal.Client.Models.Merchant;
 using Lykke.Service.PayInvoice.Client;
 using Lykke.Service.PayInvoice.Core.Domain;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +19,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Lykke.Service.PayMerchant.Client;
+using Lykke.Service.PayMerchant.Client.Models;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -31,14 +32,19 @@ namespace BackOffice.Areas.LykkePay.Controllers
         private readonly IPayInternalClient _payInternalClient;
         private readonly IPayAuthClient _payAuthClient;
         private readonly IPayInvoiceClient _payInvoiceClient;
+        private readonly IPayMerchantClient _payMerchantClient;
         private const string ErrorMessageAnchor = "#errorMessage";
+
         public MerchantsController(
             IPayInternalClient payInternalClient,
-            IPayAuthClient payAuthClient, IPayInvoiceClient payInvoiceClient)
+            IPayAuthClient payAuthClient,
+            IPayInvoiceClient payInvoiceClient, 
+            IPayMerchantClient payMerchantClient)
         {
             _payInternalClient = payInternalClient;
             _payAuthClient = payAuthClient;
             _payInvoiceClient = payInvoiceClient;
+            _payMerchantClient = payMerchantClient;
         }
         public async Task<IActionResult> Index()
         {
@@ -55,7 +61,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> MerchantsList(MerchantsListViewModel vm)
         {
-            var merchants = await _payInternalClient.GetMerchantsAsync();
+            var merchants = await _payMerchantClient.Api.GetAllAsync();
             vm.PageSize = vm.PageSize == 0 ? 10 : vm.PageSize;
             var pagesize = Request.Cookies["PageSize"];
             if (pagesize != null)
@@ -78,7 +84,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     }
                     list = filtered.AsQueryable();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     list = new List<MerchantModel>().AsQueryable();
                 }
@@ -105,7 +111,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             var merchant = new MerchantModel();
             if (id != null)
             {
-                merchant = await _payInternalClient.GetMerchantByIdAsync(id);
+                merchant = await _payMerchantClient.Api.GetByIdAsync(id);
             }
             
 
@@ -118,7 +124,6 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 LwId = merchant.LwId,
                 Name = merchant.Name,
                 PublicKey = merchant.PublicKey,
-                TimeCacheRates = merchant.TimeCacheRates,
                 Certificate = merchant.PublicKey,
                 SystemId = string.Empty,
                 DisplayName = merchant.DisplayName                
@@ -130,7 +135,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddOrEditMerchant(AddOrEditMerchantDialogViewModel vm)
         {
-            var merchants = await _payInternalClient.GetMerchantsAsync();
+            var merchants = await _payMerchantClient.Api.GetAllAsync();
             if (string.IsNullOrEmpty(vm.ApiKey))
                 return this.JsonFailResult("ApiKey id required", ErrorMessageAnchor);
             if (string.IsNullOrEmpty(vm.Name))
@@ -150,12 +155,11 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 }
                 try
                 {
-                    var merchant = await _payInternalClient.CreateMerchantAsync(new CreateMerchantRequest
+                    var merchant = await _payMerchantClient.Api.CreateAsync(new CreateMerchantRequest
                     {
                         Name = vm.Name,
                         ApiKey = vm.ApiKey,
                         LwId = vm.LwId,
-                        TimeCacheRates = vm.TimeCacheRates,
                         DisplayName = vm.Name
                     });
 
@@ -179,23 +183,17 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     Id = vm.Id,
                     ApiKey = vm.ApiKey,
                     LwId = vm.LwId,
-                    TimeCacheRates = vm.TimeCacheRates,
                     Name = vm.Name,
                     DisplayName = vm.DisplayName
                 };
 
-                await _payInternalClient.UpdateMerchantAsync(updatereq);
+                await _payMerchantClient.Api.UpdateAsync(updatereq);
             }
             return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
         }
         [HttpPost]
         public async Task<ActionResult> UploadLogoDialog(string id = null)
         {
-            var merchant = new MerchantModel();
-            if (id != null)
-            {
-                merchant = await _payInternalClient.GetMerchantByIdAsync(id);
-            }
             var merchantfiles = (await _payInternalClient.GetFilesAsync(id)).ToList();
             byte[] merchantlogo = null;
             if (merchantfiles.Any())
@@ -213,7 +211,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> UploadLogo(IFormFile file)
         {
-            const int MAX_FILE_SIZE = 10 * 1024 * 1024;
+            const int maxFileSize = 10 * 1024 * 1024;
             var merchantId = Request.Form["MerchantId"];
 
             var merchantfiles = (await _payInternalClient.GetFilesAsync(merchantId)).ToList();
@@ -225,7 +223,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (file == null)
                 file = Request.Form.Files.FirstOrDefault();
 
-            if (file != null && file.Length <= MAX_FILE_SIZE)
+            if (file != null && file.Length <= maxFileSize)
             {
                 using (var stream = file.OpenReadStream())
                 {
@@ -265,7 +263,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, "#frmDeleteMerchant");
             }
-            await _payInternalClient.DeleteMerchantAsync(vm.Id);
+            await _payMerchantClient.Api.DeleteAsync(vm.Id);
 
             return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
         }
@@ -274,7 +272,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         public async Task<ActionResult> MerchantsSettingsPage()
         {
             var model = new MerchantSettingsListViewModel();
-            model.Merchants = await _payInternalClient.GetMerchantsAsync();
+            model.Merchants = await _payMerchantClient.Api.GetAllAsync();
             model.CurrentPage = 1;
             model.IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull);
             return View(model);
@@ -282,7 +280,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> MerchantsSettingsList(MerchantSettingsListViewModel vm)
         {
-            var setting = new MerchantSetting();
+            MerchantSetting setting;
+
             try
             {
                 setting = await _payInvoiceClient.GetMerchantSettingAsync(vm.SelectedMerchant);

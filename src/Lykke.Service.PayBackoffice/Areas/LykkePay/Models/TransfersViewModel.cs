@@ -1,10 +1,6 @@
-﻿using Lykke.Service.PayInternal.Client.Models.Merchant;
+﻿using Lykke.Service.PayMerchant.Client.Models;
 using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
-using NBitcoin;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BackOffice.Areas.LykkePay.Models
 {

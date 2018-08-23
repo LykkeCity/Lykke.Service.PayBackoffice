@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Lykke.Service.PayInternal.Client.Models.Merchant;
+﻿using System.Collections.Generic;
+using Lykke.Service.PayMerchant.Client.Models;
 using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
 using BackOffice.Models;
 using BackOffice.Helpers;

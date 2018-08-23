@@ -13,6 +13,7 @@ using Common.Log;
 using Lykke.Common.Log;
 using Lykke.Service.PayInternal.Client.Exceptions;
 using Lykke.Service.PayInternal.Client.Models.SupervisorMembership;
+using Lykke.Service.PayMerchant.Client;
 
 namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
 {
@@ -22,14 +23,18 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
     {
         private readonly IPayInternalClient _payInternalClient;
         private readonly IPayInvoiceClient _payInvoiceClient;
+        private readonly IPayMerchantClient _payMerchantClient;
+
         private readonly ILog _log;
 
         public SupervisorsController(
             IPayInternalClient payInternalClient,
             IPayInvoiceClient payInvoiceClient,
-            ILogFactory logFactory)
+            ILogFactory logFactory, 
+            IPayMerchantClient payMerchantClient)
         {
             _payInvoiceClient = payInvoiceClient;
+            _payMerchantClient = payMerchantClient;
             _log = logFactory.CreateLog(this);
             _payInternalClient = payInternalClient;
         }
@@ -40,7 +45,7 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> SupervisorsPage(string merchant = "")
         {
-            var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+            var merchants = await _payMerchantClient.Api.GetAllAsync();
 
             if (!string.IsNullOrEmpty(merchant) && !merchants.Select(x => x.Id).Contains(merchant))
             {
@@ -100,9 +105,9 @@ namespace Lykke.Service.PayBackoffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<ActionResult> AddSupervisorDialog(string merchant = null)
         {
-            var merchants = (await _payInternalClient.GetMerchantsAsync()).ToArray();
+            var merchants = await _payMerchantClient.Api.GetAllAsync();
             var employees = await _payInvoiceClient.GetEmployeesAsync(merchant);
-            var viewmodel = new AddSupervisorDialogViewModel()
+            var viewmodel = new AddSupervisorDialogViewModel
             {
                 SelectedMerchant = merchant,
                 Merchants = merchants,
