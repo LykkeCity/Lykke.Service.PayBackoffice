@@ -10,11 +10,8 @@ namespace BackOffice.Areas.LykkePay.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string DisplayName { get; set; }
-        public string PublicKey { get; set; }
         public string ApiKey { get; set; }
         public string LwId { get; set; }
-        public string Certificate { get; set; }
-        public string SystemId { get; set; }
         public string LogoImage { get; set; }
     }
     public class DeleteMerchantDialogViewModel : IPersonalAreaDialog
