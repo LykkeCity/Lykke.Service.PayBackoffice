@@ -21,6 +21,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.PayMerchant.Client;
 using Lykke.Service.PayMerchant.Client.Models;
+using Common;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
@@ -160,7 +161,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 return this.JsonFailResult("DisplayName required", ErrorMessageAnchor);
 
             if (string.IsNullOrEmpty(vm.ApiKey))
-                vm.ApiKey = Guid.NewGuid().ToString().ToLower().Replace("-", string.Empty);
+                vm.ApiKey = StringUtils.GenerateId().Replace("-", string.Empty);
 
             if (vm.IsNewMerchant)
             {
