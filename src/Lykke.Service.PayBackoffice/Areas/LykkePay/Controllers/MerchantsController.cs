@@ -22,6 +22,25 @@ using System.Threading.Tasks;
 using Lykke.Service.PayMerchant.Client;
 using Lykke.Service.PayMerchant.Client.Models;
 using Common;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.X509;
+using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Asn1.Pkcs;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Crypto.Operators;
+using BackOffice.Areas.LykkePay.Models.Merchants;
+using System.Text;
+using System.IO.Compression;
+using System.IO;
+using System.Net.Http;
+using System.Net;
+using System.Net.Http.Headers;
+using Lykke.Common.Log;
+using Lykke.Service.PayAuth.Client.Models.GenerateRsaKeys;
+using Common.Log;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -34,18 +53,21 @@ namespace BackOffice.Areas.LykkePay.Controllers
         private readonly IPayAuthClient _payAuthClient;
         private readonly IPayInvoiceClient _payInvoiceClient;
         private readonly IPayMerchantClient _payMerchantClient;
+        private readonly ILog _log;
         private const string ErrorMessageAnchor = "#errorMessage";
 
         public MerchantsController(
             IPayInternalClient payInternalClient,
             IPayAuthClient payAuthClient,
             IPayInvoiceClient payInvoiceClient, 
-            IPayMerchantClient payMerchantClient)
+            IPayMerchantClient payMerchantClient,
+            ILogFactory logFactory)
         {
             _payInternalClient = payInternalClient;
             _payAuthClient = payAuthClient;
             _payInvoiceClient = payInvoiceClient;
             _payMerchantClient = payMerchantClient;
+            _log = logFactory.CreateLog(this);
         }
         public async Task<IActionResult> Index()
         {
@@ -348,6 +370,84 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 return this.JsonFailResult(ex.Error.ErrorMessage, ErrorMessageAnchor);
             }
             return this.JsonRequestResult("#merchantsSettingsList", Url.Action("MerchantsSettingsList"), new MerchantSettingsListViewModel() { SelectedMerchant = vm.MerchantId });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GenerateMerchantCertificatesDialog(string merchantId)
+        {
+            var merchant = await _payMerchantClient.Api.GetByIdAsync(merchantId);
+            var viewModel = new MerchantCertificateViewModel()
+            {
+                Caption = "Generate merchant certificates",
+                MerchantId = merchant.Id,
+                MerchantDisplayName = merchant.DisplayName
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GenerateMerchantCertificates(MerchantCertificateViewModel vm)
+        {
+            GenerateRsaKeysResponse certs = await _payAuthClient.GenerateRsaKeysAsync(new GenerateRsaKeysRequest
+            {
+                ClientId = vm.MerchantId,
+                ClientDisplayName = vm.MerchantDisplayName
+            });
+
+            var guidOfZip = StringUtils.GenerateId();
+            var publicKeyPath = Path.Combine(Path.GetTempPath(), $"{StringUtils.GenerateId()}.crt");
+            var privateKeyPath = Path.Combine(Path.GetTempPath(), $"{StringUtils.GenerateId()}.pem");
+            var zipFilePath = Path.Combine(Path.GetTempPath(), $"{guidOfZip}.zip");
+
+            using (var sw = new StreamWriter(publicKeyPath))
+                sw.WriteLine(certs.PublicKey);
+
+            using (var sw = new StreamWriter(privateKeyPath))
+                sw.WriteLine(certs.PrivateKey);
+
+            using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+            {
+                zip.CreateEntryFromFile(publicKeyPath, $"rsa-public-key_{vm.MerchantDisplayName}.crt");
+                zip.CreateEntryFromFile(privateKeyPath, $"rsa-private-key_{vm.MerchantDisplayName}.pem");
+            }
+
+            if (System.IO.File.Exists(publicKeyPath))
+                System.IO.File.Delete(publicKeyPath);
+
+            if (System.IO.File.Exists(privateKeyPath))
+                System.IO.File.Delete(privateKeyPath);
+
+            return Json(guidOfZip);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadCertificate(string guidOfZip, string merchantDisplayName)
+        {
+            if (!guidOfZip.IsGuid())
+                return BadRequest("Guid should be provided.");
+
+            try
+            {
+                var zipFilePath = Path.Combine(Path.GetTempPath(), $"{guidOfZip}.zip");
+
+                var ms = new MemoryStream();
+
+                using (var file = new FileStream(zipFilePath, FileMode.Open, FileAccess.Read))
+                {
+                    file.CopyTo(ms);
+                }
+
+                if (System.IO.File.Exists(zipFilePath))
+                    System.IO.File.Delete(zipFilePath);
+
+                return File(ms.ToArray(), "application/zip", $"certificates_{merchantDisplayName}.zip");
+            }
+            catch (Exception e)
+            {
+                _log.Error(e, $"Error for data {guidOfZip}, {merchantDisplayName}");
+
+                return BadRequest("Error occured.");
+            }
         }
     }
 }
