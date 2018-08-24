@@ -51,8 +51,8 @@
                 data: params,
                 dataType: "json",
                 headers: { 'RequestVerificationToken': getAntiForgeryCookie() },
-                success: function (fileName, status) {
-                    window.location = '@Url.Action("DownloadCertificate")' + '?filename=' + fileName;
+                success: function (guidOfZip, status) {
+                    window.location = '@Url.Action("DownloadCertificate")' + '?guidOfZip=' + guidOfZip + '&merchantDisplayName=' + '@Model.MerchantDisplayName';
                     ui.hideDialog();
                 },
                 error: function (result, status, err) {
