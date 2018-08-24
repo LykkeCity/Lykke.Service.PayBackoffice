@@ -37,7 +37,9 @@ using System.IO;
 using System.Net.Http;
 using System.Net;
 using System.Net.Http.Headers;
+using Lykke.Common.Log;
 using Lykke.Service.PayAuth.Client.Models.GenerateRsaKeys;
+using Common.Log;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -50,18 +52,21 @@ namespace BackOffice.Areas.LykkePay.Controllers
         private readonly IPayAuthClient _payAuthClient;
         private readonly IPayInvoiceClient _payInvoiceClient;
         private readonly IPayMerchantClient _payMerchantClient;
+        private readonly ILog _log;
         private const string ErrorMessageAnchor = "#errorMessage";
 
         public MerchantsController(
             IPayInternalClient payInternalClient,
             IPayAuthClient payAuthClient,
             IPayInvoiceClient payInvoiceClient, 
-            IPayMerchantClient payMerchantClient)
+            IPayMerchantClient payMerchantClient,
+            ILogFactory logFactory)
         {
             _payInternalClient = payInternalClient;
             _payAuthClient = payAuthClient;
             _payInvoiceClient = payInvoiceClient;
             _payMerchantClient = payMerchantClient;
+            _log = logFactory.CreateLog(this);
         }
         public async Task<IActionResult> Index()
         {
@@ -377,23 +382,21 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 ClientDisplayName = vm.MerchantDisplayName
             });
 
-            var publicKeyFileName = $"rsa-public-key_{vm.MerchantDisplayName}.crt";
-            var privateKeyFileName = $"rsa-private-key_{vm.MerchantDisplayName}.pem";
-            var zipFileName = $"certificates_{vm.MerchantDisplayName}.zip";
+            var guidOfZip = StringUtils.GenerateId();
+            var publicKeyPath = Path.Combine(Path.GetTempPath(), $"{StringUtils.GenerateId()}.crt");
+            var privateKeyPath = Path.Combine(Path.GetTempPath(), $"{StringUtils.GenerateId()}.pem");
+            var zipFilePath = Path.Combine(Path.GetTempPath(), $"{guidOfZip}.zip");
 
-            var publicKeyPath = Path.Combine(Path.GetTempPath(), publicKeyFileName);
             using (var sw = new StreamWriter(publicKeyPath))
                 sw.WriteLine(certs.PublicKey);
 
-            var privateKeyPath = Path.Combine(Path.GetTempPath(), privateKeyFileName);
-
             using (var sw = new StreamWriter(privateKeyPath))
                 sw.WriteLine(certs.PrivateKey);
-            
-            using (var zip = ZipFile.Open(Path.Combine(Path.GetTempPath(), zipFileName), ZipArchiveMode.Create))
+
+            using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
             {
-                zip.CreateEntryFromFile(publicKeyPath, publicKeyFileName);
-                zip.CreateEntryFromFile(privateKeyPath, privateKeyFileName);
+                zip.CreateEntryFromFile(publicKeyPath, $"rsa-public-key_{vm.MerchantDisplayName}.crt");
+                zip.CreateEntryFromFile(privateKeyPath, $"rsa-private-key_{vm.MerchantDisplayName}.pem");
             }
 
             if (System.IO.File.Exists(publicKeyPath))
@@ -402,25 +405,37 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (System.IO.File.Exists(privateKeyPath))
                 System.IO.File.Delete(privateKeyPath);
 
-            return Json(zipFileName);
+            return Json(guidOfZip);
         }
 
         [HttpGet]
-        public async Task<FileResult> DownloadCertificate(string filename)
+        public async Task<IActionResult> DownloadCertificate(string guidOfZip, string merchantDisplayName)
         {
-            string certificatesPath = Path.Combine(Path.GetTempPath(), filename);
+            if (!guidOfZip.IsGuid())
+                return BadRequest("Guid should be provided.");
 
-            var ms = new MemoryStream();
-            
-            using (var file = new FileStream(certificatesPath, FileMode.Open, FileAccess.Read))
+            try
             {
-                file.CopyTo(ms);
-            }
-                
-            if (System.IO.File.Exists(certificatesPath))
-                System.IO.File.Delete(certificatesPath);
+                var zipFilePath = Path.Combine(Path.GetTempPath(), $"{guidOfZip}.zip");
 
-            return File(ms.ToArray(), "application/octet-stream", filename);
+                var ms = new MemoryStream();
+
+                using (var file = new FileStream(zipFilePath, FileMode.Open, FileAccess.Read))
+                {
+                    file.CopyTo(ms);
+                }
+
+                if (System.IO.File.Exists(zipFilePath))
+                    System.IO.File.Delete(zipFilePath);
+
+                return File(ms.ToArray(), "application/zip", $"certificates_{merchantDisplayName}.zip");
+            }
+            catch (Exception e)
+            {
+                _log.Error(e, $"Error for data {guidOfZip}, {merchantDisplayName}");
+
+                return BadRequest("Error occured.");
+            }
         }
     }
 }
