@@ -113,7 +113,6 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 merchant = await _payMerchantClient.Api.GetByIdAsync(id);
             }
-            
 
             var viewModel = new AddOrEditMerchantDialogViewModel
             {
@@ -123,9 +122,6 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Id = id,
                 LwId = merchant.LwId,
                 Name = merchant.Name,
-                PublicKey = merchant.PublicKey,
-                Certificate = merchant.PublicKey,
-                SystemId = string.Empty,
                 DisplayName = merchant.DisplayName                
             };
 
