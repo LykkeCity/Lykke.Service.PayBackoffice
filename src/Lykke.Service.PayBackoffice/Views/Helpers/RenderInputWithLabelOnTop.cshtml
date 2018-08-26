@@ -17,7 +17,13 @@
 }
 
 <div class="form-group">
-    <label class="control-label" for="@id">@Model.Caption</label>
+    <label class="control-label" for="@id">
+        @Model.Caption
+        @if (Model.Required)
+        {
+            <span style="color: red"> *</span>
+        }
+    </label>
     <input id="@id" @GetStrOrEmptyAttr("type", Model.Type) @GetStrOrEmptyAttr("value", Model.Value) 
            name="@Model.Name" 
            class="form-control @(Model.Lg ? "input-lg" : "") @(Model.Focused ? "set-cursor" : "")" 

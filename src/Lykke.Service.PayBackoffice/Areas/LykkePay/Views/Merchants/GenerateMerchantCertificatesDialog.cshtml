@@ -1,0 +1,70 @@
+﻿@model BackOffice.Areas.LykkePay.Models.Merchants.MerchantCertificateViewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+
+<form id="frmMerchantCertificate" autocomplete="off" style="max-height: 700px;overflow: auto;">
+    <div style="font-weight: 600">Please pay attention: </div>
+    <ul style="margin-bottom: 20px">
+        <li>New rsa keys for current merchant will be generated.</li>
+        <li>Save RSA private key (.pem-file) to use for signing api requests because after generation it is not stored anywhere in the system.</li>
+    </ul>
+    <div class="form-group">
+        @Html.RenderInputWithLabelOnTopReadOnly(name: nameof(Model.MerchantDisplayName), caption: "Merchant display name", value: Model.MerchantDisplayName)
+    </div>
+</form>
+
+<div id="frmMerchantCertificateButtons" style="text-align: center;">
+    <div class="btn-group">
+        <button class="btn btn-success" style="min-width: 150px">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            <img src="~/images/processing.gif" style="display: none" />
+            <span>Generate</span>
+        </button>
+    </div>
+    <div class="errorMessage" style="color: red; display: none;">Error occured.</div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var btnSuccess = $("#frmMerchantCertificateButtons .btn.btn-success");
+        var errorMsg = $('#frmMerchantCertificateButtons .errorMessage');
+
+        // remove default handler
+        btnSuccess.onclick = function () { };
+
+        btnSuccess.click(function (e) {
+            var params = {};
+            params.MerchantId = '@Model.MerchantId';
+            params.MerchantDisplayName = '@Model.MerchantDisplayName';
+
+            var btn = $(this);
+            var imgLoading = btn.find('img');
+
+            imgLoading.show();
+            btn.prop('disabled', true);
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GenerateMerchantCertificates")',
+                data: params,
+                dataType: "json",
+                headers: { 'RequestVerificationToken': getAntiForgeryCookie() },
+                success: function (guidOfZip, status) {
+                    window.location = '@Url.Action("DownloadCertificate")' + '?guidOfZip=' + guidOfZip + '&merchantDisplayName=' + '@Model.MerchantDisplayName';
+                    ui.hideDialog();
+                },
+                error: function (result, status, err) {
+                    errorMsg.show();
+                    console.error(result, status, err);
+                    return;
+                },
+                complete: function () {
+                    imgLoading.hide();
+                    btn.prop('disabled', false);
+                }
+            });
+        });
+    });
+</script>
