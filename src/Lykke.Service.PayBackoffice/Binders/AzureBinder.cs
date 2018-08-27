@@ -3,6 +3,8 @@ using AutoMapper;
 using BackOffice.Settings;
 using Common.Cache;
 using Common.IocContainer;
+using Core;
+using LkeServices;
 using Lykke.Service.BackofficeMembership.Client;
 using Lykke.Service.EmailPartnerRouter.Client;
 using Lykke.Service.PayAuth.Client;
@@ -61,6 +63,9 @@ namespace BackOffice.Binders
             ioc.RegisterInstance(new QBitNinjaClient(settings.CurrentValue.NinjaServiceClient.ServiceUrl)).AsSelf();
 
             ioc.RegisterBackofficeMembershipClient(settings.CurrentValue.BackofficeMembershipServiceClient.ServiceUrl);
+
+            ioc.RegisterType<StaffService>()
+                .As<IStaffService>();
 
             return ioc;
         }

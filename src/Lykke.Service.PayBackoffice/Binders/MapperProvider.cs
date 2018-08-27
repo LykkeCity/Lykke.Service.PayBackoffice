@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.Configuration;
 using BackOffice.Areas.LykkePay.Models;
+using Core.Staff;
 using Lykke.Service.PayInternal.Client.Models.PaymentRequest;
 
 namespace BackOffice.Binders
@@ -17,6 +14,8 @@ namespace BackOffice.Binders
 
             CreatePaymentRequestsMaps(mce);
 
+            CreateStaffMaps(mce);
+
             var mc = new MapperConfiguration(mce);
             mc.AssertConfigurationIsValid();
 
@@ -28,6 +27,15 @@ namespace BackOffice.Binders
             mce.CreateMap<PaymentRequestModel, PaymentRequestViewModel>()
                 .ForMember(o => o.PaymentAssetGeneralSettings, e => e.Ignore())
                 .ForMember(o => o.SettlementAssetGeneralSettings, e => e.Ignore());
+        }
+
+        private void CreateStaffMaps(MapperConfigurationExpression mce)
+        {
+            mce.CreateMap<AddStaffDialogViewModel, NewStaffCommand>(MemberList.Destination)
+                .ForMember(dest => dest.MerchantId, opt => opt.MapFrom(src => src.SelectedMerchant));
+
+            mce.CreateMap<AddStaffDialogViewModel, UpdateStaffCommand>(MemberList.Destination)
+                .ForMember(dest => dest.EmployeeId, opt => opt.MapFrom(src => src.Id));
         }
     }
 }

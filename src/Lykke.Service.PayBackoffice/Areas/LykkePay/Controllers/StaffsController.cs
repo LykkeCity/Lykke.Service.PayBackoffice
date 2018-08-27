@@ -17,8 +17,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AutoMapper;
+using Common;
+using Core.Exceptions;
+using Core.Staff;
+using Lykke.Service.PayAuth.Client.Models;
 using Lykke.Service.PayMerchant.Client;
 
 namespace BackOffice.Areas.LykkePay.Controllers
@@ -32,6 +38,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         private readonly IPayInvoiceClient _payInvoiceClient;
         private readonly IPayAuthClient _payAuthClient;
         private readonly IPayMerchantClient _payMerchantClient;
+        private readonly IStaffService _staffService;
 
         private const string ErrorMessageAnchor = "#errorMessage";
         private readonly IEmailPartnerRouterClient _emailPartnerRouterClient;
@@ -41,12 +48,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
             IPayInvoiceClient payInvoiceClient, 
             IPayAuthClient payAuthClient, 
             IEmailPartnerRouterClient emailPartnerRouterClient, 
-            IPayMerchantClient payMerchantClient)
+            IPayMerchantClient payMerchantClient, 
+            IStaffService staffService)
         {
             _payInvoiceClient = payInvoiceClient;
             _payAuthClient = payAuthClient;
             _emailPartnerRouterClient = emailPartnerRouterClient;
             _payMerchantClient = payMerchantClient;
+            _staffService = staffService;
         }
         public async Task<IActionResult> Index()
         {
@@ -145,6 +154,49 @@ namespace BackOffice.Areas.LykkePay.Controllers
             };
             return View(viewmodel);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddOrEditStaff2(AddStaffDialogViewModel vm)
+        {
+            if (string.IsNullOrEmpty(vm.FirstName))
+                return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, ErrorMessageAnchor);
+
+            if (string.IsNullOrEmpty(vm.LastName))
+                return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, ErrorMessageAnchor);
+
+            if (!vm.Email?.IsValidEmail() ?? true)
+                return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, ErrorMessageAnchor);
+
+            if (vm.IsNewStaff && string.IsNullOrEmpty(vm.Password))
+                return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, ErrorMessageAnchor);
+
+            if (vm.IsNewStaff)
+            {
+                try
+                {
+                    await _staffService.AddAsync(Mapper.Map<NewStaffCommand>(vm));
+                }
+                catch (AddStaffException e)
+                {
+                    return this.JsonFailResult(e.Message, ErrorMessageAnchor);
+                }                
+            }
+            else
+            {
+                try
+                {
+                    await _staffService.UpdateAsync(Mapper.Map<UpdateStaffCommand>(vm));
+                }
+                catch (UpdateStaffException e)
+                {
+                    return this.JsonFailResult(e.Message, ErrorMessageAnchor);
+                }
+            }
+
+            return this.JsonRequestResult("#staffList", Url.Action("StaffsList"),
+                new StaffsPageViewModel {SelectedMerchant = vm.SelectedMerchant});
+        }
+
         [HttpPost]
         public async Task<ActionResult> AddOrEditStaff(AddStaffDialogViewModel vm)
         {
