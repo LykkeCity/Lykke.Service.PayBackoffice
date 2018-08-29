@@ -1,10 +1,13 @@
 PayBackOffice:
     PayInvoicePortalResetPasswordLink:
         settings-key: InvoicePortalResetPasswordLink
+        types: [ Tag ]
     BlockchainExplorerUrl:
         settings-key: PayInvoicePortalBlockchainExplorerUrl
+        types: [ Tag ]
     EthereumBlockchainExplorerUrl: 
         settings-key: EthereumBlockchainExplorerUrl
+        types: [ Tag ]
     Db:
         LogsConnString: 
             settings-key: PayBackOffice-LogsConnString
@@ -23,13 +26,16 @@ PayBackOffice:
         GoogleAuth:
             ApiClientId:
                 settings-key: GoogleAuthApiClientId
+                types: [ Tag ]
             AvailableEmailsRegex:
                 settings-key: GoogleAuthAvailableEmailsRegex
             DefaultAdminEmail: 
                 settings-key: GoogleAuthDefaultAdminEmail
+                types: [ Tag ]
         TwoFactorVerification:
             UseVerification:
                 settings-key: PayBackOffice-TwoFactorVerification-UseVerification
+                types: [ Tag ]
     PayInternalServiceClient:
         ServiceUrl: 
             settings-key: PayInternalServiceUrl
