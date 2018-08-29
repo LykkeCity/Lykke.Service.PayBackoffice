@@ -9,49 +9,49 @@ PayBackOffice:
         LogsConnString: 
             settings-key: PayBackOffice-LogsConnString
             types: [ AzureTableStorage, Tag ]
-    LykkePayWalletList:
-        Wallets: 
-            settings-key: PayBackOffice-LykkePayWalletList-Wallets
-            types: [ JsonArray, Tag ]
-    SupportedBrowsers:
-        Browsers:
-            settings-key: PayBackOffice-SupportedBrowsers-Browsers
-            types: [ JsonArray ]
-        SkipUrls:
-            settings-key: PayBackOffice-SupportedBrowsers-SkipUrls
-            types: [ JsonArray ]
-    GoogleAuth:
-        ApiClientId:
-            settings-key: PayBackOffice-GoogleAuthSettings-ApiClientId
-        AvailableEmailsRegex:
-            settings-key: PayBackOffice-GoogleAuthSettings-AvailableEmailsRegex
-        DefaultAdminEmail: 
-            settings-key: PayBackOffice-GoogleAuthSettings-DefaultAdminEmail
-    TwoFactorVerification:
-        UseVerification:
-            settings-key: PayBackOffice-TwoFactorVerification-UseVerification
-PayInternalServiceClient:
-    ServiceUrl: 
-        settings-key: PayInternalServiceUrl
-        types: [ Tag ]
-PayInvoiceServiceClient:
-    ServiceUrl: 
-        settings-key: PayInvoiceServiceUrl
-        types: [ Tag ]
-BackofficeMembershipServiceClient:
-    ServiceUrl: 
-        settings-key: BackofficeMembershipServiceUrl
-EmailPartnerRouterServiceClient:
-    ServiceUrl: 
-        settings-key: EmailPartnerRouterServiceUrl
-NinjaServiceClient:
-    ServiceUrl:
-        settings-key: NinjaServiceUrl
-        types: [ Tag ]
-PayAuthServiceClient:
-    ServiceUrl: 
-        settings-key: PayAuthServiceUrl
-        types: [ Tag ]
+        LykkePayWalletList:
+            Wallets: 
+                settings-key: PayBackOffice-LykkePayWalletList-Wallets
+                types: [ JsonArray, Tag ]
+        SupportedBrowsers:
+            Browsers:
+                settings-key: PayBackOffice-SupportedBrowsers-Browsers
+                types: [ JsonArray ]
+            SkipUrls:
+                settings-key: PayBackOffice-SupportedBrowsers-SkipUrls
+                types: [ JsonArray ]
+        GoogleAuth:
+            ApiClientId:
+                settings-key: GoogleAuthApiClientId
+            AvailableEmailsRegex:
+                settings-key: GoogleAuthAvailableEmailsRegex
+            DefaultAdminEmail: 
+                settings-key: GoogleAuthDefaultAdminEmail
+        TwoFactorVerification:
+            UseVerification:
+                settings-key: PayBackOffice-TwoFactorVerification-UseVerification
+    PayInternalServiceClient:
+        ServiceUrl: 
+            settings-key: PayInternalServiceUrl
+            types: [ Tag ]
+    PayInvoiceServiceClient:
+        ServiceUrl: 
+            settings-key: PayInvoiceServiceUrl
+            types: [ Tag ]
+    BackofficeMembershipServiceClient:
+        ServiceUrl: 
+            settings-key: BackofficeMembershipServiceUrl
+    EmailPartnerRouterServiceClient:
+        ServiceUrl: 
+            settings-key: EmailPartnerRouterServiceUrl
+    NinjaServiceClient:
+        ServiceUrl:
+            settings-key: NinjaServiceUrl
+            types: [ Tag ]
+    PayAuthServiceClient:
+        ServiceUrl: 
+            settings-key: PayAuthServiceUrl
+            types: [ Tag ]
 
 MonitoringServiceClient:
   MonitoringServiceUrl:
