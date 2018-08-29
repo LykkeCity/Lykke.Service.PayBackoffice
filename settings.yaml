@@ -64,6 +64,11 @@ PayAuthServiceClient:
     ServiceUrl: 
         settings-key: PayAuthServiceUrl
         types: [ Tag ]
+        
+PayMerchantServiceClient:
+    ServiceUrl:
+        settings-key: PayMerchantServiceUrl
+        types: [Tag]        
 
 MonitoringServiceClient:
   MonitoringServiceUrl:
