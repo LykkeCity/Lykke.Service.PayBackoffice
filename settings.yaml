@@ -22,11 +22,11 @@ PayBackOffice:
                 types: [ JsonArray ]
         GoogleAuth:
             ApiClientId:
-                settings-key: PayBackOffice-GoogleAuthSettings-ApiClientId
+                settings-key: GoogleAuthApiClientId
             AvailableEmailsRegex:
-                settings-key: PayBackOffice-GoogleAuthSettings-AvailableEmailsRegex
+                settings-key: GoogleAuthAvailableEmailsRegex
             DefaultAdminEmail: 
-                settings-key: PayBackOffice-GoogleAuthSettings-DefaultAdminEmail
+                settings-key: GoogleAuthDefaultAdminEmail
         TwoFactorVerification:
             UseVerification:
                 settings-key: PayBackOffice-TwoFactorVerification-UseVerification
