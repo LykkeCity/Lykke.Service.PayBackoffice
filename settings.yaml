@@ -25,7 +25,7 @@ PayBackOffice:
             types: [ JsonArray ]
     GoogleAuth:
         ApiClientId:
-            settings-key: GoogleAuthApiClientId
+            settings-key: PayBackOffice-GoogleAuthApiClientId
             types: [ Tag ]
         AvailableEmailsRegex:
             settings-key: GoogleAuthAvailableEmailsRegex
