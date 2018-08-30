@@ -21,6 +21,26 @@ using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.PayMerchant.Client;
 using Lykke.Service.PayMerchant.Client.Models;
+using Common;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.X509;
+using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Asn1.Pkcs;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Crypto.Operators;
+using BackOffice.Areas.LykkePay.Models.Merchants;
+using System.Text;
+using System.IO.Compression;
+using System.IO;
+using System.Net.Http;
+using System.Net;
+using System.Net.Http.Headers;
+using Lykke.Common.Log;
+using Lykke.Service.PayAuth.Client.Models.GenerateRsaKeys;
+using Common.Log;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -33,18 +53,21 @@ namespace BackOffice.Areas.LykkePay.Controllers
         private readonly IPayAuthClient _payAuthClient;
         private readonly IPayInvoiceClient _payInvoiceClient;
         private readonly IPayMerchantClient _payMerchantClient;
+        private readonly ILog _log;
         private const string ErrorMessageAnchor = "#errorMessage";
 
         public MerchantsController(
             IPayInternalClient payInternalClient,
             IPayAuthClient payAuthClient,
             IPayInvoiceClient payInvoiceClient, 
-            IPayMerchantClient payMerchantClient)
+            IPayMerchantClient payMerchantClient,
+            ILogFactory logFactory)
         {
             _payInternalClient = payInternalClient;
             _payAuthClient = payAuthClient;
             _payInvoiceClient = payInvoiceClient;
             _payMerchantClient = payMerchantClient;
+            _log = logFactory.CreateLog(this);
         }
         public async Task<IActionResult> Index()
         {
@@ -109,23 +132,22 @@ namespace BackOffice.Areas.LykkePay.Controllers
         public async Task<ActionResult> AddOrEditMerchantDialog(string id = null)
         {
             var merchant = new MerchantModel();
-            if (id != null)
+
+            bool isNewMerchant = id == null;
+
+            if (!isNewMerchant)
             {
                 merchant = await _payMerchantClient.Api.GetByIdAsync(id);
             }
-            
 
             var viewModel = new AddOrEditMerchantDialogViewModel
             {
-                Caption = "Add merchant",
+                Caption = isNewMerchant ? "Add merchant" : "Edit merchant",
                 IsNewMerchant = id == null,
                 ApiKey = merchant.ApiKey,
                 Id = id,
                 LwId = merchant.LwId,
                 Name = merchant.Name,
-                PublicKey = merchant.PublicKey,
-                Certificate = merchant.PublicKey,
-                SystemId = string.Empty,
                 DisplayName = merchant.DisplayName                
             };
 
@@ -136,23 +158,23 @@ namespace BackOffice.Areas.LykkePay.Controllers
         public async Task<ActionResult> AddOrEditMerchant(AddOrEditMerchantDialogViewModel vm)
         {
             var merchants = await _payMerchantClient.Api.GetAllAsync();
-            if (string.IsNullOrEmpty(vm.ApiKey))
-                return this.JsonFailResult("ApiKey id required", ErrorMessageAnchor);
+            
             if (string.IsNullOrEmpty(vm.Name))
-                return this.JsonFailResult("Name required", ErrorMessageAnchor);
+                return this.JsonFailResult("MerchantId required", ErrorMessageAnchor);
+
             if (string.IsNullOrEmpty(vm.DisplayName))
                 return this.JsonFailResult("DisplayName required", ErrorMessageAnchor);
 
+            if (string.IsNullOrEmpty(vm.ApiKey))
+                vm.ApiKey = StringUtils.GenerateId().Replace("-", string.Empty);
+
             if (vm.IsNewMerchant)
             {
-                if (string.IsNullOrEmpty(vm.SystemId))
-                    return this.JsonFailResult("System id required", ErrorMessageAnchor);
-                if (string.IsNullOrEmpty(vm.PublicKey))
-                    return this.JsonFailResult("Public key required", ErrorMessageAnchor);
-                if (merchants != null && (merchants.Select(x => x.Name).Contains(vm.Name) || merchants.Select(x => x.ApiKey).Contains(vm.ApiKey)))
+                if (merchants != null && merchants.Select(x => x.Name).Contains(vm.Name))
                 {
                     return this.JsonFailResult(Phrases.AlreadyExists, "#name");
                 }
+
                 try
                 {
                     var merchant = await _payMerchantClient.Api.CreateAsync(new CreateMerchantRequest
@@ -160,15 +182,13 @@ namespace BackOffice.Areas.LykkePay.Controllers
                         Name = vm.Name,
                         ApiKey = vm.ApiKey,
                         LwId = vm.LwId,
-                        DisplayName = vm.Name
+                        DisplayName = vm.DisplayName
                     });
 
                     await _payAuthClient.RegisterAsync(new Lykke.Service.PayAuth.Client.Models.RegisterRequest
                     {
                         ApiKey = vm.ApiKey,
-                        Certificate = vm.PublicKey,
-                        ClientId = merchant.Id,
-                        SystemId = vm.SystemId
+                        ClientId = merchant.Id
                     });
                 }
                 catch (Exception ex)
@@ -178,17 +198,31 @@ namespace BackOffice.Areas.LykkePay.Controllers
             }
             else
             {
-                var updatereq = new UpdateMerchantRequest
+                try
                 {
-                    Id = vm.Id,
-                    ApiKey = vm.ApiKey,
-                    LwId = vm.LwId,
-                    Name = vm.Name,
-                    DisplayName = vm.DisplayName
-                };
+                    var updatereq = new UpdateMerchantRequest
+                    {
+                        Id = vm.Id,
+                        ApiKey = vm.ApiKey,
+                        LwId = vm.LwId,
+                        Name = vm.Name,
+                        DisplayName = vm.DisplayName
+                    };
 
-                await _payMerchantClient.Api.UpdateAsync(updatereq);
+                    await _payMerchantClient.Api.UpdateAsync(updatereq);
+
+                    await _payAuthClient.UpdateApiKeyAsync(new Lykke.Service.PayAuth.Client.Models.UpdateApiKeyRequest
+                    {
+                        ApiKey = vm.ApiKey,
+                        ClientId = vm.Id
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return this.JsonFailResult(ex.Message, ErrorMessageAnchor);
+                }
             }
+
             return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
         }
         [HttpPost]
@@ -336,6 +370,84 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 return this.JsonFailResult(ex.Error.ErrorMessage, ErrorMessageAnchor);
             }
             return this.JsonRequestResult("#merchantsSettingsList", Url.Action("MerchantsSettingsList"), new MerchantSettingsListViewModel() { SelectedMerchant = vm.MerchantId });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GenerateMerchantCertificatesDialog(string merchantId)
+        {
+            var merchant = await _payMerchantClient.Api.GetByIdAsync(merchantId);
+            var viewModel = new MerchantCertificateViewModel()
+            {
+                Caption = "Generate merchant certificates",
+                MerchantId = merchant.Id,
+                MerchantDisplayName = merchant.DisplayName
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GenerateMerchantCertificates(MerchantCertificateViewModel vm)
+        {
+            GenerateRsaKeysResponse certs = await _payAuthClient.GenerateRsaKeysAsync(new GenerateRsaKeysRequest
+            {
+                ClientId = vm.MerchantId,
+                ClientDisplayName = vm.MerchantDisplayName
+            });
+
+            var guidOfZip = StringUtils.GenerateId();
+            var publicKeyPath = Path.Combine(Path.GetTempPath(), $"{StringUtils.GenerateId()}.crt");
+            var privateKeyPath = Path.Combine(Path.GetTempPath(), $"{StringUtils.GenerateId()}.pem");
+            var zipFilePath = Path.Combine(Path.GetTempPath(), $"{guidOfZip}.zip");
+
+            using (var sw = new StreamWriter(publicKeyPath))
+                sw.WriteLine(certs.PublicKey);
+
+            using (var sw = new StreamWriter(privateKeyPath))
+                sw.WriteLine(certs.PrivateKey);
+
+            using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+            {
+                zip.CreateEntryFromFile(publicKeyPath, $"rsa-public-key_{vm.MerchantDisplayName}.crt");
+                zip.CreateEntryFromFile(privateKeyPath, $"rsa-private-key_{vm.MerchantDisplayName}.pem");
+            }
+
+            if (System.IO.File.Exists(publicKeyPath))
+                System.IO.File.Delete(publicKeyPath);
+
+            if (System.IO.File.Exists(privateKeyPath))
+                System.IO.File.Delete(privateKeyPath);
+
+            return Json(guidOfZip);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadCertificate(string guidOfZip, string merchantDisplayName)
+        {
+            if (!guidOfZip.IsGuid())
+                return BadRequest("Guid should be provided.");
+
+            try
+            {
+                var zipFilePath = Path.Combine(Path.GetTempPath(), $"{guidOfZip}.zip");
+
+                var ms = new MemoryStream();
+
+                using (var file = new FileStream(zipFilePath, FileMode.Open, FileAccess.Read))
+                {
+                    file.CopyTo(ms);
+                }
+
+                if (System.IO.File.Exists(zipFilePath))
+                    System.IO.File.Delete(zipFilePath);
+
+                return File(ms.ToArray(), "application/zip", $"certificates_{merchantDisplayName}.zip");
+            }
+            catch (Exception e)
+            {
+                _log.Error(e, $"Error for data {guidOfZip}, {merchantDisplayName}");
+
+                return BadRequest("Error occured.");
+            }
         }
     }
 }
