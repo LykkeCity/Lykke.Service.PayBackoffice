@@ -258,12 +258,20 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Password = vm.Password,
             });
 
+            ResetPasswordTokenModel passwordResetToken = await _payAuthClient.CreateResetPasswordTokenAsync(
+                new CreateResetPasswordTokenRequest
+                {
+                    MerchantId = employee.MerchantId,
+                    EmployeeId = employee.Id
+                });
+
             await ResetPasswordAsync(new ResetPasswordModel()
             {
                 Email = vm.Email,
-                EmailTemplate = "PasswordResetTemplate",
+                EmailTemplate = "lykkepay_employee_registration",
                 FullName = vm.FirstName,
                 Password = vm.Password,
+                PasswordResetToken = passwordResetToken.Id
             });
 
             return this.JsonRequestResult("#staffList", Url.Action("StaffsList"),
@@ -299,12 +307,20 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     Password = vm.Password
                 });
 
+                ResetPasswordTokenModel passwordResetToken = await _payAuthClient.CreateResetPasswordTokenAsync(
+                    new CreateResetPasswordTokenRequest
+                    {
+                        MerchantId = employee.MerchantId,
+                        EmployeeId = employee.Id
+                    });
+
                 await ResetPasswordAsync(new ResetPasswordModel()
                 {
                     Email = employee.Email,
-                    EmailTemplate = "PasswordResetTemplate",
+                    EmailTemplate = "lykkepay_password_reset",
                     FullName = vm.FirstName,
                     Password = vm.Password,
+                    PasswordResetToken = passwordResetToken.Id
                 });
             }
 
@@ -316,11 +332,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
         {
             var payload = new Dictionary<string, string>
             {
-                {"UserEmail", model.Email},
-                {"ClientFullName", model.FullName},
-                {"ClientPassword", model.Password},
-                {"ResetLink", PayInvoicePortalResetPasswordLink},
-                {"DateTime", DateTime.Now.ToString(CultureInfo.InvariantCulture)},
+                {"UserName", model.FullName},
+                {"ResetPasswordUrl", string.Format(PayInvoicePortalResetPasswordLink, model.PasswordResetToken)},
                 {"Year", DateTime.Today.Year.ToString()}
             };
 
