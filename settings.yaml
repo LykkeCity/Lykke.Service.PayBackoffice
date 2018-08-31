@@ -1,12 +1,12 @@
 PayBackOffice:
     PayInvoicePortalResetPasswordLink:
-        settings-key: InvoicePortalResetPasswordLink
+        settings-key: PayBackOffice-PayInvoicePortalResetPasswordLink
         types: [ Tag ]
     BlockchainExplorerUrl:
-        settings-key: PayInvoicePortalBlockchainExplorerUrl
+        settings-key: PayBackOffice-BlockchainExplorerUrl
         types: [ Tag ]
     EthereumBlockchainExplorerUrl: 
-        settings-key: EthereumBlockchainExplorerUrl
+        settings-key: PayBackOffice-EthereumBlockchainExplorerUrl
         types: [ Tag ]
     Db:
         LogsConnString: 
