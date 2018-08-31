@@ -36,6 +36,10 @@ PayBackOffice:
         UseVerification:
             settings-key: PayBackOffice-TwoFactorVerification-UseVerification
             types: [ Tag ]
+    RabbitMq:
+        SagasConnectionString:
+            settings-key: SagasRabbitMqConnStr
+                types: [ Tag ]
             
 PayInternalServiceClient:
     ServiceUrl: 
