@@ -89,7 +89,7 @@ namespace BackOffice.Binders
                 .SingleInstance();
 
             var rabbitSettings = new RabbitMQ.Client.ConnectionFactory
-                {Uri = new Uri(appSettings.CurrentValue.PayBackOffice.RabbitMq.SagasConnectionString)};
+                {Uri = appSettings.CurrentValue.PayBackOffice.RabbitMq.SagasConnectionString};
 
             builder.RegisterType<EmployeeRegistrationErrorProjection>().SingleInstance();
 
