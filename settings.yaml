@@ -1,10 +1,13 @@
 PayBackOffice:
     PayInvoicePortalResetPasswordLink:
         settings-key: InvoicePortalResetPasswordLink
+        types: [ Tag ]
     BlockchainExplorerUrl:
         settings-key: PayInvoicePortalBlockchainExplorerUrl
+        types: [ Tag ]
     EthereumBlockchainExplorerUrl: 
         settings-key: EthereumBlockchainExplorerUrl
+        types: [ Tag ]
     Db:
         LogsConnString: 
             settings-key: PayBackOffice-LogsConnString
@@ -22,36 +25,50 @@ PayBackOffice:
             types: [ JsonArray ]
     GoogleAuth:
         ApiClientId:
-            settings-key: PayBackOffice-GoogleAuthSettings-ApiClientId
+            settings-key: PayBackOffice-GoogleAuthApiClientId
+            types: [ Tag ]
         AvailableEmailsRegex:
-            settings-key: PayBackOffice-GoogleAuthSettings-AvailableEmailsRegex
+            settings-key: GoogleAuthAvailableEmailsRegex
         DefaultAdminEmail: 
-            settings-key: PayBackOffice-GoogleAuthSettings-DefaultAdminEmail
+            settings-key: GoogleAuthDefaultAdminEmail
+            types: [ Tag ]
     TwoFactorVerification:
         UseVerification:
             settings-key: PayBackOffice-TwoFactorVerification-UseVerification
+            types: [ Tag ]
+            
 PayInternalServiceClient:
     ServiceUrl: 
         settings-key: PayInternalServiceUrl
         types: [ Tag ]
+        
 PayInvoiceServiceClient:
     ServiceUrl: 
         settings-key: PayInvoiceServiceUrl
         types: [ Tag ]
+        
 BackofficeMembershipServiceClient:
     ServiceUrl: 
         settings-key: BackofficeMembershipServiceUrl
+        
 EmailPartnerRouterServiceClient:
     ServiceUrl: 
         settings-key: EmailPartnerRouterServiceUrl
+        
 NinjaServiceClient:
     ServiceUrl:
         settings-key: NinjaServiceUrl
         types: [ Tag ]
+        
 PayAuthServiceClient:
     ServiceUrl: 
         settings-key: PayAuthServiceUrl
         types: [ Tag ]
+        
+PayMerchantServiceClient:
+    ServiceUrl:
+        settings-key: PayMerchantServiceUrl
+        types: [Tag]        
 
 MonitoringServiceClient:
   MonitoringServiceUrl:
