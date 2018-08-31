@@ -39,7 +39,6 @@
     <PackageReference Include="RazorLight" Version="1.1.0" />
     <PackageReference Include="Neostore.ImageSharp" Version="1.0.0" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.13" />
-    <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="4.5.3" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.5.3" />
