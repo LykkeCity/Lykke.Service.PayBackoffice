@@ -29,6 +29,9 @@
     <PackageReference Include="Castle.Core" Version="4.3.1" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.8.1" />
     <PackageReference Include="Lykke.Common" Version="7.0.3" />
+    <PackageReference Include="Lykke.Service.EmailPartnerRouter.Client" Version="2.0.4" />
+    <PackageReference Include="Lykke.Service.PayAuth.Client" Version="1.1.2" />
+    <PackageReference Include="Lykke.Service.PayInvoice.Client" Version="5.2.0" />
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
     <PackageReference Include="morelinq" Version="3.0.0" />
     <PackageReference Include="NBitcoin" Version="4.1.1.45" />

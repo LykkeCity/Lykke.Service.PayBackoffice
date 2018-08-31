@@ -17,8 +17,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AutoMapper;
+using Common;
+using Core.Exceptions;
+using Core.Staff;
+using Lykke.Service.PayAuth.Client.Models;
 using Lykke.Service.PayMerchant.Client;
 
 namespace BackOffice.Areas.LykkePay.Controllers
@@ -32,6 +38,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         private readonly IPayInvoiceClient _payInvoiceClient;
         private readonly IPayAuthClient _payAuthClient;
         private readonly IPayMerchantClient _payMerchantClient;
+        private readonly IStaffService _staffService;
 
         private const string ErrorMessageAnchor = "#errorMessage";
         private readonly IEmailPartnerRouterClient _emailPartnerRouterClient;
@@ -41,12 +48,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
             IPayInvoiceClient payInvoiceClient, 
             IPayAuthClient payAuthClient, 
             IEmailPartnerRouterClient emailPartnerRouterClient, 
-            IPayMerchantClient payMerchantClient)
+            IPayMerchantClient payMerchantClient, 
+            IStaffService staffService)
         {
             _payInvoiceClient = payInvoiceClient;
             _payAuthClient = payAuthClient;
             _emailPartnerRouterClient = emailPartnerRouterClient;
             _payMerchantClient = payMerchantClient;
+            _staffService = staffService;
         }
         public async Task<IActionResult> Index()
         {
@@ -145,93 +154,62 @@ namespace BackOffice.Areas.LykkePay.Controllers
             };
             return View(viewmodel);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddOrEditStaff2(AddStaffDialogViewModel vm)
+        {
+            if (string.IsNullOrEmpty(vm.FirstName))
+                return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, ErrorMessageAnchor);
+
+            if (string.IsNullOrEmpty(vm.LastName))
+                return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, ErrorMessageAnchor);
+
+            if (!vm.Email?.IsValidEmail() ?? true)
+                return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, ErrorMessageAnchor);
+
+            if (vm.IsNewStaff && string.IsNullOrEmpty(vm.Password))
+                return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, ErrorMessageAnchor);
+
+            if (vm.IsNewStaff)
+            {
+                try
+                {
+                    await _staffService.AddAsync(Mapper.Map<NewStaffCommand>(vm));
+                }
+                catch (AddStaffException e)
+                {
+                    return this.JsonFailResult(e.Message, ErrorMessageAnchor);
+                }                
+            }
+            else
+            {
+                try
+                {
+                    await _staffService.UpdateAsync(Mapper.Map<UpdateStaffCommand>(vm));
+                }
+                catch (UpdateStaffException e)
+                {
+                    return this.JsonFailResult(e.Message, ErrorMessageAnchor);
+                }
+            }
+
+            return this.JsonRequestResult("#staffList", Url.Action("StaffsList"),
+                new StaffsPageViewModel {SelectedMerchant = vm.SelectedMerchant});
+        }
+
         [HttpPost]
         public async Task<ActionResult> AddOrEditStaff(AddStaffDialogViewModel vm)
         {
-            if (string.IsNullOrEmpty(vm.FirstName))
-                return this.JsonFailResult("FirstName required", ErrorMessageAnchor);
-            if (string.IsNullOrEmpty(vm.LastName))
-                return this.JsonFailResult("LastName required", ErrorMessageAnchor);
-            if (string.IsNullOrEmpty(vm.Email))
-                return this.JsonFailResult("Email required", ErrorMessageAnchor);
-
-            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-            Match match = regex.Match(vm.Email);
-            if (!match.Success)
-                return this.JsonFailResult("Email not valid", ErrorMessageAnchor);
-
-            var employee = new EmployeeModel();
-            var employees = await _payInvoiceClient.GetEmployeesAsync(vm.SelectedMerchant);
             try
             {
                 if (vm.IsNewStaff)
                 {
-                    if (employees != null && employees.Select(x => x.Email).Contains(vm.Email))
-                    {
-                        return this.JsonFailResult(Phrases.AlreadyExists, ErrorMessageAnchor);
-                    }
-                    if (string.IsNullOrEmpty(vm.Password))
-                        return this.JsonFailResult("Password required", ErrorMessageAnchor);
-
-                    employee = await _payInvoiceClient.AddEmployeeAsync(new CreateEmployeeModel()
-                    {
-                        Email = vm.Email,
-                        LastName = vm.LastName,
-                        FirstName = vm.FirstName,
-                        MerchantId = vm.SelectedMerchant
-                    });
+                    return await AddStaffAsync(vm);
                 }
                 else
                 {
-                    await _payInvoiceClient.UpdateEmployeeAsync(new UpdateEmployeeModel()
-                    {
-                        Email = vm.Email,
-                        FirstName = vm.FirstName,
-                        LastName = vm.LastName,
-                        Id = vm.Id,
-                        MerchantId = vm.SelectedMerchant,
-                        IsBlocked = vm.IsBlocked
-                    });
+                    return await EditStaff(vm);
                 }
-                if (!string.IsNullOrEmpty(vm.Password))
-                {
-                    var rm = new RegisterModel();
-                    rm.Email = vm.Email;
-                    rm.EmployeeId = string.IsNullOrEmpty(vm.Id) ? employee.Id : vm.Id;
-                    rm.MerchantId = vm.SelectedMerchant;
-                    rm.Password = vm.Password;
-                    if (vm.IsNewStaff)
-                        await _payAuthClient.RegisterAsync(rm);
-                    else
-                    {
-                        var updatemodel = new UpdateCredentialsModel()
-                        {
-                            Email = vm.Email,
-                            EmployeeId = vm.Id,
-                            MerchantId = vm.SelectedMerchant,
-                            Password = vm.Password
-                        };
-                        await _payAuthClient.UpdateAsync(updatemodel);
-                    }
-                    var payload = new Dictionary<string, string>
-                        {
-                            {"UserEmail", vm.Email},
-                            {"ClientFullName", vm.FirstName},
-                            {"ClientPassword", vm.Password},
-                            {"ResetLink", PayInvoicePortalResetPasswordLink},
-                            {"DateTime", DateTime.Now.ToString(CultureInfo.InvariantCulture)},
-                            {"Year", DateTime.Today.Year.ToString()}
-                        };
-                    var emails = new List<string>();
-                    emails.Add(vm.Email);
-                    await _emailPartnerRouterClient.Send(new SendEmailCommand
-                    {
-                        EmailAddresses = emails.ToArray(),
-                        Template = "PasswordResetTemplate",
-                        Payload = payload
-                    });
-                }
-                return this.JsonRequestResult("#staffList", Url.Action("StaffsList"), new StaffsPageViewModel() { SelectedMerchant = vm.SelectedMerchant });
             }
             catch (Exception ex)
             {
@@ -240,6 +218,133 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 return this.JsonFailResult("Error: " + ex.Message, ErrorMessageAnchor);
             }
         }
+
+        private async Task<ActionResult> AddStaffAsync(AddStaffDialogViewModel vm)
+        {
+            if (string.IsNullOrEmpty(vm.FirstName))
+                return this.JsonFailResult("FirstName required", ErrorMessageAnchor);
+            if (string.IsNullOrEmpty(vm.LastName))
+                return this.JsonFailResult("LastName required", ErrorMessageAnchor);
+            if (string.IsNullOrEmpty(vm.Password))
+                return this.JsonFailResult("Password required", ErrorMessageAnchor);
+            if (string.IsNullOrEmpty(vm.Email))
+                return this.JsonFailResult("Email required", ErrorMessageAnchor);
+
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            Match match = regex.Match(vm.Email);
+            if (!match.Success)
+                return this.JsonFailResult("Email not valid", ErrorMessageAnchor);
+
+            var employees = await _payInvoiceClient.GetEmployeesAsync(vm.SelectedMerchant);
+            if (employees != null && employees.Select(x => x.Email)
+                    .Contains(vm.Email, StringComparer.OrdinalIgnoreCase))
+            {
+                return this.JsonFailResult(Phrases.AlreadyExists, ErrorMessageAnchor);
+            }
+
+            EmployeeModel employee = await _payInvoiceClient.AddEmployeeAsync(new CreateEmployeeModel()
+            {
+                Email = vm.Email,
+                LastName = vm.LastName,
+                FirstName = vm.FirstName,
+                MerchantId = vm.SelectedMerchant
+            });
+
+            await _payAuthClient.RegisterAsync(new RegisterModel()
+            {
+                Email = vm.Email,
+                EmployeeId = employee.Id,
+                MerchantId = vm.SelectedMerchant,
+                Password = vm.Password,
+            });
+
+            ResetPasswordTokenModel passwordResetToken = await _payAuthClient.CreateResetPasswordTokenAsync(
+                new CreateResetPasswordTokenRequest
+                {
+                    MerchantId = employee.MerchantId,
+                    EmployeeId = employee.Id
+                });
+
+            await ResetPasswordAsync(new ResetPasswordModel()
+            {
+                Email = vm.Email,
+                EmailTemplate = "lykkepay_employee_registration",
+                FullName = vm.FirstName,
+                Password = vm.Password,
+                PasswordResetToken = passwordResetToken.Id
+            });
+
+            return this.JsonRequestResult("#staffList", Url.Action("StaffsList"),
+                new StaffsPageViewModel() {SelectedMerchant = vm.SelectedMerchant});
+        }
+
+        private async Task<ActionResult> EditStaff(AddStaffDialogViewModel vm)
+        {
+            if (string.IsNullOrEmpty(vm.FirstName))
+                return this.JsonFailResult("FirstName required", ErrorMessageAnchor);
+            if (string.IsNullOrEmpty(vm.LastName))
+                return this.JsonFailResult("LastName required", ErrorMessageAnchor);
+
+            EmployeeModel employee = await _payInvoiceClient.GetEmployeeAsync(vm.Id);
+
+            await _payInvoiceClient.UpdateEmployeeAsync(new UpdateEmployeeModel()
+            {
+                Email = employee.Email,
+                FirstName = vm.FirstName,
+                LastName = vm.LastName,
+                Id = vm.Id,
+                MerchantId = vm.SelectedMerchant,
+                IsBlocked = vm.IsBlocked
+            });
+
+            if (!string.IsNullOrEmpty(vm.Password))
+            {
+                await _payAuthClient.UpdateAsync(new UpdateCredentialsModel()
+                {
+                    Email = employee.Email,
+                    EmployeeId = vm.Id,
+                    MerchantId = vm.SelectedMerchant,
+                    Password = vm.Password
+                });
+
+                ResetPasswordTokenModel passwordResetToken = await _payAuthClient.CreateResetPasswordTokenAsync(
+                    new CreateResetPasswordTokenRequest
+                    {
+                        MerchantId = employee.MerchantId,
+                        EmployeeId = employee.Id
+                    });
+
+                await ResetPasswordAsync(new ResetPasswordModel()
+                {
+                    Email = employee.Email,
+                    EmailTemplate = "lykkepay_password_reset",
+                    FullName = vm.FirstName,
+                    Password = vm.Password,
+                    PasswordResetToken = passwordResetToken.Id
+                });
+            }
+
+            return this.JsonRequestResult("#staffList", Url.Action("StaffsList"),
+                new StaffsPageViewModel() {SelectedMerchant = vm.SelectedMerchant});
+        }
+
+        private Task ResetPasswordAsync(ResetPasswordModel model)
+        {
+            var payload = new Dictionary<string, string>
+            {
+                {"UserName", model.FullName},
+                {"ResetPasswordUrl", string.Format(PayInvoicePortalResetPasswordLink, model.PasswordResetToken)},
+                {"Year", DateTime.Today.Year.ToString()}
+            };
+
+            return _emailPartnerRouterClient.Send(new SendEmailCommand
+            {
+                EmailAddresses = new[] {model.Email},
+                Template = model.EmailTemplate,
+                Payload = payload
+            });
+        }
+
         [HttpPost]
         public async Task<ActionResult> DeleteStaffDialog(string merchant, string id)
         {
