@@ -39,7 +39,7 @@ PayBackOffice:
     RabbitMq:
         SagasConnectionString:
             settings-key: SagasRabbitMqConnStr
-                types: [ Tag ]
+            types: [ Tag ]
             
 PayInternalServiceClient:
     ServiceUrl: 
