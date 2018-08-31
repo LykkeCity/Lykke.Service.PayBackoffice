@@ -15,9 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -57,10 +55,12 @@ namespace BackOffice.Areas.LykkePay.Controllers
             _payMerchantClient = payMerchantClient;
             _staffService = staffService;
         }
+
         public async Task<IActionResult> Index()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<ActionResult> StaffsPage(string merchant = "")
         {
@@ -202,14 +202,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         {
             try
             {
-                if (vm.IsNewStaff)
-                {
-                    return await AddStaffAsync(vm);
-                }
-                else
-                {
-                    return await EditStaff(vm);
-                }
+                return vm.IsNewStaff ? await AddStaffAsync(vm) : await EditStaff(vm);
             }
             catch (Exception ex)
             {
@@ -242,7 +235,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 return this.JsonFailResult(Phrases.AlreadyExists, ErrorMessageAnchor);
             }
 
-            EmployeeModel employee = await _payInvoiceClient.AddEmployeeAsync(new CreateEmployeeModel()
+            EmployeeModel employee = await _payInvoiceClient.AddEmployeeAsync(new CreateEmployeeModel
             {
                 Email = vm.Email,
                 LastName = vm.LastName,
@@ -250,7 +243,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 MerchantId = vm.SelectedMerchant
             });
 
-            await _payAuthClient.RegisterAsync(new RegisterModel()
+            await _payAuthClient.RegisterAsync(new RegisterModel
             {
                 Email = vm.Email,
                 EmployeeId = employee.Id,
@@ -265,7 +258,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                     EmployeeId = employee.Id
                 });
 
-            await ResetPasswordAsync(new ResetPasswordModel()
+            await ResetPasswordAsync(new ResetPasswordModel
             {
                 Email = vm.Email,
                 EmailTemplate = "lykkepay_employee_registration",
@@ -287,7 +280,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
 
             EmployeeModel employee = await _payInvoiceClient.GetEmployeeAsync(vm.Id);
 
-            await _payInvoiceClient.UpdateEmployeeAsync(new UpdateEmployeeModel()
+            await _payInvoiceClient.UpdateEmployeeAsync(new UpdateEmployeeModel
             {
                 Email = employee.Email,
                 FirstName = vm.FirstName,
@@ -299,7 +292,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
 
             if (!string.IsNullOrEmpty(vm.Password))
             {
-                await _payAuthClient.UpdateAsync(new UpdateCredentialsModel()
+                await _payAuthClient.UpdateAsync(new UpdateCredentialsModel
                 {
                     Email = employee.Email,
                     EmployeeId = vm.Id,
@@ -314,7 +307,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                         EmployeeId = employee.Id
                     });
 
-                await ResetPasswordAsync(new ResetPasswordModel()
+                await ResetPasswordAsync(new ResetPasswordModel
                 {
                     Email = employee.Email,
                     EmailTemplate = "lykkepay_password_reset",
@@ -325,7 +318,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             }
 
             return this.JsonRequestResult("#staffList", Url.Action("StaffsList"),
-                new StaffsPageViewModel() {SelectedMerchant = vm.SelectedMerchant});
+                new StaffsPageViewModel {SelectedMerchant = vm.SelectedMerchant});
         }
 
         private Task ResetPasswordAsync(ResetPasswordModel model)
