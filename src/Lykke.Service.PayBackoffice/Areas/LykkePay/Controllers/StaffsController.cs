@@ -38,6 +38,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         private readonly IPayAuthClient _payAuthClient;
         private readonly IPayMerchantClient _payMerchantClient;
         private readonly ICqrsEngine _cqrsEngine;
+        private readonly IMapper _mapper;
 
         private const string ErrorMessageAnchor = "#errorMessage";
         private readonly IEmailPartnerRouterClient _emailPartnerRouterClient;
@@ -48,13 +49,15 @@ namespace BackOffice.Areas.LykkePay.Controllers
             IPayAuthClient payAuthClient, 
             IEmailPartnerRouterClient emailPartnerRouterClient, 
             IPayMerchantClient payMerchantClient, 
-            ICqrsEngine cqrsEngine)
+            ICqrsEngine cqrsEngine, 
+            IMapper mapper)
         {
             _payInvoiceClient = payInvoiceClient;
             _payAuthClient = payAuthClient;
             _emailPartnerRouterClient = emailPartnerRouterClient;
             _payMerchantClient = payMerchantClient;
             _cqrsEngine = cqrsEngine;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -174,13 +177,13 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (vm.IsNewStaff)
             {
                 _cqrsEngine.PublishEvent(
-                    Mapper.Map<RegisterEmployeeCommand>(vm),
+                    _mapper.Map<RegisterEmployeeCommand>(vm),
                     EmployeeRegistrationBoundedContext.Name);
             }
             else
             {
                 _cqrsEngine.PublishEvent(
-                    Mapper.Map<UpdateEmployeeCommand>(vm),
+                    _mapper.Map<UpdateEmployeeCommand>(vm),
                     EmployeeRegistrationBoundedContext.Name);
             }
 

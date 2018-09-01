@@ -44,8 +44,7 @@ namespace BackOffice.Binders
 
             var ioc = builder ?? new ContainerBuilder();
 
-            IMapper mapper = new MapperProvider().GetMapper();
-            ioc.RegisterInstance(mapper).As<IMapper>();
+            ioc.RegisterInstance(new MapperProvider().GetMapper()).As<IMapper>();
 
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice);
             ioc.RegisterInstance(settings.CurrentValue.PayBackOffice.GoogleAuth);
