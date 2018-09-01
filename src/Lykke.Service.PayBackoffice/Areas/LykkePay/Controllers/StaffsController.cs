@@ -20,10 +20,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Common;
-using Core.Exceptions;
-using Core.Staff;
+using Lykke.Cqrs;
 using Lykke.Service.PayAuth.Client.Models;
 using Lykke.Service.PayMerchant.Client;
+using Lykke.Service.PayInvoice.Contract;
+using Lykke.Service.PayInvoice.Contract.Commands;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -36,7 +37,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         private readonly IPayInvoiceClient _payInvoiceClient;
         private readonly IPayAuthClient _payAuthClient;
         private readonly IPayMerchantClient _payMerchantClient;
-        private readonly IStaffService _staffService;
+        private readonly ICqrsEngine _cqrsEngine;
 
         private const string ErrorMessageAnchor = "#errorMessage";
         private readonly IEmailPartnerRouterClient _emailPartnerRouterClient;
@@ -47,13 +48,13 @@ namespace BackOffice.Areas.LykkePay.Controllers
             IPayAuthClient payAuthClient, 
             IEmailPartnerRouterClient emailPartnerRouterClient, 
             IPayMerchantClient payMerchantClient, 
-            IStaffService staffService)
+            ICqrsEngine cqrsEngine)
         {
             _payInvoiceClient = payInvoiceClient;
             _payAuthClient = payAuthClient;
             _emailPartnerRouterClient = emailPartnerRouterClient;
             _payMerchantClient = payMerchantClient;
-            _staffService = staffService;
+            _cqrsEngine = cqrsEngine;
         }
 
         public async Task<IActionResult> Index()
@@ -156,7 +157,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddOrEditStaff2(AddStaffDialogViewModel vm)
+        public IActionResult AddOrEditStaff(AddStaffDialogViewModel vm)
         {
             if (string.IsNullOrEmpty(vm.FirstName))
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, ErrorMessageAnchor);
@@ -172,25 +173,15 @@ namespace BackOffice.Areas.LykkePay.Controllers
 
             if (vm.IsNewStaff)
             {
-                try
-                {
-                    await _staffService.AddAsync(Mapper.Map<NewStaffCommand>(vm));
-                }
-                catch (AddStaffException e)
-                {
-                    return this.JsonFailResult(e.Message, ErrorMessageAnchor);
-                }                
+                _cqrsEngine.PublishEvent(
+                    Mapper.Map<RegisterEmployeeCommand>(vm),
+                    EmployeeRegistrationBoundedContext.Name);
             }
             else
             {
-                try
-                {
-                    await _staffService.UpdateAsync(Mapper.Map<UpdateStaffCommand>(vm));
-                }
-                catch (UpdateStaffException e)
-                {
-                    return this.JsonFailResult(e.Message, ErrorMessageAnchor);
-                }
+                _cqrsEngine.PublishEvent(
+                    Mapper.Map<UpdateEmployeeCommand>(vm),
+                    EmployeeRegistrationBoundedContext.Name);
             }
 
             return this.JsonRequestResult("#staffList", Url.Action("StaffsList"),
@@ -198,7 +189,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddOrEditStaff(AddStaffDialogViewModel vm)
+        public async Task<ActionResult> AddOrEditStaffOld(AddStaffDialogViewModel vm)
         {
             try
             {
