@@ -176,14 +176,16 @@ namespace BackOffice.Areas.LykkePay.Controllers
 
             if (vm.IsNewStaff)
             {
-                _cqrsEngine.PublishEvent(
+                _cqrsEngine.SendCommand(
                     _mapper.Map<RegisterEmployeeCommand>(vm),
+                    EmployeeRegistrationBoundedContext.Name,
                     EmployeeRegistrationBoundedContext.Name);
             }
             else
             {
-                _cqrsEngine.PublishEvent(
+                _cqrsEngine.SendCommand(
                     _mapper.Map<UpdateEmployeeCommand>(vm),
+                    EmployeeRegistrationBoundedContext.Name,
                     EmployeeRegistrationBoundedContext.Name);
             }
 
