@@ -24,5 +24,31 @@ namespace BackOffice.Cqrs.Projections
 
             return Task.CompletedTask;
         }
+
+        public Task Handle(EmployeeUpdateFailedEvent evt)
+        {
+            _log.Critical(
+                "Employee update",
+                message: $"Failed to update employee: {evt.Error}",
+                context: evt.Email);
+
+            return Task.CompletedTask;
+        }
+        
+        // temporary
+        public Task Handle(EmployeeRegisteredEvent evt)
+        {
+            _log.Info("Employee registered", $"Email = {evt.Email}");
+
+            return Task.CompletedTask;
+        }
+
+        // temporary
+        public Task Handle(EmployeeUpdatedEvent evt)
+        {
+            _log.Info("Employee updated", $"Email = {evt.Email}");
+
+            return Task.CompletedTask;
+        }
     }
 }

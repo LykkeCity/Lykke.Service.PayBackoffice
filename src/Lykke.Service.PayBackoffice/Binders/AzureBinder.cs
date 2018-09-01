@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Autofac;
 using AutoMapper;
 using BackOffice.Cqrs.Projections;
 using BackOffice.Settings;
 using Common.Cache;
 using Common.IocContainer;
-using Core.Staff;
-using LkeServices;
 using Lykke.Common.Log;
 using Lykke.Cqrs;
 using Lykke.Cqrs.Configuration;
@@ -73,9 +70,6 @@ namespace BackOffice.Binders
 
             ioc.RegisterBackofficeMembershipClient(settings.CurrentValue.BackofficeMembershipServiceClient.ServiceUrl);
 
-            ioc.RegisterType<StaffService>()
-                .As<IStaffService>();
-
             RegisterCqrsEngine(settings, ioc);
 
             return ioc;
@@ -127,7 +121,7 @@ namespace BackOffice.Binders
                         .PublishingCommands(typeof(RegisterEmployeeCommand))
                         .To(EmployeeRegistrationBoundedContext.Name)
                         .With(CommandsRoute)
-                        .ListeningEvents(typeof(EmployeeRegistrationFailedEvent))
+                        .ListeningEvents(typeof(EmployeeRegistrationFailedEvent), typeof(EmployeeUpdateFailedEvent), typeof(EmployeeRegisteredEvent), typeof(EmployeeUpdatedEvent))
                         .From(EmployeeRegistrationBoundedContext.Name)
                         .On(EventsRoute)
                         .WithProjection(typeof(EmployeeRegistrationErrorProjection), EmployeeRegistrationBoundedContext.Name)
