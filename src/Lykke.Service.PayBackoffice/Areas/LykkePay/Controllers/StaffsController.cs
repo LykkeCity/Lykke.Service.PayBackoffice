@@ -244,7 +244,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Email = vm.Email,
                 EmployeeId = employee.Id,
                 MerchantId = vm.SelectedMerchant,
-                Password = vm.Password,
+                Password = vm.Password
             });
 
             ResetPasswordTokenModel passwordResetToken = await _payAuthClient.CreateResetPasswordTokenAsync(
