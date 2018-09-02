@@ -120,7 +120,7 @@ namespace BackOffice.Binders
                         .PublishingCommands(typeof(RegisterEmployeeCommand))
                         .To(EmployeeRegistrationBoundedContext.Name)
                         .With(CommandsRoute)
-                        .ListeningEvents(typeof(EmployeeRegistrationFailedEvent), typeof(EmployeeUpdateFailedEvent), typeof(EmployeeRegisteredEvent), typeof(EmployeeUpdatedEvent))
+                        .ListeningEvents(typeof(EmployeeRegistrationFailedEvent), typeof(EmployeeUpdateFailedEvent))
                         .From(EmployeeRegistrationBoundedContext.Name)
                         .On(EventsRoute)
                         .WithProjection(typeof(EmployeeRegistrationErrorProjection), EmployeeRegistrationBoundedContext.Name)

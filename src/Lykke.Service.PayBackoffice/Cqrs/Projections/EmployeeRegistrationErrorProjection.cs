@@ -6,6 +6,7 @@ using Lykke.Service.PayInvoice.Contract.Events;
 
 namespace BackOffice.Cqrs.Projections
 {
+    [UsedImplicitly]
     public class EmployeeRegistrationErrorProjection
     {
         private readonly ILog _log;
@@ -15,6 +16,7 @@ namespace BackOffice.Cqrs.Projections
             _log = logFactory.CreateLog(this);
         }
 
+        [UsedImplicitly]
         public Task Handle(EmployeeRegistrationFailedEvent evt)
         {
             _log.Critical(
@@ -25,28 +27,13 @@ namespace BackOffice.Cqrs.Projections
             return Task.CompletedTask;
         }
 
+        [UsedImplicitly]
         public Task Handle(EmployeeUpdateFailedEvent evt)
         {
             _log.Critical(
                 "Employee update",
                 message: $"Failed to update employee: {evt.Error}",
                 context: evt.Email);
-
-            return Task.CompletedTask;
-        }
-        
-        // temporary
-        public Task Handle(EmployeeRegisteredEvent evt)
-        {
-            _log.Info("Employee registered", $"Email = {evt.Email}");
-
-            return Task.CompletedTask;
-        }
-
-        // temporary
-        public Task Handle(EmployeeUpdatedEvent evt)
-        {
-            _log.Info("Employee updated", $"Email = {evt.Email}");
 
             return Task.CompletedTask;
         }
