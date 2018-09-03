@@ -15,7 +15,6 @@ using Lykke.Service.EmailPartnerRouter.Client;
 using Lykke.Service.PayAuth.Client;
 using Lykke.Service.PayInternal.Client;
 using Lykke.Service.PayInvoice.Client;
-using Lykke.Service.PayInvoice.Contract;
 using Lykke.Service.PayInvoice.Contract.Commands;
 using Lykke.Service.PayInvoice.Contract.Events;
 using Lykke.Service.PayMerchant.Client;
@@ -114,13 +113,15 @@ namespace BackOffice.Binders
                         environment: "lykke")),
 
                     Register.BoundedContext("lykkepay-employee-registration-ui")
-                        .PublishingCommands(typeof(RegisterEmployeeCommand))
-                        .To(EmployeeRegistrationBoundedContext.Name)
+                        .PublishingCommands(typeof(RegisterEmployeeCommand), typeof(UpdateEmployeeCommand))
+                        .To("lykkepay-employee-registration")
                         .With("commands")
                         .ListeningEvents(typeof(EmployeeRegistrationFailedEvent), typeof(EmployeeUpdateFailedEvent))
-                        .From(EmployeeRegistrationBoundedContext.Name)
+                        .From("lykkepay-employee-registration")
                         .On("events.paybo")
-                        .WithProjection(typeof(EmployeeRegistrationErrorProjection), EmployeeRegistrationBoundedContext.Name)
+                        .WithProjection(
+                            typeof(EmployeeRegistrationErrorProjection), 
+                            "lykkepay-employee-registration")
                 ))
                 .As<ICqrsEngine>()
                 .SingleInstance()

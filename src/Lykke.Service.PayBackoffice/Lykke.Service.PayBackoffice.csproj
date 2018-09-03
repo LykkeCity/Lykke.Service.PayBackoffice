@@ -169,7 +169,7 @@
     <PackageReference Include="BundlerMinifier.Core" Version="2.8.391" />
     <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.35.1.1274" />
     <PackageReference Include="Lykke.Backoffice.Common" Version="1.0.5" />
-    <PackageReference Include="Lykke.Common" Version="7.0.3" />
+    <PackageReference Include="Lykke.Common" Version="7.0.4" />
     <PackageReference Include="Lykke.Cqrs" Version="5.0.1" />
     <PackageReference Include="Lykke.GoogleAuthenticator" Version="1.0.8" />
     <PackageReference Include="Lykke.Messaging" Version="6.0.1" />
@@ -180,7 +180,7 @@
     <PackageReference Include="Lykke.Service.PayAuth.Client" Version="1.1.2" />
     <PackageReference Include="Lykke.Service.PayInternal.Client" Version="2.0.23" />
     <PackageReference Include="Lykke.Service.PayInvoice.Client" Version="5.2.0" />
-    <PackageReference Include="Lykke.Service.PayInvoice.Contract" Version="1.0.1" />
+    <PackageReference Include="Lykke.Service.PayInvoice.Contract" Version="1.0.2" />
     <PackageReference Include="Lykke.Service.PayMerchant.Client" Version="1.0.4" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.2" />
