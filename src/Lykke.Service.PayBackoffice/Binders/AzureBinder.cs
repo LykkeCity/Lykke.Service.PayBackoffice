@@ -118,7 +118,7 @@ namespace BackOffice.Binders
                         .With("commands")
                         .ListeningEvents(typeof(EmployeeRegistrationFailedEvent), typeof(EmployeeUpdateFailedEvent))
                         .From("lykkepay-employee-registration")
-                        .On("events.paybo")
+                        .On("paybo")
                         .WithProjection(
                             typeof(EmployeeRegistrationErrorProjection), 
                             "lykkepay-employee-registration")
