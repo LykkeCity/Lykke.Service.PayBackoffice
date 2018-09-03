@@ -31,9 +31,6 @@ namespace BackOffice.Binders
         internal static string EthereumBlockchainExplorerUrl;
         internal static string PayInvoicePortalResetPasswordLink;
 
-        private const string CommandsRoute = "commands";
-        private const string EventsRoute = "events";
-
         public ContainerBuilder Bind(IConfigurationRoot configuration, ContainerBuilder builder = null)
         {
             var settings = configuration.LoadSettings<BackOfficeBundle>(options => {});
@@ -116,13 +113,13 @@ namespace BackOffice.Binders
                         Lykke.Messaging.Serialization.SerializationFormat.ProtoBuf,
                         environment: "lykke")),
 
-                    Register.BoundedContext(EmployeeRegistrationBoundedContext.Name)
+                    Register.BoundedContext("lykkepay-employee-registration-ui")
                         .PublishingCommands(typeof(RegisterEmployeeCommand))
                         .To(EmployeeRegistrationBoundedContext.Name)
-                        .With(CommandsRoute)
+                        .With("commands")
                         .ListeningEvents(typeof(EmployeeRegistrationFailedEvent), typeof(EmployeeUpdateFailedEvent))
                         .From(EmployeeRegistrationBoundedContext.Name)
-                        .On(EventsRoute)
+                        .On("events.paybo")
                         .WithProjection(typeof(EmployeeRegistrationErrorProjection), EmployeeRegistrationBoundedContext.Name)
                 ))
                 .As<ICqrsEngine>()
