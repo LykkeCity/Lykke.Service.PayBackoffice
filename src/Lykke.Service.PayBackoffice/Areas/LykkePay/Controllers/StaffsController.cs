@@ -178,13 +178,15 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 _cqrsEngine.SendCommand(
                     _mapper.Map<RegisterEmployeeCommand>(vm),
-                    null, "lykkepay-employee-registration");
+                    "lykkepay-employee-registration-ui", 
+                    "lykkepay-employee-registration");
             }
             else
             {
                 _cqrsEngine.SendCommand(
                     _mapper.Map<UpdateEmployeeCommand>(vm),
-                    null, "lykkepay-employee-registration");
+                    "lykkepay-employee-registration-ui", 
+                    "lykkepay-employee-registration");
             }
 
             return this.JsonRequestResult("#staffList", Url.Action("StaffsList"),
