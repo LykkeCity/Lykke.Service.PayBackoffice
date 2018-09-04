@@ -1,0 +1,89 @@
+PayBackOffice:
+    PayInvoicePortalResetPasswordLink:
+        settings-key: PayBackOffice-PayInvoicePortalResetPasswordLink
+        types: [ Tag ]
+    BlockchainExplorerUrl:
+        settings-key: PayBackOffice-BlockchainExplorerUrl
+        types: [ Tag ]
+    EthereumBlockchainExplorerUrl: 
+        settings-key: PayBackOffice-EthereumBlockchainExplorerUrl
+        types: [ Tag ]
+    Db:
+        LogsConnString: 
+            settings-key: LykkePayLogsConnString
+            types: [ AzureTableStorage, Tag ]
+    LykkePayWalletList:
+        Wallets: 
+            settings-key: PayBackOffice-LykkePayWalletList-Wallets
+            types: [ JsonArray, Tag ]
+    SupportedBrowsers:
+        Browsers:
+            settings-key: PayBackOffice-SupportedBrowsers-Browsers
+            types: [ JsonArray ]
+        SkipUrls:
+            settings-key: PayBackOffice-SupportedBrowsers-SkipUrls
+            types: [ JsonArray ]
+    GoogleAuth:
+        ApiClientId:
+            settings-key: PayBackOffice-GoogleAuthApiClientId
+            types: [ Tag ]
+        AvailableEmailsRegex:
+            settings-key: GoogleAuthAvailableEmailsRegex
+        DefaultAdminEmail: 
+            settings-key: GoogleAuthDefaultAdminEmail
+            types: [ Tag ]
+    TwoFactorVerification:
+        UseVerification:
+            settings-key: PayBackOffice-TwoFactorVerification-UseVerification
+            types: [ Tag ]
+    RabbitMq:
+        SagasConnectionString:
+            settings-key: RabbitSagas
+            types: [ RabbitMq ]
+            
+PayInternalServiceClient:
+    ServiceUrl: 
+        settings-key: PayInternalServiceUrl
+        types: [ Tag ]
+        
+PayInvoiceServiceClient:
+    ServiceUrl: 
+        settings-key: PayInvoiceServiceUrl
+        types: [ Tag ]
+        
+BackofficeMembershipServiceClient:
+    ServiceUrl: 
+        settings-key: BackofficeMembershipServiceUrl
+        
+EmailPartnerRouterServiceClient:
+    ServiceUrl: 
+        settings-key: EmailPartnerRouterServiceUrl
+        
+NinjaServiceClient:
+    ServiceUrl:
+        settings-key: NinjaServiceUrl
+        types: [ Tag ]
+        
+PayAuthServiceClient:
+    ServiceUrl: 
+        settings-key: PayAuthServiceUrl
+        types: [ Tag ]
+        
+PayMerchantServiceClient:
+    ServiceUrl:
+        settings-key: PayMerchantServiceUrl
+        types: [Tag]        
+
+MonitoringServiceClient:
+  MonitoringServiceUrl:
+    settings-key: MonitoringServiceUrl
+    types: [Tag]
+
+SlackNotifications:
+  AzureQueue:
+    ConnectionString:
+      settings-key: SlackNotificationsConnString
+      types: [ AzureTableStorage ]
+    QueueName:
+      settings-key: SlackQueueName
+      types: [ AzureTableStorage ]
