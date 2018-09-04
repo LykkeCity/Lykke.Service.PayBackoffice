@@ -77,6 +77,7 @@ PayMerchantServiceClient:
 MonitoringServiceClient:
   MonitoringServiceUrl:
     settings-key: MonitoringServiceUrl
+    types: [Tag]
 
 SlackNotifications:
   AzureQueue:
