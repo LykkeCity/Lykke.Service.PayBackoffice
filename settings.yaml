@@ -10,7 +10,7 @@ PayBackOffice:
         types: [ Tag ]
     Db:
         LogsConnString: 
-            settings-key: PayBackOffice-LogsConnString
+            settings-key: LykkePayLogsConnString
             types: [ AzureTableStorage, Tag ]
     LykkePayWalletList:
         Wallets: 
@@ -38,8 +38,8 @@ PayBackOffice:
             types: [ Tag ]
     RabbitMq:
         SagasConnectionString:
-            settings-key: SagasRabbitMqConnStr
-            types: [ Tag ]
+            settings-key: RabbitSagas
+            types: [ RabbitMq ]
             
 PayInternalServiceClient:
     ServiceUrl: 
