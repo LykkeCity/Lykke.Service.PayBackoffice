@@ -5,25 +5,17 @@ using BackOffice.Helpers;
 using BackOffice.Translates;
 using Lykke.Service.BackofficeMembership.Client;
 using Lykke.Service.BackofficeMembership.Client.Filters;
-using Lykke.Service.EmailPartnerRouter.Client;
-using Lykke.Service.EmailPartnerRouter.Contracts;
-using Lykke.Service.PayAuth.Client;
-using Lykke.Service.PayAuth.Client.Models.Employees;
 using Lykke.Service.PayInvoice.Client;
 using Lykke.Service.PayInvoice.Client.Models.Employee;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Common;
 using Lykke.Cqrs;
-using Lykke.Service.PayAuth.Client.Models;
 using Lykke.Service.PayMerchant.Client;
-using Lykke.Service.PayInvoice.Contract;
 using Lykke.Service.PayInvoice.Contract.Commands;
 
 namespace BackOffice.Areas.LykkePay.Controllers
@@ -35,26 +27,20 @@ namespace BackOffice.Areas.LykkePay.Controllers
     public class StaffsController : Controller
     {
         private readonly IPayInvoiceClient _payInvoiceClient;
-        private readonly IPayAuthClient _payAuthClient;
         private readonly IPayMerchantClient _payMerchantClient;
         private readonly ICqrsEngine _cqrsEngine;
         private readonly IMapper _mapper;
 
         private const string ErrorMessageAnchor = "#errorMessage";
-        private readonly IEmailPartnerRouterClient _emailPartnerRouterClient;
         protected string PayInvoicePortalResetPasswordLink
                => AzureBinder.PayInvoicePortalResetPasswordLink;
         public StaffsController(
             IPayInvoiceClient payInvoiceClient, 
-            IPayAuthClient payAuthClient, 
-            IEmailPartnerRouterClient emailPartnerRouterClient, 
             IPayMerchantClient payMerchantClient, 
             ICqrsEngine cqrsEngine, 
             IMapper mapper)
         {
             _payInvoiceClient = payInvoiceClient;
-            _payAuthClient = payAuthClient;
-            _emailPartnerRouterClient = emailPartnerRouterClient;
             _payMerchantClient = payMerchantClient;
             _cqrsEngine = cqrsEngine;
             _mapper = mapper;
@@ -191,147 +177,6 @@ namespace BackOffice.Areas.LykkePay.Controllers
 
             return this.JsonRequestResult("#staffList", Url.Action("StaffsList"),
                 new StaffsPageViewModel {SelectedMerchant = vm.SelectedMerchant});
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> AddOrEditStaffOld(AddStaffDialogViewModel vm)
-        {
-            try
-            {
-                return vm.IsNewStaff ? await AddStaffAsync(vm) : await EditStaff(vm);
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null)
-                    return this.JsonFailResult("Error: " + ex.InnerException.Message, ErrorMessageAnchor);
-                return this.JsonFailResult("Error: " + ex.Message, ErrorMessageAnchor);
-            }
-        }
-
-        private async Task<ActionResult> AddStaffAsync(AddStaffDialogViewModel vm)
-        {
-            if (string.IsNullOrEmpty(vm.FirstName))
-                return this.JsonFailResult("FirstName required", ErrorMessageAnchor);
-            if (string.IsNullOrEmpty(vm.LastName))
-                return this.JsonFailResult("LastName required", ErrorMessageAnchor);
-            if (string.IsNullOrEmpty(vm.Password))
-                return this.JsonFailResult("Password required", ErrorMessageAnchor);
-            if (string.IsNullOrEmpty(vm.Email))
-                return this.JsonFailResult("Email required", ErrorMessageAnchor);
-
-            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-            Match match = regex.Match(vm.Email);
-            if (!match.Success)
-                return this.JsonFailResult("Email not valid", ErrorMessageAnchor);
-
-            var employees = await _payInvoiceClient.GetEmployeesAsync(vm.SelectedMerchant);
-            if (employees != null && employees.Select(x => x.Email)
-                    .Contains(vm.Email, StringComparer.OrdinalIgnoreCase))
-            {
-                return this.JsonFailResult(Phrases.AlreadyExists, ErrorMessageAnchor);
-            }
-
-            EmployeeModel employee = await _payInvoiceClient.AddEmployeeAsync(new CreateEmployeeModel
-            {
-                Email = vm.Email,
-                LastName = vm.LastName,
-                FirstName = vm.FirstName,
-                MerchantId = vm.SelectedMerchant
-            });
-
-            await _payAuthClient.RegisterAsync(new RegisterModel
-            {
-                Email = vm.Email,
-                EmployeeId = employee.Id,
-                MerchantId = vm.SelectedMerchant,
-                Password = vm.Password
-            });
-
-            ResetPasswordTokenModel passwordResetToken = await _payAuthClient.CreateResetPasswordTokenAsync(
-                new CreateResetPasswordTokenRequest
-                {
-                    MerchantId = employee.MerchantId,
-                    EmployeeId = employee.Id
-                });
-
-            await ResetPasswordAsync(new ResetPasswordModel
-            {
-                Email = vm.Email,
-                EmailTemplate = "lykkepay_employee_registration",
-                FullName = vm.FirstName,
-                Password = vm.Password,
-                PasswordResetToken = passwordResetToken.Id
-            });
-
-            return this.JsonRequestResult("#staffList", Url.Action("StaffsList"),
-                new StaffsPageViewModel() {SelectedMerchant = vm.SelectedMerchant});
-        }
-
-        private async Task<ActionResult> EditStaff(AddStaffDialogViewModel vm)
-        {
-            if (string.IsNullOrEmpty(vm.FirstName))
-                return this.JsonFailResult("FirstName required", ErrorMessageAnchor);
-            if (string.IsNullOrEmpty(vm.LastName))
-                return this.JsonFailResult("LastName required", ErrorMessageAnchor);
-
-            EmployeeModel employee = await _payInvoiceClient.GetEmployeeAsync(vm.Id);
-
-            await _payInvoiceClient.UpdateEmployeeAsync(new UpdateEmployeeModel
-            {
-                Email = employee.Email,
-                FirstName = vm.FirstName,
-                LastName = vm.LastName,
-                Id = vm.Id,
-                MerchantId = vm.SelectedMerchant,
-                IsBlocked = vm.IsBlocked
-            });
-
-            if (!string.IsNullOrEmpty(vm.Password))
-            {
-                await _payAuthClient.UpdateAsync(new UpdateCredentialsModel
-                {
-                    Email = employee.Email,
-                    EmployeeId = vm.Id,
-                    MerchantId = vm.SelectedMerchant,
-                    Password = vm.Password
-                });
-
-                ResetPasswordTokenModel passwordResetToken = await _payAuthClient.CreateResetPasswordTokenAsync(
-                    new CreateResetPasswordTokenRequest
-                    {
-                        MerchantId = employee.MerchantId,
-                        EmployeeId = employee.Id
-                    });
-
-                await ResetPasswordAsync(new ResetPasswordModel
-                {
-                    Email = employee.Email,
-                    EmailTemplate = "lykkepay_password_reset",
-                    FullName = vm.FirstName,
-                    Password = vm.Password,
-                    PasswordResetToken = passwordResetToken.Id
-                });
-            }
-
-            return this.JsonRequestResult("#staffList", Url.Action("StaffsList"),
-                new StaffsPageViewModel {SelectedMerchant = vm.SelectedMerchant});
-        }
-
-        private Task ResetPasswordAsync(ResetPasswordModel model)
-        {
-            var payload = new Dictionary<string, string>
-            {
-                {"UserName", model.FullName},
-                {"ResetPasswordUrl", string.Format(PayInvoicePortalResetPasswordLink, model.PasswordResetToken)},
-                {"Year", DateTime.Today.Year.ToString()}
-            };
-
-            return _emailPartnerRouterClient.Send(new SendEmailCommand
-            {
-                EmailAddresses = new[] {model.Email},
-                Template = model.EmailTemplate,
-                Payload = payload
-            });
         }
 
         [HttpPost]
