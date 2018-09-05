@@ -146,7 +146,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddOrEditStaff(AddStaffDialogViewModel vm)
+        public async Task<IActionResult> AddOrEditStaff(AddStaffDialogViewModel vm)
         {
             if (string.IsNullOrEmpty(vm.FirstName))
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, ErrorMessageAnchor);
@@ -154,7 +154,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (string.IsNullOrEmpty(vm.LastName))
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, ErrorMessageAnchor);
 
-            if (!vm.Email?.IsValidEmail() ?? true)
+            if (!vm.Email?.IsValidEmail() ?? vm.IsNewStaff)
                 return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, ErrorMessageAnchor);
 
             if (vm.IsNewStaff && string.IsNullOrEmpty(vm.Password))
@@ -169,8 +169,12 @@ namespace BackOffice.Areas.LykkePay.Controllers
             }
             else
             {
+                EmployeeModel employee = await _payInvoiceClient.GetEmployeeAsync(vm.Id);
+                var updateEmployeeCommand = _mapper.Map<UpdateEmployeeCommand>(vm);
+                updateEmployeeCommand.Email = employee.Email;
+
                 _cqrsEngine.SendCommand(
-                    _mapper.Map<UpdateEmployeeCommand>(vm),
+                    updateEmployeeCommand,
                     "lykkepay-employee-registration-ui", 
                     "lykkepay-employee-registration");
             }
