@@ -22,22 +22,7 @@ using System.Threading.Tasks;
 using Lykke.Service.PayMerchant.Client;
 using Lykke.Service.PayMerchant.Client.Models;
 using Common;
-using Org.BouncyCastle.Crypto.Generators;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.X509;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Asn1.Pkcs;
-using Org.BouncyCastle.Pkcs;
-using Org.BouncyCastle.Crypto.Operators;
-using BackOffice.Areas.LykkePay.Models.Merchants;
-using System.Text;
 using System.IO.Compression;
-using System.IO;
-using System.Net.Http;
-using System.Net;
-using System.Net.Http.Headers;
 using Lykke.Common.Log;
 using Lykke.Service.PayAuth.Client.Models.GenerateRsaKeys;
 using Common.Log;
@@ -148,7 +133,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Id = id,
                 LwId = merchant.LwId,
                 Name = merchant.Name,
-                DisplayName = merchant.DisplayName                
+                DisplayName = merchant.DisplayName,
+                Email = merchant.Email
             };
 
             return View(viewModel);
@@ -168,6 +154,9 @@ namespace BackOffice.Areas.LykkePay.Controllers
             if (string.IsNullOrEmpty(vm.ApiKey))
                 vm.ApiKey = StringUtils.GenerateId().Replace("-", string.Empty);
 
+            if (string.IsNullOrEmpty(vm.Email))
+                return this.JsonFailResult("Email required", ErrorMessageAnchor);
+
             if (vm.IsNewMerchant)
             {
                 if (merchants != null && merchants.Select(x => x.Name).Contains(vm.Name))
@@ -182,7 +171,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                         Name = vm.Name,
                         ApiKey = vm.ApiKey,
                         LwId = vm.LwId,
-                        DisplayName = vm.DisplayName
+                        DisplayName = vm.DisplayName,
+                        Email = vm.Email
                     });
 
                     await _payAuthClient.RegisterAsync(new Lykke.Service.PayAuth.Client.Models.RegisterRequest
@@ -206,7 +196,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                         ApiKey = vm.ApiKey,
                         LwId = vm.LwId,
                         Name = vm.Name,
-                        DisplayName = vm.DisplayName
+                        DisplayName = vm.DisplayName,
+                        Email = vm.Email
                     };
 
                     await _payMerchantClient.Api.UpdateAsync(updatereq);
