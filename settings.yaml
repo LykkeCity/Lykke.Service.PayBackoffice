@@ -21,7 +21,7 @@ PayBackOffice:
             settings-key: SharedBackOffice-SupportedBrowsers-Browsers
             types: [ JsonArray ]
         SkipUrls:
-            settings-key: PayBackOffice-SupportedBrowsers-SkipUrls
+            settings-key: SharedBackOffice-SupportedBrowsers-SkipUrls
             types: [ JsonArray ]
     GoogleAuth:
         ApiClientId:
