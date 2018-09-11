@@ -11,7 +11,6 @@ using Lykke.Cqrs.Configuration;
 using Lykke.Messaging;
 using Lykke.Messaging.RabbitMq;
 using Lykke.Service.BackofficeMembership.Client;
-using Lykke.Service.EmailPartnerRouter.Client;
 using Lykke.Service.PayAuth.Client;
 using Lykke.Service.PayInternal.Client;
 using Lykke.Service.PayInvoice.Client;
@@ -51,8 +50,6 @@ namespace BackOffice.Binders
             var cacheManager = new MemoryCacheManager();
             ioc.RegisterInstance<ICacheManager>(cacheManager);
 
-            ioc.RegisterInstance<IEmailPartnerRouterClient>(
-                new EmailPartnerRouterClient(settings.CurrentValue.EmailPartnerRouterServiceClient.ServiceUrl));
             ioc.RegisterInstance<IPayInternalClient>(new PayInternalClient(new PayInternalServiceClientSettings()
                 {ServiceUrl = settings.CurrentValue.PayInternalServiceClient.ServiceUrl}));
             ioc.RegisterInstance<IPayInvoiceClient>(new PayInvoiceClient(new PayInvoiceServiceClientSettings()

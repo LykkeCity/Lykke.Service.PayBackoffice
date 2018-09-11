@@ -6,7 +6,7 @@ PayBackOffice:
         settings-key: PayBackOffice-BlockchainExplorerUrl
         types: [ Tag ]
     EthereumBlockchainExplorerUrl: 
-        settings-key: PayBackOffice-EthereumBlockchainExplorerUrl
+        settings-key: LykkePayEthereumBlockchainExplorerUrl
         types: [ Tag ]
     Db:
         LogsConnString: 
@@ -18,10 +18,10 @@ PayBackOffice:
             types: [ JsonArray, Tag ]
     SupportedBrowsers:
         Browsers:
-            settings-key: PayBackOffice-SupportedBrowsers-Browsers
+            settings-key: SharedBackOffice-SupportedBrowsers-Browsers
             types: [ JsonArray ]
         SkipUrls:
-            settings-key: PayBackOffice-SupportedBrowsers-SkipUrls
+            settings-key: SharedBackOffice-SupportedBrowsers-SkipUrls
             types: [ JsonArray ]
     GoogleAuth:
         ApiClientId:
@@ -54,10 +54,6 @@ PayInvoiceServiceClient:
 BackofficeMembershipServiceClient:
     ServiceUrl: 
         settings-key: BackofficeMembershipServiceUrl
-        
-EmailPartnerRouterServiceClient:
-    ServiceUrl: 
-        settings-key: EmailPartnerRouterServiceUrl
         
 NinjaServiceClient:
     ServiceUrl:
