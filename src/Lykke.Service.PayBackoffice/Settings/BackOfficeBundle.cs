@@ -15,7 +15,6 @@ namespace BackOffice.Settings
         public PayInvoiceServiceClientSettings PayInvoiceServiceClient { get; set; }
         public PayAuthServiceClientSettings PayAuthServiceClient { get; set; }
         public NinjaServiceClientSettings NinjaServiceClient { get; set; }
-        public EmailPartnerRouterServiceClientSettings EmailPartnerRouterServiceClient { get; set; }
         public BackofficeMembershipServiceClientSettings BackofficeMembershipServiceClient { get; set; }
         public SlackNotificationsSettings SlackNotifications { get; set; }
         public PayMerchantServiceClientSettings PayMerchantServiceClient { get; set; }
