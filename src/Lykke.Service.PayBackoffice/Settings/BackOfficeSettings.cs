@@ -8,8 +8,9 @@ namespace BackOffice.Settings
         public string EthereumBlockchainExplorerUrl { get; set; }
         public string PayInvoicePortalResetPasswordLink { get; set; }
 
-        public DbSettings Db { get; set; }
+        public RabbitMqSettings RabbitMq { get; set; }
 
+        public DbSettings Db { get; set; }
 
         public GoogleAuthSettings GoogleAuth { get; set; }
 
@@ -18,5 +19,10 @@ namespace BackOffice.Settings
         public LykkePayWalletListSettings LykkePayWalletList { get; set; }
 
         public SupportedBrowsersSettings SupportedBrowsers { get; set; }
+    }
+
+    public class RabbitMqSettings
+    {
+        public string SagasConnectionString { get; set; }
     }
 }
