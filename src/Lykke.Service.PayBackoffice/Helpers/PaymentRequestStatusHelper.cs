@@ -41,9 +41,25 @@ namespace BackOffice.Helpers
         /// An error occurred during processing payment request.
         /// </summary>
         Error,
+
         /// <summary>
         /// Payment request has been cancelled
         /// </summary>
-        Cancelled
+        Cancelled,
+
+        /// <summary>
+        /// Payment request is accepted to settlement.
+        /// </summary>
+        SettlementInProgress,
+
+        /// <summary>
+        ///  An error occurred during settlement processing.
+        /// </summary>
+        SettlementError,
+
+        /// <summary>
+        /// Payment request is settled.
+        /// </summary>
+        Settled
     }
 }
