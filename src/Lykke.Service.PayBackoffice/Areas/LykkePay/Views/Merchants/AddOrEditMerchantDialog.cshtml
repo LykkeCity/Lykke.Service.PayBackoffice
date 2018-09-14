@@ -30,7 +30,8 @@
         @Html.RenderInputWithLabelOnTop("ApiKey", "ApiKey", Model.ApiKey, placeHolder: "will be generated automatically if not filled")
     </div>
     <div class="form-group">
-        @Html.RenderInputWithLabelOnTop("Email", "Email")
+        @(Model.IsNewMerchant ? @Html.RenderInputWithLabelOnTop("Email", "Email") :
+              @Html.RenderInputWithLabelOnTopReadOnly("Email", Model.Email, name: "Email"))
     </div>
 </form>
 @Html.RenderSaveCancelButtonPair(Url.Action("AddOrEditMerchant"), "#frmMerchant")
