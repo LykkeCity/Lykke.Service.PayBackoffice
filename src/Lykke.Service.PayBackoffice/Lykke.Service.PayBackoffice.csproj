@@ -177,7 +177,7 @@
     <PackageReference Include="Lykke.MonitoringServiceApiCaller" Version="1.6.2" />
     <PackageReference Include="Lykke.Service.BackofficeMembership.Client" Version="1.0.33" />
     <PackageReference Include="Lykke.Service.PayAuth.Client" Version="1.1.2" />
-    <PackageReference Include="Lykke.Service.PayInternal.Client" Version="2.0.24" />
+    <PackageReference Include="Lykke.Service.PayInternal.Client" Version="2.0.26" />
     <PackageReference Include="Lykke.Service.PayInvoice.Client" Version="5.2.0" />
     <PackageReference Include="Lykke.Service.PayInvoice.Contract" Version="1.0.2" />
     <PackageReference Include="Lykke.Service.PayMerchant.Client" Version="1.0.6" />
