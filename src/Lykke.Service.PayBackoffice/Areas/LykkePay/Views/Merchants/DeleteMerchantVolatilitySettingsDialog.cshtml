@@ -1,0 +1,14 @@
+﻿@model BackOffice.Areas.LykkePay.Models.Merchants.DeleteMerchantVolatilitySettingsDialogViewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+
+<form id="frmDeleteMerchantVolatilitySettings">
+
+    <input style="display: none" name="MerchantId" value="@Model.MerchantId" />
+    <h3>@Model.MerchantId</h3>
+
+</form>
+
+@Html.RenderSaveCancelButtonPair(Url.Action("DeleteMerchantVolatilitySettings"), "#frmDeleteMerchantVolatilitySettings", "Confirm")
