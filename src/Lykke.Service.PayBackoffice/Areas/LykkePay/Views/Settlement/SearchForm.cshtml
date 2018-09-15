@@ -1,0 +1,21 @@
+﻿@using BackOffice.Areas.LykkePay.Models.Settlement
+@model SettlementSearchFormViewModel
+
+@{
+    Layout = "_ContinuationFormLayout";
+}
+
+<td>
+    <span>Merchant:</span>
+</td>
+<td>
+    @Html.DropDownListFor(m => m.MerchantId,
+        Model.Merchants?.Select(m => new SelectListItem(m.Name, m.Id, m.Id == Model.MerchantId)),
+        new {@class = "form-control"})
+</td>
+<td>
+    <span>Search by Payment Request Id, Wallet Address or Transaction Hash:</span>
+</td>
+<td>
+    @Html.EditorFor(m => m.Query, new {@class = "form-control"})
+</td>

@@ -17,6 +17,7 @@ using Lykke.Service.PayInvoice.Client;
 using Lykke.Service.PayInvoice.Contract.Commands;
 using Lykke.Service.PayInvoice.Contract.Events;
 using Lykke.Service.PayMerchant.Client;
+using Lykke.Service.PaySettlement.Client;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.Configuration;
 using QBitNinja.Client;
@@ -57,6 +58,7 @@ namespace BackOffice.Binders
             ioc.RegisterInstance<IPayAuthClient>(new PayAuthClient(new PayAuthServiceClientSettings()
                 {ServiceUrl = settings.CurrentValue.PayAuthServiceClient.ServiceUrl}));
             ioc.RegisterPayMerchantClient(settings.CurrentValue.PayMerchantServiceClient, null);
+            ioc.RegisterPaySettlementClient(settings.CurrentValue.PaySettlementServiceClient, null);
 
             ioc.RegisterInstance(new QBitNinjaClient(settings.CurrentValue.NinjaServiceClient.ServiceUrl)).AsSelf();
 

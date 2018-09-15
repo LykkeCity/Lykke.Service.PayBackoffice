@@ -1,0 +1,93 @@
+﻿@using BackOffice.Areas.LykkePay.Models
+@model ContinuationFormViewModel
+
+<form id="ContinuationForm">
+    @Html.HiddenFor(m=>m.ContinuationToken)
+    <table style="margin: auto">
+        <tr>
+            @RenderBody()
+            <td>
+                <span>PageSize:</span>
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.PageSize,
+                    Model.PageSizes.Select(s => new SelectListItem(s.ToString(), s.ToString(), s == Model.PageSize)),
+                    new {@class = "form-control"})
+            </td>
+            <td>
+                <a id="btnMovePrevious" class="btn btn-xs btn-success" style="display: none;">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Previous
+                </a>
+                <a id="btnRefreshData" class="btn btn-xs btn-success">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh data
+                </a>
+                <a id="btnMoveNext" class="btn btn-xs btn-success">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Next
+                </a>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<div id="ContinuationData" style="text-align: center;">    
+</div>
+
+<script type="text/javascript" language="javascript">
+    var ContinuationForm = {
+        LoadData: function() {
+            requests.doRequest({
+                url: '@Model.DataUrl',
+                formId: '#ContinuationForm',
+                divResult: '#ContinuationData'
+            });
+        },
+
+        RefreshData: function() {
+            ContinuationForm.ContinuationTokens = [];
+            ContinuationForm.btnMovePrevious.hide();
+            ContinuationForm.continuationTokenElement.val(null);
+
+            ContinuationForm.LoadData();
+        },
+
+        MoveNext: function () {
+            var nextContinuationTokenElement = $("#@ContinuationFormViewModel.NextContinuationToken");
+            var nextContinuationToken = nextContinuationTokenElement.val();
+            if (nextContinuationToken == "") {
+                return;
+            }
+
+            ContinuationForm.ContinuationTokens.push(ContinuationForm.continuationTokenElement.val());
+            ContinuationForm.btnMovePrevious.show();
+            ContinuationForm.continuationTokenElement.val(nextContinuationToken);
+
+            ContinuationForm.LoadData();
+        },
+
+        MovePrevious: function () {
+            ContinuationForm.continuationTokenElement.val(ContinuationForm.ContinuationTokens.pop());
+
+            if (ContinuationForm.ContinuationTokens.length == 0) {
+                ContinuationForm.btnMovePrevious.hide();
+            }
+
+            ContinuationForm.LoadData();
+        },
+
+        ContinuationTokens: [],
+        continuationTokenElement: $("#@Html.IdFor(m=> m.ContinuationToken)"),
+        btnMovePrevious: $("#btnMovePrevious"),
+        btnRefreshData: $("#btnRefreshData"),
+        btnMoveNext: $("#btnMoveNext"),
+
+        Initialize: function () {
+            ContinuationForm.btnMovePrevious.click(ContinuationForm.MovePrevious);
+            ContinuationForm.btnRefreshData.click(ContinuationForm.RefreshData);
+            ContinuationForm.btnMoveNext.click(ContinuationForm.MoveNext);
+
+            ContinuationForm.RefreshData();
+        }
+    };
+
+    $(ContinuationForm.Initialize);    
+</script>
