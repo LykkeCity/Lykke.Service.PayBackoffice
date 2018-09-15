@@ -25,6 +25,7 @@
         @if (Model.UserRolesPair.HasAccessToFeature(UserFeatureAccess.LykkePayPaymentRequests))
         {
             <li class="smi smiSub" data-url="@Url.Action("Index", "PaymentRequests", new { area = "LykkePay" })" data-text="Payment requests"></li>
+            <li class="smi smiSub" data-url="@Url.Action("Index", "Settlement", new { area = "LykkePay" })" data-text="Settlement"></li>
         }
         <li class="smi smiSub" data-url="@Url.Action("Index", "Assets", new {area = "LykkePay"})" data-text="Assets"></li>
         <li class="smi smiSub" data-url="@Url.Action("Index", "Markups", new {area = "LykkePay"})" data-text="Markups"></li>
