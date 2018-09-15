@@ -72,7 +72,7 @@ PayMerchantServiceClient:
 
 PaySettlementServiceClient:
     ServiceUrl:
-        settings-key: PayMerchantServiceUrl
+        settings-key: PaySettlementServiceUrl
         types: [Tag]
         
 MonitoringServiceClient:
