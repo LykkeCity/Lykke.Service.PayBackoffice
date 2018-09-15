@@ -196,8 +196,14 @@
   <data name="AddSwiftCredentials" xml:space="preserve">
     <value>Add swift credentials</value>
   </data>
+  <data name="AlphaEngine" xml:space="preserve">
+    <value>Alpha Engine</value>
+  </data>
   <data name="AlreadyExists" xml:space="preserve">
     <value>Already exists</value>
+  </data>
+  <data name="AndroidVersion" xml:space="preserve">
+    <value>Android version</value>
   </data>
   <data name="Antifraud" xml:space="preserve">
     <value>Anti fraud</value>
@@ -205,11 +211,17 @@
   <data name="Any" xml:space="preserve">
     <value>Any</value>
   </data>
+  <data name="ApiUnknownError" xml:space="preserve">
+    <value>Unknown API error</value>
+  </data>
   <data name="Applications" xml:space="preserve">
     <value>Applications</value>
   </data>
   <data name="ApplyButton" xml:space="preserve">
     <value>Apply</value>
+  </data>
+  <data name="AppVersion" xml:space="preserve">
+    <value>App version</value>
   </data>
   <data name="Asset" xml:space="preserve">
     <value>Asset</value>
@@ -388,6 +400,12 @@
   <data name="ClientWasUnbanned" xml:space="preserve">
     <value>Account enabled</value>
   </data>
+  <data name="CoastlineTradersOperations" xml:space="preserve">
+    <value>Coastline Traders Operations</value>
+  </data>
+  <data name="CoastlineTradersStates" xml:space="preserve">
+    <value>Coastline Traders States</value>
+  </data>
   <data name="CommitmentId" xml:space="preserve">
     <value>Commitment Id</value>
   </data>
@@ -510,6 +528,9 @@
   </data>
   <data name="Device" xml:space="preserve">
     <value>Device</value>
+  </data>
+  <data name="DeviceType" xml:space="preserve">
+    <value>Device type</value>
   </data>
   <data name="DeviceTypeNotSelected" xml:space="preserve">
     <value>Please, select device type</value>
@@ -645,6 +666,12 @@
   </data>
   <data name="FeeRecharging" xml:space="preserve">
     <value>Fee recharging</value>
+  </data>
+  <data name="FieldHasIncorrectValue" xml:space="preserve">
+    <value>Field has incorrect value</value>
+  </data>
+  <data name="FieldShouldMatchConfirm" xml:space="preserve">
+    <value>Field value and confirmation value should match</value>
   </data>
   <data name="FieldShouldNotBeEmpty" xml:space="preserve">
     <value>Field should not be empty</value>
@@ -841,6 +868,9 @@
   <data name="LiveMTAvailable" xml:space="preserve">
     <value>Great news! Live margin trading account is now available to you. Please use settings to switch the account.</value>
   </data>
+  <data name="Log" xml:space="preserve">
+    <value>Log</value>
+  </data>
   <data name="LoginDelay" xml:space="preserve">
     <value>Login delay</value>
   </data>
@@ -874,6 +904,12 @@
   <data name="MarginTradingTab" xml:space="preserve">
     <value>Margin Trading</value>
   </data>
+  <data name="MarketMakerOperations" xml:space="preserve">
+    <value>Market Maker Operations</value>
+  </data>
+  <data name="MarketMakerStates" xml:space="preserve">
+    <value>Market Maker States</value>
+  </data>
   <data name="MarketOrderPriceDeviation" xml:space="preserve">
     <value>Market order price deviation alert (%)</value>
   </data>
@@ -895,8 +931,20 @@
   <data name="MenuReportKycOfficerStats" xml:space="preserve">
     <value>KYC: officers statistics</value>
   </data>
+  <data name="MerchantsEmptyError" xml:space="preserve">
+    <value>Please, select merchants</value>
+  </data>
+  <data name="MinInvertedVolume" xml:space="preserve">
+    <value>Minimum Inverted Volume</value>
+  </data>
   <data name="Minutes" xml:space="preserve">
     <value>Minutes</value>
+  </data>
+  <data name="MinVolume" xml:space="preserve">
+    <value>Minimum Volume</value>
+  </data>
+  <data name="MMSettings" xml:space="preserve">
+    <value>MM Settings</value>
   </data>
   <data name="MoneyAmount" xml:space="preserve">
     <value>Amount</value>
@@ -925,6 +973,9 @@
   <data name="NoComments" xml:space="preserve">
     <value>No comments here yet</value>
   </data>
+  <data name="NoEntities" xml:space="preserve">
+    <value>There are no entities.</value>
+  </data>
   <data name="NoGroupsExist" xml:space="preserve">
     <value>No Asset Group found. Add some group(s) first.</value>
   </data>
@@ -946,6 +997,9 @@
   <data name="NotValidUrl" xml:space="preserve">
     <value>is not valid Url</value>
   </data>
+  <data name="NoValue" xml:space="preserve">
+    <value>No value</value>
+  </data>
   <data name="Number" xml:space="preserve">
     <value>Number</value>
   </data>
@@ -966,6 +1020,9 @@
   </data>
   <data name="OrderBook" xml:space="preserve">
     <value>Order book</value>
+  </data>
+  <data name="OsVersion" xml:space="preserve">
+    <value>OS Version</value>
   </data>
   <data name="Partner" xml:space="preserve">
     <value>Partner</value>
@@ -1021,6 +1078,12 @@
   <data name="PleaseTypeAccuracy" xml:space="preserve">
     <value>Please, type accuracy</value>
   </data>
+  <data name="PleaseTypeMinInvertedVolume" xml:space="preserve">
+    <value>Please, type min inverted volume</value>
+  </data>
+  <data name="PleaseTypeMinVolume" xml:space="preserve">
+    <value>Please, type min volume</value>
+  </data>
   <data name="PleaseTypeYourNewPassword" xml:space="preserve">
     <value>Please, type your new password</value>
   </data>
@@ -1062,6 +1125,9 @@
   </data>
   <data name="RefreshButton" xml:space="preserve">
     <value>Refresh</value>
+  </data>
+  <data name="RegisteredUsersCount" xml:space="preserve">
+    <value>Registered Users Count</value>
   </data>
   <data name="Registrations" xml:space="preserve">
     <value>Registrations</value>
@@ -1158,6 +1224,12 @@
   </data>
   <data name="Saved" xml:space="preserve">
     <value>Saved</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SearchBySessionMenuItem" xml:space="preserve">
+    <value>Search by Session</value>
   </data>
   <data name="SelectedForCheckBy_0_For_1_in_2" xml:space="preserve">
     <value>User was selected for check by {0} for {1} minutes in {2} UTC</value>
@@ -1276,6 +1348,9 @@
   <data name="Trades" xml:space="preserve">
     <value>Trades</value>
   </data>
+  <data name="TradingWalletDoesNotExist" xml:space="preserve">
+    <value>Trading wallet does not exist</value>
+  </data>
   <data name="TransactionHash" xml:space="preserve">
     <value>Transaction Hash</value>
   </data>
@@ -1369,6 +1444,9 @@
   <data name="WalletAddress" xml:space="preserve">
     <value>Wallet address</value>
   </data>
+  <data name="WalletAmountError" xml:space="preserve">
+    <value>Please enter amount with correct format. (0.00)</value>
+  </data>
   <data name="WalletBalance" xml:space="preserve">
     <value>Wallet Balance</value>
   </data>
@@ -1410,74 +1488,5 @@
   </data>
   <data name="ZipCode" xml:space="preserve">
     <value>Zip Code</value>
-  </data>
-  <data name="RegisteredUsersCount" xml:space="preserve">
-    <value>Registered Users Count</value>
-  </data>
-  <data name="TradingWalletDoesNotExist" xml:space="preserve">
-    <value>Trading wallet does not exist</value>
-  </data>
-  <data name="SearchBySessionMenuItem" xml:space="preserve">
-    <value>Search by Session</value>
-  </data>
-  <data name="OsVersion" xml:space="preserve">
-    <value>OS Version</value>
-  </data>
-  <data name="NoValue" xml:space="preserve">
-    <value>No value</value>
-  </data>
-  <data name="AndroidVersion" xml:space="preserve">
-    <value>Android version</value>
-  </data>
-  <data name="AppVersion" xml:space="preserve">
-    <value>App version</value>
-  </data>
-  <data name="DeviceType" xml:space="preserve">
-    <value>Device type</value>
-  </data>
-  <data name="MMSettings" xml:space="preserve">
-    <value>MM Settings</value>
-  </data>
-  <data name="FieldShouldMatchConfirm" xml:space="preserve">
-    <value>Field value and confirmation value should match</value>
-  </data>
-  <data name="FieldHasIncorrectValue" xml:space="preserve">
-    <value>Field has incorrect value</value>
-  </data>
-  <data name="WalletAmountError" xml:space="preserve">
-    <value>Please enter amount with correct format. (0.00)</value>
-  </data>
-  <data name="PleaseTypeMinInvertedVolume" xml:space="preserve">
-    <value>Please, type min inverted volume</value>
-  </data>
-  <data name="PleaseTypeMinVolume" xml:space="preserve">
-    <value>Please, type min volume</value>
-  </data>
-  <data name="MinInvertedVolume" xml:space="preserve">
-    <value>Minimum Inverted Volume</value>
-  </data>
-  <data name="MinVolume" xml:space="preserve">
-    <value>Minimum Volume</value>
-  </data>
-  <data name="AlphaEngine" xml:space="preserve">
-    <value>Alpha Engine</value>
-  </data>
-  <data name="CoastlineTradersStates" xml:space="preserve">
-    <value>Coastline Traders States</value>
-  </data>
-  <data name="CoastlineTradersOperations" xml:space="preserve">
-    <value>Coastline Traders Operations</value>
-  </data>
-  <data name="MarketMakerOperations" xml:space="preserve">
-    <value>Market Maker Operations</value>
-  </data>
-  <data name="MarketMakerStates" xml:space="preserve">
-    <value>Market Maker States</value>
-  </data>
-  <data name="ApiUnknownError" xml:space="preserve">
-    <value>Unknown API error</value>
-  </data>
-  <data name="MerchantsEmptyError" xml:space="preserve">
-    <value>Please, select merchants</value>
   </data>
 </root>
