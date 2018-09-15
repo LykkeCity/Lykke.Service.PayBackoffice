@@ -182,6 +182,7 @@
     <PackageReference Include="Lykke.Service.PayInvoice.Contract" Version="1.0.2" />
     <PackageReference Include="Lykke.Service.PayMerchant.Client" Version="1.0.6" />
     <PackageReference Include="Lykke.Service.PayTransferValidation.Client" Version="1.0.3" />
+    <PackageReference Include="Lykke.Service.PaySettlement.Client" Version="1.0.2" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.2" />
@@ -220,6 +221,18 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Areas\LykkePay\Views\Settlement\SearchForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\LykkePay\Views\Settlement\SettlementPaymentRequests.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\LykkePay\Views\Settlement\SettlementCreatedForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\LykkePay\Views\Shared\_ContinuationFormLayout.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="wwwroot/output\mobile-site.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -1,0 +1,22 @@
+﻿@using BackOffice.Areas.LykkePay.Models.Settlement
+@model SettlementCreatedFormViewModel
+
+@{
+    Layout = "_ContinuationFormLayout";
+}
+
+<td>
+    <span>From:</span>
+</td>
+<td>
+    @Html.EditorFor(m => m.From, new {@class = "form-control", type = "date"})
+</td>
+<td>
+    <span>-</span>
+</td>
+<td>
+    <span>To:</span>
+</td>
+<td>
+    @Html.EditorFor(m => m.To, new {@class = "form-control", type = "date"})
+</td>

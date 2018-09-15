@@ -1,0 +1,87 @@
+﻿@using BackOffice.Areas.LykkePay.Models.Settlement
+@using Lykke.Service.PaySettlement.Models
+@model SettlementPaymentRequestsViewModel
+
+@Html.Hidden(SettlementCreatedFormViewModel.NextContinuationToken, Model.ContinuationToken)
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <span class="error">@Model.ErrorMessage</span>
+}
+
+@if (Model.PaymentRequests != null)
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>@nameof(PaymentRequestModel.PaymentRequestId)</th>
+            <th>@nameof(PaymentRequestModel.MerchantId)</th>
+            <th>@nameof(PaymentRequestModel.WalletAddress)</th>
+            <th>@nameof(PaymentRequestModel.OrderId)</th>
+
+            <th>@nameof(PaymentRequestModel.Amount)</th>
+            <th>@nameof(PaymentRequestModel.SettlementAssetId)</th>
+            <th>@nameof(PaymentRequestModel.DueDate)</th>
+
+            <th>@nameof(PaymentRequestModel.PaidAmount)</th>
+            <th>@nameof(PaymentRequestModel.PaymentAssetId)</th>
+            <th>@nameof(PaymentRequestModel.PaidDate)</th>
+
+            <th>@nameof(PaymentRequestModel.SettlementCreatedUtc)</th>
+            <th>@nameof(PaymentRequestModel.SettlementStatus)</th>
+
+            <th>@nameof(PaymentRequestModel.TransferToMarketTransactionHash)</th>
+            <th>@nameof(PaymentRequestModel.TransferToMarketTransactionFee)</th>
+            <th>@nameof(PaymentRequestModel.TransferedToMarketUtc)</th>
+
+            <th>@nameof(PaymentRequestModel.ExchangeAmount)</th>
+            <th>@nameof(PaymentRequestModel.MarketPrice)</th>
+            <th>@nameof(PaymentRequestModel.MarketOrderId)</th>
+            <th>@nameof(PaymentRequestModel.ExchangedUtc)</th>
+
+            <th>@nameof(PaymentRequestModel.TransferredAmount)</th>
+            <th>@nameof(PaymentRequestModel.MerchantClientId)</th>
+            <th>@nameof(PaymentRequestModel.TransferedToMerchantUtc)</th>
+
+            <th>@nameof(PaymentRequestModel.ErrorDescription)</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var paymentRequest in Model.PaymentRequests)
+        {
+            <tr>
+                <td>@paymentRequest.PaymentRequestId</td>
+                <td>@paymentRequest.MerchantId</td>
+                <td>@paymentRequest.WalletAddress</td>
+                <td>@paymentRequest.OrderId</td>
+
+                <td>@paymentRequest.Amount</td>
+                <td>@paymentRequest.SettlementAssetId</td>
+                <td>@paymentRequest.DueDate</td>
+
+                <td>@paymentRequest.PaidAmount</td>
+                <td>@paymentRequest.PaymentAssetId</td>
+                <td>@paymentRequest.PaidDate</td>
+
+                <td>@paymentRequest.SettlementCreatedUtc</td>
+                <td>@paymentRequest.SettlementStatus</td>
+
+                <td>@paymentRequest.TransferToMarketTransactionHash</td>
+                <td>@paymentRequest.TransferToMarketTransactionFee</td>
+                <td>@paymentRequest.TransferedToMarketUtc</td>
+
+                <td>@paymentRequest.ExchangeAmount</td>
+                <td>@paymentRequest.MarketPrice</td>
+                <td>@paymentRequest.MarketOrderId</td>
+                <td>@paymentRequest.ExchangedUtc</td>
+
+                <td>@paymentRequest.TransferredAmount</td>
+                <td>@paymentRequest.MerchantClientId</td>
+                <td>@paymentRequest.TransferedToMerchantUtc</td>
+
+                <td>@paymentRequest.ErrorDescription</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

@@ -171,6 +171,9 @@
   <data name="AndroidVersion" xml:space="preserve">
     <value>Версия android</value>
   </data>
+  <data name="ApiUnknownError" xml:space="preserve">
+    <value>Неизвестная ошибка вызова API</value>
+  </data>
   <data name="ApplyButton" xml:space="preserve">
     <value>Применить</value>
   </data>
@@ -663,6 +666,9 @@
   <data name="LatestEmailCodeSent" xml:space="preserve">
     <value>Последний отправленный код</value>
   </data>
+  <data name="Log" xml:space="preserve">
+    <value>Журнал</value>
+  </data>
   <data name="LoginDelay" xml:space="preserve">
     <value>Таймаут логина</value>
   </data>
@@ -696,6 +702,15 @@
   <data name="MenuDevelopers" xml:space="preserve">
     <value>Разработчикам</value>
   </data>
+  <data name="MerchantsEmptyError" xml:space="preserve">
+    <value>Пожалуйста, выберите мерчантов</value>
+  </data>
+  <data name="MinInvertedVolume" xml:space="preserve">
+    <value>минимум перевернутый объем</value>
+  </data>
+  <data name="MinVolume" xml:space="preserve">
+    <value>минимум объем</value>
+  </data>
   <data name="MoneyAmount" xml:space="preserve">
     <value>Сумма</value>
   </data>
@@ -719,6 +734,9 @@
   </data>
   <data name="NoComments" xml:space="preserve">
     <value>Нет комментариев</value>
+  </data>
+  <data name="NoEntities" xml:space="preserve">
+    <value>Записи отсутствуют</value>
   </data>
   <data name="NoInformationFound" xml:space="preserve">
     <value>информация не найдена</value>
@@ -791,6 +809,12 @@
   </data>
   <data name="PleaseTypeAccuracy" xml:space="preserve">
     <value>Пожалуйста, введите точность</value>
+  </data>
+  <data name="PleaseTypeMinInvertedVolume" xml:space="preserve">
+    <value>Пожалуйста, введите минимум Inv. объем</value>
+  </data>
+  <data name="PleaseTypeMinVolume" xml:space="preserve">
+    <value>Пожалуйста, введите минимум объем</value>
   </data>
   <data name="PleaseTypeYourNewPassword" xml:space="preserve">
     <value>Пожалуйста введите Ваш новый пароль</value>
@@ -911,6 +935,9 @@
   </data>
   <data name="Saved" xml:space="preserve">
     <value>Сохранено</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Поиск</value>
   </data>
   <data name="SearchBySessionMenuItem" xml:space="preserve">
     <value>Поиск сессии</value>
@@ -1080,6 +1107,9 @@
   <data name="WalletAddress" xml:space="preserve">
     <value>Адрес кошелька</value>
   </data>
+  <data name="WalletAmountError" xml:space="preserve">
+    <value>Пожалуйста, укажитье сумму с правильным формате. (0.00)</value>
+  </data>
   <data name="Wallets" xml:space="preserve">
     <value>Кошельки</value>
   </data>
@@ -1091,26 +1121,5 @@
   </data>
   <data name="ZipCode" xml:space="preserve">
     <value>Индекс</value>
-  </data>
-  <data name="PleaseTypeMinInvertedVolume" xml:space="preserve">
-    <value>Пожалуйста, введите минимум Inv. объем</value>
-  </data>
-  <data name="PleaseTypeMinVolume" xml:space="preserve">
-    <value>Пожалуйста, введите минимум объем</value>
-  </data>
-  <data name="MinInvertedVolume" xml:space="preserve">
-    <value>минимум перевернутый объем</value>
-  </data>
-  <data name="MinVolume" xml:space="preserve">
-    <value>минимум объем</value>
-  </data>
-  <data name="WalletAmountError" xml:space="preserve">
-    <value>Пожалуйста, укажитье сумму с правильным формате. (0.00)</value>
-  </data>
-  <data name="ApiUnknownError" xml:space="preserve">
-    <value>Неизвестная ошибка вызова API</value>
-  </data>
-  <data name="MerchantsEmptyError" xml:space="preserve">
-    <value>Пожалуйста, выберите мерчантов</value>
   </data>
 </root>

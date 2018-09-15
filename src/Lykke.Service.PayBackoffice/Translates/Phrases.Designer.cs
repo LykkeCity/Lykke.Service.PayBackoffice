@@ -2311,6 +2311,15 @@ namespace BackOffice.Translates {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log.
+        /// </summary>
+        public static string Log {
+            get {
+                return ResourceManager.GetString("Log", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login delay.
         /// </summary>
         public static string LoginDelay {
@@ -2613,6 +2622,15 @@ namespace BackOffice.Translates {
         public static string NoComments {
             get {
                 return ResourceManager.GetString("NoComments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no entities..
+        /// </summary>
+        public static string NoEntities {
+            get {
+                return ResourceManager.GetString("NoEntities", resourceCulture);
             }
         }
         
@@ -3360,6 +3378,15 @@ namespace BackOffice.Translates {
         public static string Saved {
             get {
                 return ResourceManager.GetString("Saved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
             }
         }
         
