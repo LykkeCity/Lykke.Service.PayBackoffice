@@ -205,17 +205,22 @@ namespace BackOffice.Areas.LykkePay.Controllers
 
                 try
                 {
-                    var updatereq = new UpdateMerchantRequest
+                    var updateRequest = new UpdateMerchantRequest
                     {
                         Id = vm.Id,
                         ApiKey = vm.ApiKey,
                         LwId = vm.LwId,
                         Name = vm.Name,
                         DisplayName = vm.DisplayName,
-                        Email = existingMerchant.Email
                     };
 
-                    await _payMerchantClient.Api.UpdateAsync(updatereq);
+                    if (string.IsNullOrEmpty(existingMerchant.Email))
+                    {
+                        if (!string.IsNullOrEmpty(vm.Email))
+                            updateRequest.Email = vm.Email;
+                    }
+
+                    await _payMerchantClient.Api.UpdateAsync(updateRequest);
 
                     await _payAuthClient.UpdateApiKeyAsync(new Lykke.Service.PayAuth.Client.Models.UpdateApiKeyRequest
                     {
