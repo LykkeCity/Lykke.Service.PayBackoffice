@@ -392,3 +392,7 @@ border-radius: 5px;
     margin: 3px;
     margin-right: 10px;
 }
+
+.error {
+    color: red;
+}

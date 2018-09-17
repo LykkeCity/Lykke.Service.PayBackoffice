@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BackOffice.Areas.LykkePay.Models.Settlement;
@@ -59,11 +60,19 @@ namespace BackOffice.Areas.LykkePay.Controllers
         }
 
         [HttpPost]
-        public Task<IActionResult> SettlementCreatedData(SettlementCreatedFormViewModel model)
+        public async Task<IActionResult> SettlementCreatedData(SettlementCreatedFormViewModel model)
         {
-            return GetPaymentRequestsAsync(() =>
+            if (!ModelState.IsValid)
+            {
+                return View("SettlementPaymentRequests", new SettlementPaymentRequestsViewModel
+                {
+                    ErrorMessage = GetModelErrorMessage()
+                });
+            }
+
+            return await GetPaymentRequestsAsync(() =>
                 _paySettlementClient.Api.GetPaymentRequestsBySettlementCreatedAsync(
-                    model.From, model.To, model.PageSize, model.ContinuationToken));
+                    model.From.Value, model.To.Value, model.PageSize, model.ContinuationToken));
         }
 
         [HttpPost]
@@ -82,6 +91,14 @@ namespace BackOffice.Areas.LykkePay.Controllers
         [HttpPost]
         public async Task<IActionResult> SearchData(SettlementSearchFormViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("SettlementPaymentRequests", new SettlementPaymentRequestsViewModel
+                {
+                    ErrorMessage = GetModelErrorMessage()
+                });
+            }
+
             if (string.IsNullOrEmpty(model.Query))
             {
                 return await GetPaymentRequestsAsync(() =>
@@ -94,10 +111,15 @@ namespace BackOffice.Areas.LykkePay.Controllers
             return await GetPaymentRequestsAsync(async () =>
             {
                 var tasks = new List<Task<IEnumerable<PaymentRequestModel>>>();
-                tasks.Add(GetPaymentRequestsWithoutNotFoundAsync(async () => new[]
+
+                if (!string.IsNullOrEmpty(model.MerchantId))
                 {
-                    await _paySettlementClient.Api.GetPaymentRequestAsync(model.MerchantId, query)
-                }));
+                    tasks.Add(GetPaymentRequestsWithoutNotFoundAsync(async () => new[]
+                    {
+                        await _paySettlementClient.Api.GetPaymentRequestAsync(model.MerchantId, query)
+                    }));
+                }
+
                 tasks.Add(GetPaymentRequestsWithoutNotFoundAsync(async () => new[]
                 {
                     await _paySettlementClient.Api.GetPaymentRequestByWalletAddressAsync(query)
@@ -108,15 +130,16 @@ namespace BackOffice.Areas.LykkePay.Controllers
 
                 await Task.WhenAll(tasks);
 
+                var results = new List<PaymentRequestModel>();
                 foreach (var task in tasks)
                 {
                     if (task.Result?.Any() == true)
                     {
-                        return new ContinuationResult<PaymentRequestModel>() {Entities = task.Result};
+                        results.AddRange(task.Result);
                     }
                 }
 
-                return new ContinuationResult<PaymentRequestModel>();
+                return new ContinuationResult<PaymentRequestModel> {Entities = results};
             });
         }
 
@@ -168,6 +191,27 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 return new PaymentRequestModel[0];
             }
+        }
+
+        private string GetModelErrorMessage()
+        {
+            var message = new StringBuilder("Model is invalid. ");
+            foreach (var entity in ModelState)
+            {
+                foreach (var error in entity.Value.Errors)
+                {
+                    if (error.Exception != null)
+                    {
+                        message.AppendFormat("{0}: {1}", entity.Key, error.Exception);
+                    }
+                    else
+                    {
+                        message.AppendFormat("{0}: {1}", entity.Key, error.ErrorMessage);
+                    }
+                }
+            }
+
+            return message.ToString();
         }
     }
 }
