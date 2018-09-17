@@ -8,11 +8,11 @@ namespace BackOffice.Areas.LykkePay.Models.Settlement
     {    
         [Required]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
-        public DateTime From { get; set; }
+        public DateTime? From { get; set; }
 
         [Required]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
-        public DateTime To { get; set; }
+        public DateTime? To { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
