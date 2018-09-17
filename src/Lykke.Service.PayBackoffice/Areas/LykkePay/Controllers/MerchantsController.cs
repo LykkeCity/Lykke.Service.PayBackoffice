@@ -26,6 +26,7 @@ using System.IO.Compression;
 using Lykke.Common.Log;
 using Lykke.Service.PayAuth.Client.Models.GenerateRsaKeys;
 using Common.Log;
+using Lykke.Common.ApiLibrary.Exceptions;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -293,6 +294,35 @@ namespace BackOffice.Areas.LykkePay.Controllers
         }
 
         [HttpPost]
+        public IActionResult DeleteMerchantVolatilitySettingsDialog(string merchantId)
+        {
+            var viewModel = new DeleteMerchantVolatilitySettingsDialogViewModel
+            {
+                Caption = "Delete volatility settings for",
+                MerchantId = merchantId
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMerchantVolatilitySettings(
+            DeleteMerchantVolatilitySettingsDialogViewModel vm)
+        {
+            try
+            {
+                await _payMerchantClient.Settings.DeleteVolatilitySettingsAsync(vm.MerchantId);
+            }
+            catch (ClientApiException e)
+            {
+                return this.JsonFailResult(e.Message, ErrorMessageAnchor);
+            }
+
+            return this.JsonRequestResult("#merchantVolatilitySettingsList",
+                Url.Action("MerchantVolatilitySettingsList", new {SelectedMerchant = vm.MerchantId}));
+        }
+
+        [HttpPost]
         public ActionResult DeleteMerchantDialog(string merchant, string id)
         {
             var viewModel = new DeleteMerchantDialogViewModel
@@ -316,6 +346,103 @@ namespace BackOffice.Areas.LykkePay.Controllers
             await _payMerchantClient.Api.DeleteAsync(vm.Id);
 
             return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MerchantVolatilitySettingsPage()
+        {
+            var model = new MerchantVolatilitySettingsListViewModel
+            {
+                Merchants = await _payMerchantClient.Api.GetAllAsync(),
+                CurrentPage = 1,
+                IsFullAccess = this.GetUserRolesPair().HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MerchantVolatilitySettingsList(MerchantVolatilitySettingsListViewModel vm)
+        {
+            var settingsList = new List<VolatilitySettingsResponse>();
+
+            try
+            {
+                VolatilitySettingsResponse setting =
+                    await _payMerchantClient.Settings.GetVolatilitySettingsAsync(vm.SelectedMerchant);
+
+                if (setting != null)
+                    settingsList.Add(setting);
+            }
+            catch (ClientApiException e) when (e.HttpStatusCode == HttpStatusCode.NotFound)
+            {
+            }
+
+            var viewmodel = new MerchantVolatilitySettingsListViewModel
+            {
+                Settings = settingsList,
+                IsEditAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsEdit),
+                IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
+            };
+
+            return View(viewmodel);
+        }
+
+        [HttpPost]
+        public ActionResult AddOrEditMerchantVolatilitySettingDialog(AddOrEditMerchantVolatilitySettingsDialog vm)
+        {
+            bool isNew = string.IsNullOrEmpty(vm.ZeroCoverageAssetPairs);
+
+            vm.Caption = isNew ? "Add setting" : "Edit setting";
+            vm.IsNew = isNew;
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddOrEditMerchantVolatilitySetting(AddOrEditMerchantVolatilitySettingsDialog vm)
+        {
+            if (string.IsNullOrEmpty(vm.ZeroCoverageAssetPairs))
+                return this.JsonFailResult("ZeroCoverageAssetPairs required", ErrorMessageAnchor);
+
+            if (vm.IsNew)
+            {
+                var newSettings = new AddVolatilitySettingsRequest
+                {
+                    MerchantId = vm.MerchantId,
+                    ZeroCoverageAssetPairs = vm.ZeroCoverageAssetPairs
+                };
+
+                try
+                {
+                    await _payMerchantClient.Settings.AddVolatilitySettingsAsync(newSettings);
+                }
+                catch (ClientApiException e)
+                {
+                    return this.JsonFailResult(e.Message, ErrorMessageAnchor);
+                }
+            }
+            else
+            {
+                var editSettings = new UpdateVolatilitySettingsRequest
+                {
+                    MerchantId = vm.MerchantId,
+                    ZeroCoverageAssetPairs = vm.ZeroCoverageAssetPairs
+                };
+
+                try
+                {
+                    await _payMerchantClient.Settings.UpdateVolatilitySettingsAsync(editSettings);
+                }
+                catch (ClientApiException e)
+                {
+                    return this.JsonFailResult(e.Message, ErrorMessageAnchor);
+                }
+            }
+
+            return this.JsonRequestResult("#merchantVolatilitySettingsList",
+                Url.Action("MerchantVolatilitySettingsList"),
+                new MerchantVolatilitySettingsListViewModel {SelectedMerchant = vm.MerchantId});
         }
 
         [HttpPost]

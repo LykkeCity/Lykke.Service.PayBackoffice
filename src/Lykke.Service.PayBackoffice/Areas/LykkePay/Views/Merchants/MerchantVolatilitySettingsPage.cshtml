@@ -1,0 +1,51 @@
+﻿@using BackOffice.Models
+@model BackOffice.Areas.LykkePay.Models.Merchants.MerchantVolatilitySettingsListViewModel
+@{
+    IEnumerable<ItemViewModel> merchantList = Model.Merchants.
+        Select(m => new ItemViewModel { Id = m.Id, Title = m.Name }).ToArray();
+}
+
+<div>
+    <h1>Merchant volatility settings</h1>
+    <hr />
+    <form id="frmMerchantVolatilitySettingsPage">
+        @Html.HiddenFor(x => x.CurrentPage)
+        @Html.HiddenFor(x => x.PageSize)
+        <div class="row">
+            <div class="col-md-1">
+                @if (Model.IsFullAccess)
+                {
+                    <a class="btn btn btn-success"
+                       onclick="openDialog();">
+                        Add
+                    </a>
+                }
+            </div>
+            <div class="col-md-2 col-md-offset-0 input-lg">
+                @Html.RenderSelect2("", "SelectedMerchant", merchantList, false, "Select merchant...")
+            </div>
+        </div>
+    </form>
+    <div id="merchantVolatilitySettingsList"></div>
+</div>
+
+<script>
+    $(function () {
+        var $merchantSelect = $('#selectedMerchant');
+        $merchantSelect.select2().on("change",
+            function (e) {
+                requests.doRequest({
+                    url: '@Url.Action("MerchantVolatilitySettingsList")',
+                    formId: '#frmMerchantVolatilitySettingsPage',
+                    divResult: '#merchantVolatilitySettingsList'
+                });
+            });
+        $('.select2-container--default').width(200);
+        requests.doRequest({ url: '@Url.Action("MerchantVolatilitySettingsList")', formId: '#frmMerchantVolatilitySettingsPage', divResult: '#merchantVolatilitySettingsList' });
+    });
+    function openDialog()
+    {
+        var $merchantSelect = $('#selectedMerchant');
+        ui.showDialog('@Url.Action("AddOrEditMerchantVolatilitySettingDialog")', { merchantId: $merchantSelect.val() });
+    }
+</script>
