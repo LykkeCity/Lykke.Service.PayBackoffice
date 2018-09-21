@@ -55,10 +55,6 @@ BackofficeMembershipServiceClient:
     ServiceUrl: 
         settings-key: BackofficeMembershipServiceUrl
         
-EmailPartnerRouterServiceClient:
-    ServiceUrl: 
-        settings-key: EmailPartnerRouterServiceUrl
-        
 NinjaServiceClient:
     ServiceUrl:
         settings-key: NinjaServiceUrl

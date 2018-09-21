@@ -13,6 +13,7 @@ namespace BackOffice.Areas.LykkePay.Models
         public string ApiKey { get; set; }
         public string LwId { get; set; }
         public string LogoImage { get; set; }
+        public string Email { get; set; }
     }
     public class DeleteMerchantDialogViewModel : IPersonalAreaDialog
     {
