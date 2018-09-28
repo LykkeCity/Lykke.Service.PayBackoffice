@@ -70,7 +70,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
             {
                 SelectedMerchant = merchant,
                 Merchants = merchants,
-                Statuses = Enum.GetValues(typeof(PaymentRequestStatusHelper)).Cast<PaymentRequestStatusHelper>().ToList()
+                Statuses = Enum.GetValues(typeof(PaymentRequestStatus)).Cast<PaymentRequestStatus>().ToList()
         });
         }
 
@@ -109,7 +109,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
                         || (!string.IsNullOrEmpty(x.OrderId) && x.OrderId.Contains(vm.SearchValue))).AsQueryable();
                 }
 
-                if (vm.SelectedStatus != PaymentRequestStatusHelper.None)
+                if (vm.SelectedStatus != PaymentRequestStatus.None)
                     list = list.Where(x => x.Status.ToString() == vm.SelectedStatus.ToString()).AsQueryable();
             }
             catch (Exception ex)
