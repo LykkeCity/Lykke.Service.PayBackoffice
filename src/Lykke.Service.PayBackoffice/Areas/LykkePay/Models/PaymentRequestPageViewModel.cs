@@ -10,9 +10,9 @@ namespace BackOffice.Areas.LykkePay.Models
     public class PaymentRequestPageViewModel : PagedListModel
     {
         public string SelectedMerchant { get; set; }
-        public PaymentRequestStatusHelper SelectedStatus { get; set; }
+        public PaymentRequestStatus SelectedStatus { get; set; }
         public IReadOnlyList<MerchantModel> Merchants { get; set; }
-        public IReadOnlyList<PaymentRequestStatusHelper> Statuses { get; set; }
+        public IReadOnlyList<PaymentRequestStatus> Statuses { get; set; }
         public string MerchantName { get; set; }
         public string SearchValue { get; set; }
     }
