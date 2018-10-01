@@ -5,6 +5,7 @@ using Lykke.Service.PayInvoice.Client;
 using Lykke.Service.PayAuth.Client;
 using Lykke.Service.PayMerchant.Client;
 using Lykke.Service.PaySettlement.Client;
+using Lykke.Service.PayTransferValidation.Client;
 
 namespace BackOffice.Settings
 {
@@ -20,5 +21,6 @@ namespace BackOffice.Settings
         public SlackNotificationsSettings SlackNotifications { get; set; }
         public PayMerchantServiceClientSettings PayMerchantServiceClient { get; set; }
         public PaySettlementServiceClientSettings PaySettlementServiceClient { get; set; }
+        public PayTransferValidationServiceClientSettings PayTransferValidationServiceClient { get; set; }
     }
 }
