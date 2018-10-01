@@ -6,6 +6,7 @@ using Lykke.Service.PayAuth.Client;
 using Lykke.Service.PayMerchant.Client;
 using Lykke.Service.PayTransferValidation.Client;
 using Lykke.Service.PaySettlement.Client;
+using Lykke.Service.PayTransferValidation.Client;
 
 namespace BackOffice.Settings
 {
@@ -22,5 +23,6 @@ namespace BackOffice.Settings
         public PayMerchantServiceClientSettings PayMerchantServiceClient { get; set; }
         public PayTransferValidationServiceClientSettings PayTransferValidationServiceClient { get; set; }
         public PaySettlementServiceClientSettings PaySettlementServiceClient { get; set; }
+        public PayTransferValidationServiceClientSettings PayTransferValidationServiceClient { get; set; }
     }
 }
