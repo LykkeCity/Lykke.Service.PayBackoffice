@@ -83,3 +83,8 @@ SlackNotifications:
     QueueName:
       settings-key: SlackQueueName
       types: [ AzureTableStorage ]
+
+PayTransferValidationServiceClient:
+    ServiceUrl:
+        settings-key: PayTransferValidationServiceUrl
+        types: [ Tag ]
