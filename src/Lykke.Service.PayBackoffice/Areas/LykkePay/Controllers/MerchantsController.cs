@@ -27,6 +27,10 @@ using Lykke.Common.Log;
 using Lykke.Service.PayAuth.Client.Models.GenerateRsaKeys;
 using Common.Log;
 using Lykke.Common.ApiLibrary.Exceptions;
+using Lykke.Service.PayTransferValidation.Client;
+using Lykke.Service.PayTransferValidation.Client.Models.MerchantConfiguration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace BackOffice.Areas.LykkePay.Controllers
 {
@@ -39,6 +43,7 @@ namespace BackOffice.Areas.LykkePay.Controllers
         private readonly IPayAuthClient _payAuthClient;
         private readonly IPayInvoiceClient _payInvoiceClient;
         private readonly IPayMerchantClient _payMerchantClient;
+        private readonly IPayTransferValidationClient _payTransferValidationClient;
         private readonly ILog _log;
         private const string ErrorMessageAnchor = "#errorMessage";
 
@@ -47,14 +52,18 @@ namespace BackOffice.Areas.LykkePay.Controllers
             IPayAuthClient payAuthClient,
             IPayInvoiceClient payInvoiceClient,
             IPayMerchantClient payMerchantClient,
-            ILogFactory logFactory)
+            ILogFactory logFactory, 
+            IPayTransferValidationClient payTransferValidationClient)
         {
             _payInternalClient = payInternalClient;
             _payAuthClient = payAuthClient;
             _payInvoiceClient = payInvoiceClient;
             _payMerchantClient = payMerchantClient;
+            _payTransferValidationClient = payTransferValidationClient;
             _log = logFactory.CreateLog(this);
         }
+
+        #region Merchants
 
         public IActionResult Index()
         {
@@ -294,6 +303,36 @@ namespace BackOffice.Areas.LykkePay.Controllers
         }
 
         [HttpPost]
+        public ActionResult DeleteMerchantDialog(string merchant, string id)
+        {
+            var viewModel = new DeleteMerchantDialogViewModel
+            {
+                Caption = "Delete merchant",
+                Name = merchant,
+                Id = id
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteMerchant(DeleteMerchantDialogViewModel vm)
+        {
+            if (string.IsNullOrEmpty(vm.Id))
+            {
+                return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, "#frmDeleteMerchant");
+            }
+
+            await _payMerchantClient.Api.DeleteAsync(vm.Id);
+
+            return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
+        }
+
+        #endregion
+
+        #region Volatility settings
+
+        [HttpPost]
         public IActionResult DeleteMerchantVolatilitySettingsDialog(string merchantId)
         {
             var viewModel = new DeleteMerchantVolatilitySettingsDialogViewModel
@@ -320,32 +359,6 @@ namespace BackOffice.Areas.LykkePay.Controllers
 
             return this.JsonRequestResult("#merchantVolatilitySettingsList",
                 Url.Action("MerchantVolatilitySettingsList", new {SelectedMerchant = vm.MerchantId}));
-        }
-
-        [HttpPost]
-        public ActionResult DeleteMerchantDialog(string merchant, string id)
-        {
-            var viewModel = new DeleteMerchantDialogViewModel
-            {
-                Caption = "Delete merchant",
-                Name = merchant,
-                Id = id
-            };
-
-            return View(viewModel);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> DeleteMerchant(DeleteMerchantDialogViewModel vm)
-        {
-            if (string.IsNullOrEmpty(vm.Id))
-            {
-                return this.JsonFailResult(Phrases.FieldShouldNotBeEmpty, "#frmDeleteMerchant");
-            }
-
-            await _payMerchantClient.Api.DeleteAsync(vm.Id);
-
-            return this.JsonRequestResult("#merchantsList", Url.Action("MerchantsList"));
         }
 
         [HttpPost]
@@ -444,6 +457,190 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 Url.Action("MerchantVolatilitySettingsList"),
                 new MerchantVolatilitySettingsListViewModel {SelectedMerchant = vm.MerchantId});
         }
+        #endregion
+
+        #region Transfer settings
+
+        [HttpPost]
+        public IActionResult DeleteMerchantTransferSettingsDialog(string merchantId, string ruleId, string ruleDisplayName)
+        {
+            var viewModel = new DeleteMerchantTransferSettingsDialogViewModel
+            {
+                Caption = "Delete rule from merchant validation settings",
+                MerchantId = merchantId,
+                RuleId = ruleId,
+                RuleDisplayName = ruleDisplayName
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMerchantTransferSettings(DeleteMerchantTransferSettingsDialogViewModel vm)
+        {
+            try
+            {
+                await _payTransferValidationClient.Config.DeleteAsync(vm.MerchantId, vm.RuleId);
+            }
+            catch (ClientApiException e) when (e.HttpStatusCode == HttpStatusCode.NotFound)
+            {
+                return this.JsonFailResult(e.Message, ErrorMessageAnchor);
+            }
+
+            return this.JsonRequestResult("#merchantTransferSettingsList",
+                Url.Action("MerchantTransferSettingsList", new {SelectedMerchant = vm.MerchantId}));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MerchantTransferSettingsPage()
+        {
+            var model = new MerchantTransferSettingsListViewModel
+            {
+                Merchants = await _payMerchantClient.Api.GetAllAsync(),
+                CurrentPage = 1,
+                IsFullAccess = this.GetUserRolesPair().HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MerchantTransferSettingsList(MerchantTransferSettingsListViewModel vm)
+        {
+            ConfigurationModel settings = await _payTransferValidationClient.Config.GetAsync(vm.SelectedMerchant);
+
+            var viewmodel = new MerchantTransferSettingsListViewModel
+            {
+                Settings = settings.Rules,
+                IsEditAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsEdit),
+                IsFullAccess = (this.GetUserRolesPair()).HasAccessToFeature(UserFeatureAccess.LykkePayMerchantsFull),
+                SelectedMerchant = vm.SelectedMerchant
+            };
+
+            return View(viewmodel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddOrEditMerchantTransferSettingDialog(AddOrEditMerchantTransferSettingsDialog vm)
+        {
+            bool isNew = string.IsNullOrEmpty(vm.RuleId);
+
+            vm.Caption = isNew ? "Add rule" : "Edit rule";
+
+            vm.IsNew = isNew;
+
+            if (isNew)
+            {
+                vm.Enabled = true;
+            }
+            else
+            {
+                ConfigurationModel cfg = await _payTransferValidationClient.Config.GetAsync(vm.MerchantId);
+
+                vm.RuleInput = cfg.Rules.SingleOrDefault(x => x.RuleId == vm.RuleId)?.RuleInput;
+            }
+
+            vm.RuleList = await _payTransferValidationClient.Api.GetRegisteredRules();
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddOrEditMerchantTransferSetting(AddOrEditMerchantTransferSettingsDialog vm)
+        {
+            try
+            {
+                JObject ruleInput = string.IsNullOrEmpty(vm.RuleInput?.Trim()) ? null : JObject.Parse(vm.RuleInput);
+
+                if (vm.IsNew)
+                {
+                    await _payTransferValidationClient.Config.AddAsync(new AddLineModel
+                    {
+                        MerchantId = vm.MerchantId,
+                        RuleId = vm.RuleId,
+                        RuleInput = ruleInput
+                    });
+                }
+                else
+                {
+                    await _payTransferValidationClient.Config.UpdateInputAsync(new UpdateInputModel
+                    {
+                        MerchantId = vm.MerchantId,
+                        RuleId = vm.RuleId,
+                        RuleInput = ruleInput
+                    });
+                }
+            }
+            catch (JsonReaderException)
+            {
+                return this.JsonFailResult("Input must be valid json object", ErrorMessageAnchor);
+            }
+            catch (ClientApiException e) when (e.HttpStatusCode == HttpStatusCode.BadRequest ||
+                                               e.HttpStatusCode == HttpStatusCode.NotFound)
+            {
+                return this.JsonFailResult(e.Message, ErrorMessageAnchor);
+            }
+            catch (ClientApiException e)
+            {
+                _log.Error(e, "PayTransfer API Call error", $"merchantId = {vm.MerchantId}, ruleId = {vm.RuleId}");
+
+                return this.JsonFailResult("Unexpected API call error", ErrorMessageAnchor);
+            }
+
+            return this.JsonRequestResult("#merchantTransferSettingsList",
+                Url.Action("MerchantTransferSettingsList"),
+                new MerchantTransferSettingsListViewModel {SelectedMerchant = vm.MerchantId});
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EnableRule(string merchantId, string ruleId)
+        {
+            try
+            {
+                await _payTransferValidationClient.Config.EnableAsync(merchantId, ruleId);
+
+                return this.JsonRequestResult("#merchantTransferSettingsList",
+                    Url.Action("MerchantTransferSettingsList",
+                        new MerchantTransferSettingsListViewModel { SelectedMerchant = merchantId }));
+            }
+            catch (ClientApiException e) when (e.HttpStatusCode == HttpStatusCode.NotFound)
+            {
+                return this.JsonFailResult(e.Message, ErrorMessageAnchor);
+            }
+            catch (ClientApiException e)
+            {
+                _log.Error(e, "PayTransfer API Call error", $"merchantId: {merchantId}, ruleId = {ruleId}");
+
+                return this.JsonFailResult("Unexpected API call error", ErrorMessageAnchor);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DisableRule(string merchantId, string ruleId)
+        {
+            try
+            {
+                await _payTransferValidationClient.Config.DisableAsync(merchantId, ruleId);
+
+                return this.JsonRequestResult("#merchantTransferSettingsList",
+                    Url.Action("MerchantTransferSettingsList",
+                        new MerchantTransferSettingsListViewModel { SelectedMerchant = merchantId }));
+            }
+            catch (ClientApiException e) when (e.HttpStatusCode == HttpStatusCode.NotFound)
+            {
+                return this.JsonFailResult(e.Message, ErrorMessageAnchor);
+            }
+            catch (ClientApiException e)
+            {
+                _log.Error(e, "PayTransfer API Call error", $"merchantId: {merchantId}, ruleId = {ruleId}");
+
+                return this.JsonFailResult("Unexpected API call error", ErrorMessageAnchor);
+            }
+        }
+
+        #endregion
+
+        #region Base settings
 
         [HttpPost]
         public async Task<ActionResult> MerchantsSettingsPage()
@@ -599,5 +796,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 return BadRequest("Error occured.");
             }
         }
+
+
+        #endregion
     }
 }
