@@ -4,10 +4,13 @@
     <li id="merchants"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("MerchantsPage")')">Merchants</a></li>
     <li id="merchantsSettings"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("MerchantsSettingsPage")')">Settings</a></li>
     <li id="merchantVolatilitySettings"><a data-toggle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("MerchantVolatilitySettingsPage")')">Volatility settings</a></li>
+    <li id="merchantTransferSettings"><a data-toogle="tab" onclick="selectTab(this.parentNode.id, '@Url.Action("MerchantTransferSettingsPage")')">BIL transfer settings</a></li>
 </ul>
 
 <div id="MerchantsPage" style="margin: 10px"></div>
 <div id="MerchantsSettingsPage" style="margin: 10px"></div>
+<div id="MerchantVolatilitySettingsPage" style="margin: 10px"></div>
+<div id="MerchantTransferSettingsPage" style="margin: 10px"></div>
 
 <script>
     function selectTab(tabId, url) {

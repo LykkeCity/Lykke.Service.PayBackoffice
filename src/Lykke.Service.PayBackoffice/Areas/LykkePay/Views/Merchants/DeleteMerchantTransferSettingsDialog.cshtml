@@ -1,0 +1,15 @@
+﻿@model BackOffice.Areas.LykkePay.Models.Merchants.DeleteMerchantTransferSettingsDialogViewModel
+
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+
+<form id="frmDeleteMerchantTransferSettings">
+
+    <input style="display: none" name="MerchantId" value="@Model.MerchantId" />
+    <input style="display: none" name="RuleId" value="@Model.RuleId" />
+    <h3>Rule name: @Model.RuleDisplayName</h3>
+
+</form>
+
+@Html.RenderSaveCancelButtonPair(Url.Action("DeleteMerchantTransferSettings"), "#frmDeleteMerchantTransferSettings", "Confirm")
