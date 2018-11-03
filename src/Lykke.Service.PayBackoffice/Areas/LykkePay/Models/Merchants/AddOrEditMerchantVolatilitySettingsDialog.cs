@@ -8,6 +8,7 @@ namespace BackOffice.Areas.LykkePay.Models.Merchants
         public string Width { get; set; }
         public string MerchantId { get; set; }
         public string ZeroCoverageAssetPairs { get; set; }
+        public bool IsDeltaSpreadFixed { get; set; }
         public bool IsNew { get; set; }
     }
 }
