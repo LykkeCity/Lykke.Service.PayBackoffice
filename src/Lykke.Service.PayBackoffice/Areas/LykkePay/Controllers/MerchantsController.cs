@@ -423,7 +423,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 var newSettings = new AddVolatilitySettingsRequest
                 {
                     MerchantId = vm.MerchantId,
-                    ZeroCoverageAssetPairs = vm.ZeroCoverageAssetPairs
+                    ZeroCoverageAssetPairs = vm.ZeroCoverageAssetPairs,
+                    IsDeltaSpreadFixed = vm.IsDeltaSpreadFixed
                 };
 
                 try
@@ -440,7 +441,8 @@ namespace BackOffice.Areas.LykkePay.Controllers
                 var editSettings = new UpdateVolatilitySettingsRequest
                 {
                     MerchantId = vm.MerchantId,
-                    ZeroCoverageAssetPairs = vm.ZeroCoverageAssetPairs
+                    ZeroCoverageAssetPairs = vm.ZeroCoverageAssetPairs,
+                    IsDeltaSpreadFixed = vm.IsDeltaSpreadFixed
                 };
 
                 try
