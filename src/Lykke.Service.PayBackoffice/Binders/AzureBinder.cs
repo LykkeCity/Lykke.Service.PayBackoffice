@@ -17,7 +17,6 @@ using Lykke.Service.PayInvoice.Client;
 using Lykke.Service.PayInvoice.Contract.Commands;
 using Lykke.Service.PayInvoice.Contract.Events;
 using Lykke.Service.PayMerchant.Client;
-using Lykke.Service.PayTransferValidation.Client;
 using Lykke.Service.PaySettlement.Client;
 using Lykke.Service.PayTransferValidation.Client;
 using Lykke.SettingsReader;
@@ -60,7 +59,6 @@ namespace BackOffice.Binders
             ioc.RegisterInstance<IPayAuthClient>(new PayAuthClient(new PayAuthServiceClientSettings()
                 {ServiceUrl = settings.CurrentValue.PayAuthServiceClient.ServiceUrl}));
             ioc.RegisterPayMerchantClient(settings.CurrentValue.PayMerchantServiceClient, null);
-            ioc.RegisterPayTransferValidationClient(settings.CurrentValue.PayTransferValidationServiceClient, null);
             ioc.RegisterPaySettlementClient(settings.CurrentValue.PaySettlementServiceClient, null);
             ioc.RegisterPayTransferValidationClient(settings.CurrentValue.PayTransferValidationServiceClient, null);
 

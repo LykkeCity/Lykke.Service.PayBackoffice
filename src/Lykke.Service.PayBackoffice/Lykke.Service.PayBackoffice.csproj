@@ -181,7 +181,6 @@
     <PackageReference Include="Lykke.Service.PayInvoice.Client" Version="5.5.0" />
     <PackageReference Include="Lykke.Service.PayInvoice.Contract" Version="1.1.0" />
     <PackageReference Include="Lykke.Service.PayMerchant.Client" Version="1.1.0" />
-	<PackageReference Include="Lykke.Service.PayTransferValidation.Client" Version="1.0.3" />
     <PackageReference Include="Lykke.Service.PaySettlement.Client" Version="1.0.12" />
     <PackageReference Include="Lykke.Service.PayTransferValidation.Client" Version="1.0.3" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.3" />
